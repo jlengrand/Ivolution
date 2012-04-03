@@ -6,6 +6,7 @@ Created on 27 mars 2012
 import cv
 import os
 import Guy
+from FaceParams import FaceParams
 
 class FaceMovie(object):
     '''
@@ -13,8 +14,6 @@ class FaceMovie(object):
     Contains the core image processing functions.
     Supports the communication layer with the end user interface.
     '''
-
-
     def __init__(self, in_folder, out_folder, param_folder):
         '''
         Constructor
@@ -26,15 +25,7 @@ class FaceMovie(object):
         self.guys = [] # List of pictures in source folder
         
         # Setting up some default parameters for Face Detection
-        self.face_cascade = cv.Load(os.path.join(param_folder, "haarcascade_frontalface_alt.xml"))
-        self.eye_cascade = cv.Load(os.path.join(param_folder, "haarcascade_eye.xml"))
-
-        # To be defined more precisely
-        self.min_size = (20,20)
-        self.image_scale = 2
-        self.haar_scale = 1.2
-        self.min_neighbors = 2
-        self.haar_flags = 0
+        self.face_params = FaceParams(self.params_source)
         
     def list_guys(self):
         """
@@ -58,14 +49,59 @@ class FaceMovie(object):
          
             # populating guys
             self.guys.append(a_guy)
+
+    def search_faces(self):
+        """
+        Searches for all faces in the guys we have
+        Results to be stored directly in guys
+        """
+        for a_guy in self.guys:
+            a_guy.search_face(self.face_params)
+            if a_guy.has_face(): # face(s) have been found
+                print "%d faces found for %s" % (a_guy.num_faces(), a_guy.name)
         
+    # Informative functions
+    def number_guys(self):
+        """
+        Simply returns the number of guys in the current to-be movie
+        """    
+        return len(self.guys)
+    
+    def show_faces(self, time=1000, mode="debug"):
+        """
+        Show all faces that have been found for the guys.
+        The time for which each image will be diplayed can be chosen.
+        Several modes can be chosen to adapt the result.
+        """
+        # TODO: Where can I find the lower function? 
+        if mode == "debug" :
+            for a_guy in self.guys:
+                a_guy.show_debug(self.face_params, time)
+        else:
+            print "Warning : only supported mode is debug"
+
+    def save_faces(self, out_folder, format="png", debug=True):
+        """
+        Save all faces into out_folder, in the given format
+        Debug is used to draw rectangles around found faces
+        """
+        for a_guy in self.guys:
+                a_guy.save_result(self.face_params, 
+                                  out_folder, 
+                                  format, 
+                                  debug)              
+           
 if __name__ == "__main__":
     # quick and dirty tests
     root_fo = "C:\Users\jll\perso\FaceMovie"
-    in_fo = os.path.join(root_fo, "input\Axel")
+    in_fo = os.path.join(root_fo, "input\Axel_tsts")
+    #in_fo = os.path.join(root_fo, "input\Axel")
     out_fo = os.path.join(root_fo, "output")
     par_fo = os.path.join(root_fo, "haarcascades")
     
     my_movie = FaceMovie(in_fo, out_fo, par_fo)
     my_movie.list_guys()
+    my_movie.search_faces()
+    #my_movie.show_faces(2000, "debug")
+    my_movie.save_faces("output", debug=True)
     print "Done !"
