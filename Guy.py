@@ -73,18 +73,20 @@ class Guy(object):
                                      face_params.min_neighbors, 
                                      face_params.haar_flags, 
                                      face_params.min_size)
-    
+        
         # sorting faces to keep only the most probable one
         self.sort_faces()
         self.update_center() # finds centre of face in image
-    
+        
     def sort_faces(self):
         """
         sort faces by probability, most probable one first
         """
         if self.has_face() : # needed ?
             self.faces.sort(key= lambda prob : prob[1], reverse=True)
-
+        else : 
+            print "Warning! No face found for %s" %(self.name)
+        
     def update_center(self):
         """
         Using sorted faces, defines the new center of interest of the output image
@@ -94,37 +96,15 @@ class Guy(object):
             self.x_center = x + w / 2
             self.y_center = y + h / 2
     
-    
-    def in_display(self, time):
+    def create_output(self, face_params, debug=False):
         """
-        Displays the input image, for time ms.
-        Setting time to 0 causes the image to remains open.
+        Creates output image
+        If debug is set to true, output image is the input image with a red
+        box around the most probable face.
         """
-        cv.NamedWindow(self.name)
-        cv.ShowImage(self.name, self.in_image)
-        cv.WaitKey(time)    
-        cv.DestroyWindow(self.name)
-        
-    def out_display(self, time):
-        """
-        Displays the output image, for time ms.
-        Setting time to 0 causes the image to remains open.
-        Window name slightly changed to match output
-        """
-        win_name = self.name + " - out"
-        cv.NamedWindow(win_name)
-        cv.ShowImage(win_name, self.in_image)
-        cv.WaitKey(time)
-        cv.DestroyWindow(win_name)
-
-    def save_result(self, face_params, out_folder, ext, debug=False):
-        """
-        Saves output image to the given format (given in extension)
-        """
-        # FIXME : face_params to be removed !
-        # TODO : should be refactored into a create_output(debug function)
-        if (debug and self.has_face()):
-            # Adds a rectangle around the output, and a point in the center
+        cv.Copy(self.in_image, self.out_im)
+        if debug and self.has_face():
+            # some nice drawings
             ((x, y, w, h), n) = self.faces[0]
             # the input to cv.HaarDetectObjects was resized, so scale the
             # bounding box of each face and convert it to two CvPoints
@@ -146,6 +126,36 @@ class Guy(object):
                         pt3, 
                         cv.RGB(0, 255, 0), 
                         3, 8, 0)
+    
+    def in_display(self, time):
+        """
+        Displays the input image, for time ms.
+        Setting time to 0 causes the image to remains open.
+        """
+        cv.NamedWindow(self.name)
+        cv.ShowImage(self.name, self.in_image)
+        cv.WaitKey(time)    
+        cv.DestroyWindow(self.name)
+        
+    def out_display(self, face_params, time, debug=False):
+        """
+        Displays the output image, for time ms.
+        Setting time to 0 causes the image to remains open.
+        Window name slightly changed to match output
+        """
+        create_output(face_params, debug)
+        win_name = self.name + " - out"
+        cv.NamedWindow(win_name)
+        cv.ShowImage(win_name, self.out_im)
+        cv.WaitKey(time)
+        cv.DestroyWindow(win_name)
+
+    def save_result(self, face_params, out_folder, ext, debug=False):
+        """
+        Saves output image to the given format (given in extension)
+        """
+        # FIXME : face_params to be removed !
+        self.create_output(face_params, debug)
         
         # check that format is a string ? ?
         file_name = self.name + "." + ext
@@ -153,55 +163,6 @@ class Guy(object):
         print "Saving %s" %(out_name)
         
         cv.SaveImage(out_name, self.out_im)
-
-    def show_debug(self, face_params, time):
-        """
-        Function that may be used after having populated faces. 
-        Displays each guy, with a red square around detected face, 
-        for time ms.
-        
-        TODO: green square around most probable face? 
-        See the doc !
-        """
-
-        # Instead of doing it for all, do it only for the biggest one 
-        if self.has_face() : 
-            
-            debug_image = cv.CreateImage((self.in_x, self.in_y),cv.IPL_DEPTH_8U, self.in_channels)
-            cv.Copy(self.in_image, debug_image)
-            
-            # some nice drawings
-            ((x, y, w, h), n) = self.faces[0]
-            # the input to cv.HaarDetectObjects was resized, so scale the
-            # bounding box of each face and convert it to two CvPoints
-            pt1 = (int(x * face_params.image_scale), 
-                   int(y * face_params.image_scale))
-            pt2 = (int((x + w) * face_params.image_scale), 
-                   int((y + h) * face_params.image_scale))
-            cv.Rectangle(debug_image, 
-                        pt1, 
-                        pt2, 
-                        cv.RGB(255, 0, 0), 
-                        3, 8, 0)# surrounds face   
-        
-            # Adds point in the center
-            pt3 = (int(self.x_center * face_params.image_scale), 
-                   int(self.y_center * face_params.image_scale))
-            cv.Line(debug_image, 
-                        pt3, 
-                        pt3, 
-                        cv.RGB(0, 255, 0), 
-                        3, 8, 0)
-        
-            win_name = self.name + " - debug"
-            cv.NamedWindow(win_name, cv.CV_WINDOW_NORMAL)
-            cv.ResizeWindow(win_name, 640, 480)
-            cv.ShowImage(win_name, debug_image)
-            cv.WaitKey(time)
-            cv.DestroyWindow(win_name)
-        
-        else : 
-            print "Warning! No face found for %s" %(self.name)
 
     def num_faces(self):
         """
