@@ -163,6 +163,7 @@ class Guy(object):
         TODO: green square around most probable face? 
         See the doc !
         """
+
         # Instead of doing it for all, do it only for the biggest one 
         if self.has_face() : 
             
@@ -201,7 +202,7 @@ class Guy(object):
         
         else : 
             print "Warning! No face found for %s" %(self.name)
-       
+
     def num_faces(self):
         """
         Returns the number of faces found for this guy

@@ -90,7 +90,7 @@ class FaceMovie(object):
                                   out_folder, 
                                   format, 
                                   debug)              
-           
+
 if __name__ == "__main__":
     # quick and dirty tests
     root_fo = "C:\Users\jll\perso\FaceMovie"
