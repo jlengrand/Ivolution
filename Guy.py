@@ -90,6 +90,7 @@ class Guy(object):
     def update_center(self):
         """
         Using sorted faces, defines the new center of interest of the output image
+        TODO: Insert image scale in there, instead of multiplying everywhere
         """
         if self.has_face():
             ((x, y, w, h), n) = self.faces[0]
@@ -180,8 +181,7 @@ if __name__ == "__main__":
     # quick and dirty tests
     name = "input/search.jpg"
     im = cv.LoadImage(name)
-    
     my_guy = Guy(im, os.path.basename(name))
-    my_guy.in_display(100)
-    my_guy.out_display(1000)
+    my_guy.in_display(0)
+    #my_guy.out_display(1000)
     

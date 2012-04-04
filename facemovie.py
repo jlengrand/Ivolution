@@ -27,6 +27,15 @@ class FaceMovie(object):
         # Setting up some default parameters for Face Detection
         self.face_params = FaceParams(self.params_source)
         
+        # PLacement of face wanted in the image in the end 
+        # Generic is center face = (1/2, 1/4)
+        self.x_ratio = 1.0/2
+        self.y_ratio = 1.0/4
+        
+        # Needed minimum size of output image
+        self.dim_x = 0
+        self.dim_y = 0
+        
     def list_guys(self):
         """
         Aims at populating the guys list, using the source folder as an input. 
@@ -60,6 +69,35 @@ class FaceMovie(object):
             a_guy.search_face(self.face_params)
             if a_guy.has_face(): # face(s) have been found
                 print "%d faces found for %s" % (a_guy.num_faces(), a_guy.name)
+    
+    def find_out_dims(self):
+        """
+        Aims at calculating which size of output image is needed to display 
+        outputs, knowing x and y desired ratios, and detected faces centers
+        """
+        for a_guy in self.guys:
+            # update dims
+            x_size = a_guy.in_x
+            y_size = a_guy.in_y
+            x_face = a_guy.x_center * self.face_params.image_scale
+            y_face = a_guy.y_center * self.face_params.image_scale
+            
+            x1 = (x_size - x_face) / self.x_ratio # left side
+            x2 = (x_size - (x_size - x_face)) / (1 - self.x_ratio) # right side
+            self.dim_x = int(max(x1, x2)) + 1 # +1 for borders
+        
+            y1 = (y_size - y_face) / self.y_ratio
+            y2 = (y_size - (y_size - y_face)) / (1 - self.y_ratio)
+            self.dim_y = int(max(y1, y2)) + 1 # +1 for borders
+            
+            print "DEBUG"
+            print "####"
+            print x_size, y_size
+            print x_face, y_face
+            print self.x_ratio, self.y_ratio
+            print "####"
+            print x1, x2, self.dim_x
+            print y1, y2, self.dim_y
         
     # Informative functions
     def number_guys(self):
@@ -113,9 +151,10 @@ class FaceMovie(object):
                                cv.IPL_DEPTH_8U, 
                                3)
         for a_guy in self.guys: 
-            a_guy.create_output(self.face_params, debug)
-            cv.Resize(a_guy.out_im, frame)
-            cv.WriteFrame(my_video, frame)   
+            if a_guy.has_face():
+                a_guy.create_output(self.face_params, debug)
+                cv.Resize(a_guy.out_im, frame)
+                cv.WriteFrame(my_video, frame)   
 
 if __name__ == "__main__":
     # quick and dirty tests
@@ -131,6 +170,9 @@ if __name__ == "__main__":
     #my_movie.show_faces(2000)
     #my_movie.save_faces("output", debug=True)
     my_movie.save_movie("output", debug=True)
+    
+    # I want to know the size of the output frame, knowing initial conditions
+    #my_movie.find_out_dims()
     
     print "Done !"
     
