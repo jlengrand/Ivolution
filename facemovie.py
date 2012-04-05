@@ -75,30 +75,24 @@ class FaceMovie(object):
         Aims at calculating which size of output image is needed to display 
         outputs, knowing x and y desired ratios, and detected faces centers
         """
+        
         for a_guy in self.guys:
-            # update dims
-            x_size = a_guy.in_x
-            y_size = a_guy.in_y
-            x_face = a_guy.x_center * self.face_params.image_scale
-            y_face = a_guy.y_center * self.face_params.image_scale
-            
-            x1 = (x_size - x_face) / self.x_ratio # left side
-            x2 = (x_size - (x_size - x_face)) / (1 - self.x_ratio) # right side
-            self.dim_x = int(max(x1, x2)) + 1 # +1 for borders
-        
-            y1 = (y_size - y_face) / self.y_ratio
-            y2 = (y_size - (y_size - y_face)) / (1 - self.y_ratio)
-            self.dim_y = int(max(y1, y2)) + 1 # +1 for borders
-            
-            print "DEBUG"
-            print "####"
-            print x_size, y_size
-            print x_face, y_face
-            print self.x_ratio, self.y_ratio
-            print "####"
-            print x1, x2, self.dim_x
-            print y1, y2, self.dim_y
-        
+            if a_guy.has_face():
+                # Working on x                
+                x1 = (a_guy.x_center  / self.x_ratio) 
+                x2 = 1
+                #x2 = ((a_guy.in_x - a_guy.x_center) / (1 - self.x_ratio))
+                x_fin = int(max(x1, x2)) + 1 # for borders
+                if x_fin > self.dim_x:
+                    self.dim_x = x_fin
+                    
+                # Working on y
+                y1 = (a_guy.y_center / self.y_ratio) 
+                y2 = ((a_guy.in_y - a_guy.y_center) / (1 - self.y_ratio))
+                y_fin = int(max(y1, y2)) + 1 # for borders
+                if y_fin > self.dim_y:
+                    self.dim_y = y_fin
+                
     # Informative functions
     def number_guys(self):
         """
@@ -112,12 +106,8 @@ class FaceMovie(object):
         The time for which each image will be diplayed can be chosen.
         Several modes can be chosen to adapt the result.
         """
-        # TODO: Where can I find the lower function? 
-        if mode == "debug" :
-            for a_guy in self.guys:
-                a_guy.out_display(self.face_params, time, debug)
-        else:
-            print "Warning : only supported mode is debug"
+        for a_guy in self.guys:
+            a_guy.out_display(self.face_params, time, debug=debug)
 
     def save_faces(self, out_folder, format="png", debug=True):
         """
@@ -159,20 +149,27 @@ class FaceMovie(object):
 if __name__ == "__main__":
     # quick and dirty tests
     root_fo = "C:\Users\jll\perso\FaceMovie"
-    #in_fo = os.path.join(root_fo, "input\Axel_tsts")
-    in_fo = os.path.join(root_fo, "input\Axel")
+    in_fo = os.path.join(root_fo, "input\Axel_tsts")
+    #in_fo = os.path.join(root_fo, "input\Axel")
     out_fo = os.path.join(root_fo, "output")
     par_fo = os.path.join(root_fo, "haarcascades")
     
     my_movie = FaceMovie(in_fo, out_fo, par_fo)
     my_movie.list_guys()
     my_movie.search_faces()
+    # I want to know the size of the output frame, knowing initial conditions
+    my_movie.find_out_dims()
+
+    x_center = int(my_movie.dim_x * my_movie.x_ratio)
+    y_center = int(my_movie.dim_y * my_movie.y_ratio)
+    for a_guy in my_movie.guys:
+        a_guy.create_debug_output()
+        #a_guy.create_video_output(my_movie.dim_x, my_movie.dim_y, x_center, y_center)
+        a_guy.out_display(000)
+    
     #my_movie.show_faces(2000)
     #my_movie.save_faces("output", debug=True)
-    my_movie.save_movie("output", debug=True)
-    
-    # I want to know the size of the output frame, knowing initial conditions
-    #my_movie.find_out_dims()
+    #my_movie.save_movie("output", debug=True)
     
     print "Done !"
     

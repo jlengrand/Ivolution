@@ -29,7 +29,6 @@ class Guy(object):
         self.eyes = []  # List of eyes detected for this input 
         
         # Some operations on variables
-        
         (self.in_x, self.in_y) = cv.GetSize(image) # image size in x, y
         
         # Two variables used to define the new center of interest of the image
@@ -40,9 +39,6 @@ class Guy(object):
         # Creation of the images
         self.in_image = cv.CreateImage((self.in_x, self.in_y),cv.IPL_DEPTH_8U, self.in_channels)
         cv.Copy(image, self.in_image)
-        self.out_im = cv.CreateImage((self.in_x, self.in_y),cv.IPL_DEPTH_8U, self.in_channels)
-        cv.Zero(self.out_im) # put everything to 0
-        
 
     def search_face(self, face_params):
         """
@@ -66,13 +62,23 @@ class Guy(object):
         cv.EqualizeHist(smallImage, smallImage)
         
         # Detect the faces
-        self.faces = cv.HaarDetectObjects(smallImage, 
+        small_faces = cv.HaarDetectObjects(smallImage, 
                                      face_params.face_cascade, 
                                      cv.CreateMemStorage(0),
                                      face_params.haar_scale, 
                                      face_params.min_neighbors, 
                                      face_params.haar_flags, 
                                      face_params.min_size)
+        
+        # Resizing faces to full_scale
+        for face in small_faces:
+            if len(face): # if faces have been found
+                ((x, y, w, h), n) = face
+                big_face = ((int(x * face_params.image_scale), 
+                             int(y * face_params.image_scale), 
+                             int(w * face_params.image_scale), 
+                             int(h * face_params.image_scale)), n)
+                self.faces.append(big_face)
         
         # sorting faces to keep only the most probable one
         self.sort_faces()
@@ -97,22 +103,41 @@ class Guy(object):
             self.x_center = x + w / 2
             self.y_center = y + h / 2
     
-    def create_output(self, face_params, debug=False):
+    def create_video_output(self, x_size, y_size, x_point, y_point):
+        """
+        Creates image output, centering the face center with the required position
+        """
+        self.out_im = cv.CreateImage((x_size, y_size),cv.IPL_DEPTH_8U, self.in_channels)
+        cv.Zero(self.out_im)
+        
+        # We want to place the input image so that the center of the face matches
+        # x_center and y_center
+        xtl = x_point - self.x_center
+        ytl = y_point - self.y_center
+        rect = (xtl, ytl, self.in_x, self.in_y)
+        print rect, x_size, y_size, x_point, y_point, self.x_center, self.y_center
+        cv.SetImageROI(self.out_im, rect)
+        
+        cv.Copy(self.in_image, self.out_im)
+        cv.ResetImageROI(self.out_im) 
+    
+    def create_debug_output(self):
         """
         Creates output image
         If debug is set to true, output image is the input image with a red
         box around the most probable face.
         """
+        self.out_im = cv.CreateImage((self.in_x, self.in_y),cv.IPL_DEPTH_8U, self.in_channels)
+        cv.Zero(self.out_im) # put everything to 0
+        
         cv.Copy(self.in_image, self.out_im)
-        if debug and self.has_face():
+        if self.has_face():
             # some nice drawings
             ((x, y, w, h), n) = self.faces[0]
             # the input to cv.HaarDetectObjects was resized, so scale the
             # bounding box of each face and convert it to two CvPoints
-            pt1 = (int(x * face_params.image_scale), 
-                   int(y * face_params.image_scale))
-            pt2 = (int((x + w) * face_params.image_scale), 
-                   int((y + h) * face_params.image_scale))
+            pt1 = (x, y)
+            pt2 = ((x + w), (y + h))
             cv.Rectangle(self.out_im, 
                         pt1, 
                         pt2, 
@@ -120,33 +145,33 @@ class Guy(object):
                         3, 8, 0)# surrounds face   
         
             # Adds point in the center
-            pt3 = (int(self.x_center * face_params.image_scale), 
-                   int(self.y_center * face_params.image_scale))
+            pt3 = (self.x_center, self.y_center)
             cv.Line(self.out_im, 
                         pt3, 
                         pt3, 
                         cv.RGB(0, 255, 0), 
                         3, 8, 0)
     
-    def in_display(self, time):
+    def in_display(self, time=1000, im_x=640, im_y=480):
         """
         Displays the input image, for time ms.
         Setting time to 0 causes the image to remains open.
         """
-        cv.NamedWindow(self.name)
+        cv.NamedWindow(self.name, cv.CV_WINDOW_NORMAL)
+        cv.ResizeWindow(self.name, im_x, im_y) 
         cv.ShowImage(self.name, self.in_image)
         cv.WaitKey(time)    
         cv.DestroyWindow(self.name)
         
-    def out_display(self, face_params, time, debug=False):
+    def out_display(self, time=1000, im_x=640, im_y=480):
         """
         Displays the output image, for time ms.
         Setting time to 0 causes the image to remains open.
         Window name slightly changed to match output
         """
-        create_output(face_params, debug)
         win_name = self.name + " - out"
-        cv.NamedWindow(win_name)
+        cv.NamedWindow(win_name, cv.CV_WINDOW_NORMAL)
+        cv.ResizeWindow(win_name, im_x, im_y) 
         cv.ShowImage(win_name, self.out_im)
         cv.WaitKey(time)
         cv.DestroyWindow(win_name)
