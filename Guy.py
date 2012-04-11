@@ -176,13 +176,12 @@ class Guy(object):
         cv.WaitKey(time)
         cv.DestroyWindow(win_name)
 
-    def save_result(self, face_params, out_folder, ext, debug=False):
+    def save_result(self, x_size, y_size, x_point, y_point, out_folder, ext, debug=False):
         """
         Saves output image to the given format (given in extension)
         """
         # FIXME : face_params to be removed !
-        self.create_output(face_params, debug)
-        
+        self.create_video_output(x_size, y_size, x_point, y_point)
         # check that format is a string ? ?
         file_name = self.name + "." + ext
         out_name = os.path.join(out_folder, file_name)

@@ -25,12 +25,15 @@ class FaceMovie(object):
         self.guys = [] # List of pictures in source folder
         
         # Setting up some default parameters for Face Detection
-        self.face_params = FaceParams(self.params_source)
+        self.face_params = FaceParams(self.params_source)        
         
-        # PLacement of face wanted in the image in the end 
-        # Generic is center face = (1/2, 1/4)
-        self.x_ratio = 1.0/2
-        self.y_ratio = 1.0/4
+        # Position of the center in output images 
+        self.x_center = 0
+        self.y_center = 0
+
+        # minimum size needed on right of center
+        self.x_af = 0
+        self.y_af = 0
         
         # Needed minimum size of output image
         self.dim_x = 0
@@ -72,26 +75,21 @@ class FaceMovie(object):
     
     def find_out_dims(self):
         """
-        Aims at calculating which size of output image is needed to display 
-        outputs, knowing x and y desired ratios, and detected faces centers
+        Calculates best output image size and position depending on
+        faces found in guys.
         """
-        
         for a_guy in self.guys:
             if a_guy.has_face():
-                # Working on x                
-                x1 = (a_guy.x_center  / self.x_ratio) 
-                x2 = 1
-                #x2 = ((a_guy.in_x - a_guy.x_center) / (1 - self.x_ratio))
-                x_fin = int(max(x1, x2)) + 1 # for borders
-                if x_fin > self.dim_x:
-                    self.dim_x = x_fin
-                    
-                # Working on y
-                y1 = (a_guy.y_center / self.y_ratio) 
-                y2 = ((a_guy.in_y - a_guy.y_center) / (1 - self.y_ratio))
-                y_fin = int(max(y1, y2)) + 1 # for borders
-                if y_fin > self.dim_y:
-                    self.dim_y = y_fin
+                # update center
+                if a_guy.x_center > self.x_cen:
+                    self.x_cen = a_guy.x_center
+                if a_guy.y_center > self.y_cen:
+                    self.y_cen = a_guy.y_center
+                # update right part
+                if (a_guy.in_x - a_guy.x_center) > self.x_af:
+                    self.x_af = a_guy.in_x - a_guy.x_center
+                if (a_guy.in_y - a_guy.y_center) > self.y_af:
+                    self.y_af = a_guy.in_y - a_guy.y_center
                 
     # Informative functions
     def number_guys(self):
@@ -109,13 +107,16 @@ class FaceMovie(object):
         for a_guy in self.guys:
             a_guy.out_display(self.face_params, time, debug=debug)
 
-    def save_faces(self, out_folder, format="png", debug=True):
+    def save_faces(self, x_center, y_center, out_folder, format="png", debug=True):
         """
         Save all faces into out_folder, in the given format
         Debug is used to draw rectangles around found faces
         """
-        for a_guy in self.guys:
-                a_guy.save_result(self.face_params, 
+        for a_guy in self.guys: 
+                a_guy.save_result(self.dim_x, 
+                                  self.dim_y, 
+                                  x_center, 
+                                  y_center,
                                   out_folder, 
                                   format, 
                                   debug)    
@@ -129,9 +130,9 @@ class FaceMovie(object):
         Resize should be done somewhere else !
         """
         filename = os.path.join(out_folder, "output.avi")
-        fourcc = 0#-1
+        fourcc = -1#-1
         fps = 10 # should be less
-        frameSize = (self.guys[0].in_x, self.guys[0].in_y) 
+        frameSize = (self.dim_x, self.dim_y) 
         my_video = cv.CreateVideoWriter(filename, 
                                       fourcc, 
                                       fps, 
@@ -140,17 +141,22 @@ class FaceMovie(object):
         frame = cv.CreateImage(frameSize, 
                                cv.IPL_DEPTH_8U, 
                                3)
+        x_center = int(my_movie.dim_x * my_movie.x_ratio)
+        y_center = int(my_movie.dim_y * my_movie.y_ratio)
+    
         for a_guy in self.guys: 
             if a_guy.has_face():
-                a_guy.create_output(self.face_params, debug)
+                #a_guy.create_video_output(self.dim_x, self.dim_y, x_center, y_center)
                 cv.Resize(a_guy.out_im, frame)
                 cv.WriteFrame(my_video, frame)   
+                #a_guy.out_display(1000)
+                cv.WriteFrame(my_video, a_guy.out_im)   
 
 if __name__ == "__main__":
     # quick and dirty tests
     root_fo = "C:\Users\jll\perso\FaceMovie"
-    in_fo = os.path.join(root_fo, "input\Axel_tsts")
-    #in_fo = os.path.join(root_fo, "input\Axel")
+    #in_fo = os.path.join(root_fo, "input\Axel_tsts")
+    in_fo = os.path.join(root_fo, "input\Axel")
     out_fo = os.path.join(root_fo, "output")
     par_fo = os.path.join(root_fo, "haarcascades")
     
@@ -160,15 +166,14 @@ if __name__ == "__main__":
     # I want to know the size of the output frame, knowing initial conditions
     my_movie.find_out_dims()
 
-    x_center = int(my_movie.dim_x * my_movie.x_ratio)
-    y_center = int(my_movie.dim_y * my_movie.y_ratio)
-    for a_guy in my_movie.guys:
-        a_guy.create_debug_output()
-        #a_guy.create_video_output(my_movie.dim_x, my_movie.dim_y, x_center, y_center)
-        a_guy.out_display(000)
+    if 0:
+        for a_guy in my_movie.guys:
+            #a_guy.create_debug_output()
+            a_guy.create_video_output(my_movie.dim_x, my_movie.dim_y, x_center, y_center)
+            a_guy.out_display(1000)
     
     #my_movie.show_faces(2000)
-    #my_movie.save_faces("output", debug=True)
+    #my_movie.save_faces(x_center, y_center, "output", debug=True)
     #my_movie.save_movie("output", debug=True)
     
     print "Done !"
