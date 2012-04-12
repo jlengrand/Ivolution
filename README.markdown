@@ -2,7 +2,7 @@
 
 [FaceMovie](http://www.lengrand.fr) is a simple project that aims at helping you create videos of yourself over time, using photos as input.
 I see a growing interest for this kind of projects, where people take one picture of themselves a day for several months (years ?) and compile it into a video. 
-I started this project for a friend currently [travelling around the world](http://www.lengrand.fr). He wanted to create a video of its face changes along the trip.
+I started this project for a friend currently [travelling around the world](http://http://ungrandtour.blogspot.com/). He wanted to create a video of its face changes along the trip.
 
 The main idea is simple. The software takes a batch of images as input. The images are assumed to be named by date (so that an alphabetical order is also the chronological order).
 The output is a video containing each image, where the face is centered and always placed in the same position. This way, people can actually see the face change over time.
@@ -19,13 +19,16 @@ The output is a video containing each image, where the face is centered and alwa
 
 ## Libraries
 
-The language I used to create this piece of software is Python, simply because I love it :P (and because it allows easy testing while developing IP applications).
+This piece of code is developed in [Python](http://www.python.org/), simply because I love it :P (and because it allows easy testing while developing IP applications).
 I used Python 2.7 for development. 
-The only library needed to run the code for now is Opencv (and by extension Numpy). See the documentation for more information. 
+The only library needed to run the code for now is [Opencv](http://opencv.willowgarage.com/wiki/) (and by extension [Numpy](http://numpy.scipy.org/)). See [the documentation](http://opencv.willowgarage.com/wiki/InstallGuide) for more information. 
 
-This project is developed on a windows platform, but there should be no compatibility problems with UNIX. 
+This project is developed on a Windows (7) platform, but there should be no compatibility problems with UNIX. 
 
 ## License
+
+Not defined yet. Let's say thaat the code is public and that you can use it and modify it as you want. 
+What I simply would love is a short message (like "Thank you !" or "You rock !" :p) if you find the project useful. 
 
 ## Contact
 
