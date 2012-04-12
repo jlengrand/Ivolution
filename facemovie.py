@@ -81,16 +81,19 @@ class FaceMovie(object):
         for a_guy in self.guys:
             if a_guy.has_face():
                 # update center
-                if a_guy.x_center > self.x_cen:
-                    self.x_cen = a_guy.x_center
-                if a_guy.y_center > self.y_cen:
-                    self.y_cen = a_guy.y_center
+                if a_guy.x_center > self.x_center:
+                    self.x_center = a_guy.x_center
+                if a_guy.y_center > self.y_center:
+                    self.y_center = a_guy.y_center
                 # update right part
                 if (a_guy.in_x - a_guy.x_center) > self.x_af:
                     self.x_af = a_guy.in_x - a_guy.x_center
                 if (a_guy.in_y - a_guy.y_center) > self.y_af:
                     self.y_af = a_guy.in_y - a_guy.y_center
-                
+        
+        self.dim_x = self.x_af + self.x_center
+        self.dim_y = self.y_af + self.y_center
+        
     # Informative functions
     def number_guys(self):
         """
@@ -105,21 +108,22 @@ class FaceMovie(object):
         Several modes can be chosen to adapt the result.
         """
         for a_guy in self.guys:
-            a_guy.out_display(self.face_params, time, debug=debug)
+            if a_guy.has_face():
+                a_guy.create_video_output(self.dim_x, self.dim_y, self.x_center, self.y_center)
+                a_guy.out_display(time)
 
-    def save_faces(self, x_center, y_center, out_folder, format="png", debug=True):
+    def save_faces(self, out_folder, format="png", debug=True):
         """
         Save all faces into out_folder, in the given format
         Debug is used to draw rectangles around found faces
         """
         for a_guy in self.guys: 
-                a_guy.save_result(self.dim_x, 
-                                  self.dim_y, 
-                                  x_center, 
-                                  y_center,
-                                  out_folder, 
-                                  format, 
-                                  debug)    
+            if debug:
+                a_guy.create_debug_output()
+            else:
+                a_guy.create_video_output(self.dim_x, self.dim_y, self.x_center, self.y_center)
+
+            a_guy.save_result(out_folder, format)    
                           
     def save_movie(self, out_folder, debug=True):
         """
@@ -127,30 +131,34 @@ class FaceMovie(object):
         Guy is skipped if no face is found.
         
         TODO : No codec involved !
+        TODO : Can FPS be changed?
         Resize should be done somewhere else !
         """
         filename = os.path.join(out_folder, "output.avi")
-        fourcc = -1#-1
-        fps = 10 # should be less
+        fourcc = 0#-1
+        fps = 24 # not taken into account
         frameSize = (self.dim_x, self.dim_y) 
         my_video = cv.CreateVideoWriter(filename, 
                                       fourcc, 
                                       fps, 
                                       frameSize,
                                       1) 
-        frame = cv.CreateImage(frameSize, 
-                               cv.IPL_DEPTH_8U, 
-                               3)
-        x_center = int(my_movie.dim_x * my_movie.x_ratio)
-        y_center = int(my_movie.dim_y * my_movie.y_ratio)
+        if debug:
+            frame = cv.CreateImage(frameSize, 
+                                   cv.IPL_DEPTH_8U, 
+                                   3)
     
         for a_guy in self.guys: 
-            if a_guy.has_face():
-                #a_guy.create_video_output(self.dim_x, self.dim_y, x_center, y_center)
+            if debug:
+                a_guy.create_debug_output()
                 cv.Resize(a_guy.out_im, frame)
-                cv.WriteFrame(my_video, frame)   
-                #a_guy.out_display(1000)
-                cv.WriteFrame(my_video, a_guy.out_im)   
+                if a_guy.has_face():
+                    cv.WriteFrame(my_video, frame)                
+            else:
+                a_guy.create_video_output(self.dim_x, self.dim_y, self.x_center, self.y_center)
+                if a_guy.has_face():
+                    cv.WriteFrame(my_video, a_guy.out_im)
+               
 
 if __name__ == "__main__":
     # quick and dirty tests
@@ -166,15 +174,9 @@ if __name__ == "__main__":
     # I want to know the size of the output frame, knowing initial conditions
     my_movie.find_out_dims()
 
-    if 0:
-        for a_guy in my_movie.guys:
-            #a_guy.create_debug_output()
-            a_guy.create_video_output(my_movie.dim_x, my_movie.dim_y, x_center, y_center)
-            a_guy.out_display(1000)
-    
-    #my_movie.show_faces(2000)
-    #my_movie.save_faces(x_center, y_center, "output", debug=True)
-    #my_movie.save_movie("output", debug=True)
+    #my_movie.show_faces(1000)
+    #my_movie.save_faces("output", debug=False)
+    my_movie.save_movie("output", debug=False)
     
     print "Done !"
     

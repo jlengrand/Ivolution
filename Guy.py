@@ -115,7 +115,6 @@ class Guy(object):
         xtl = x_point - self.x_center
         ytl = y_point - self.y_center
         rect = (xtl, ytl, self.in_x, self.in_y)
-        print rect, x_size, y_size, x_point, y_point, self.x_center, self.y_center
         cv.SetImageROI(self.out_im, rect)
         
         cv.Copy(self.in_image, self.out_im)
@@ -176,12 +175,10 @@ class Guy(object):
         cv.WaitKey(time)
         cv.DestroyWindow(win_name)
 
-    def save_result(self, x_size, y_size, x_point, y_point, out_folder, ext, debug=False):
+    def save_result(self, out_folder, ext):
         """
         Saves output image to the given format (given in extension)
         """
-        # FIXME : face_params to be removed !
-        self.create_video_output(x_size, y_size, x_point, y_point)
         # check that format is a string ? ?
         file_name = self.name + "." + ext
         out_name = os.path.join(out_folder, file_name)
