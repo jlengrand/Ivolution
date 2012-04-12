@@ -93,13 +93,6 @@ class FaceMovie(object):
         
         self.dim_x = self.x_af + self.x_center
         self.dim_y = self.y_af + self.y_center
-        
-    # Informative functions
-    def number_guys(self):
-        """
-        Simply returns the number of guys in the current to-be movie
-        """    
-        return len(self.guys)
     
     def show_faces(self, time=1000, debug=True):
         """
@@ -112,9 +105,9 @@ class FaceMovie(object):
                 a_guy.create_video_output(self.dim_x, self.dim_y, self.x_center, self.y_center)
                 a_guy.out_display(time)
 
-    def save_faces(self, out_folder, format="png", debug=True):
+    def save_faces(self, out_folder, im_format="png", debug=True):
         """
-        Save all faces into out_folder, in the given format
+        Save all faces into out_folder, in the given image format
         Debug is used to draw rectangles around found faces
         """
         for a_guy in self.guys: 
@@ -123,7 +116,7 @@ class FaceMovie(object):
             else:
                 a_guy.create_video_output(self.dim_x, self.dim_y, self.x_center, self.y_center)
 
-            a_guy.save_result(out_folder, format)    
+            a_guy.save_result(out_folder, im_format)    
                           
     def save_movie(self, out_folder, debug=True):
         """
@@ -158,7 +151,12 @@ class FaceMovie(object):
                 a_guy.create_video_output(self.dim_x, self.dim_y, self.x_center, self.y_center)
                 if a_guy.has_face():
                     cv.WriteFrame(my_video, a_guy.out_im)
-               
+
+    def number_guys(self):
+        """
+        Simply returns the number of guys in the current to-be movie
+        """    
+        return len(self.guys)
 
 if __name__ == "__main__":
     # quick and dirty tests
@@ -178,5 +176,5 @@ if __name__ == "__main__":
     #my_movie.save_faces("output", debug=False)
     my_movie.save_movie("output", debug=False)
     
-    print "Done !"
+    print "Facemovie finished !"
     

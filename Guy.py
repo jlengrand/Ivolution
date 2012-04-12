@@ -25,8 +25,6 @@ class Guy(object):
 
         
         self.faces = [] # List of faces detected for this input 
-        # TODO: should eyes be tied to a precise face ?  
-        self.eyes = []  # List of eyes detected for this input 
         
         # Some operations on variables
         (self.in_x, self.in_y) = cv.GetSize(image) # image size in x, y
@@ -43,7 +41,8 @@ class Guy(object):
     def search_face(self, face_params):
         """
         Search on the picture for a face. 
-        Populates faces
+        Populates faces list. 
+        This function is the only one containing scaling information
         """
         # Allocate the temporary images
         gray = cv.CreateImage((self.in_x, self.in_y), 
@@ -82,11 +81,11 @@ class Guy(object):
         
         # sorting faces to keep only the most probable one
         self.sort_faces()
-        self.update_center() # finds centre of face in image
+        self.update_center() # finds center of face in image
         
     def sort_faces(self):
         """
-        sort faces by probability, most probable one first
+        sort faces by number of neighbours found, most probable one first
         """
         if self.has_face() : # needed ?
             self.faces.sort(key= lambda prob : prob[1], reverse=True)
@@ -96,7 +95,6 @@ class Guy(object):
     def update_center(self):
         """
         Using sorted faces, defines the new center of interest of the output image
-        TODO: Insert image scale in there, instead of multiplying everywhere
         """
         if self.has_face():
             ((x, y, w, h), n) = self.faces[0]
@@ -197,12 +195,4 @@ class Guy(object):
         Returns True if at least one face has been found
         """
         return (len(self.faces) > 0)
-
-if __name__ == "__main__":
-    # quick and dirty tests
-    name = "input/search.jpg"
-    im = cv.LoadImage(name)
-    my_guy = Guy(im, os.path.basename(name))
-    my_guy.in_display(0)
-    #my_guy.out_display(1000)
     
