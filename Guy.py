@@ -18,11 +18,14 @@ class Guy(object):
         '''
         self.in_x = None
         self.in_y = None
+
+        self.out_x = None
+        self.out_y = None
+        
         self.in_channels = image.nChannels
         self.name = image_id # Name of the picture used as input
         self.out_im = None
         self.in_image = None # input image
-
         
         self.faces = [] # List of faces detected for this input 
         
@@ -37,6 +40,14 @@ class Guy(object):
         # Creation of the images
         self.in_image = cv.CreateImage((self.in_x, self.in_y),cv.IPL_DEPTH_8U, self.in_channels)
         cv.Copy(image, self.in_image)
+
+        # defined for normalization
+        self.normalize = 0
+        self.norm_im = None
+        self.norm_x = None
+        self.norm_y = None
+        self.x_norm_center = 0
+        self.y_norm_center = 0
 
     def search_face(self, face_params):
         """
@@ -90,7 +101,7 @@ class Guy(object):
         if self.has_face() : # needed ?
             self.faces.sort(key= lambda prob : prob[1], reverse=True)
         else : 
-            print "Warning! No face found for %s" %(self.name)
+            self.faces = []
         
     def update_center(self):
         """
@@ -101,21 +112,61 @@ class Guy(object):
             self.x_center = x + w / 2
             self.y_center = y + h / 2
     
+    def normalize_face(self, reference):
+        """
+        Creates intermediate image, whose face fits reference size
+        """
+        #TODO: implement
+        self.normalize = 1
+        
+        ratio = reference / float(self.faces[0][0][3])
+        new_x = int(ratio * self.in_x)
+        new_y = int(ratio * self.in_y)
+            
+        print "reference : %d" %(reference)
+        print ratio
+        print "bef_f_size : %d" %(self.faces[0][0][3])
+        print "aft_f_size : %d" %(self.faces[0][0][3] * ratio)
+        print "bef_size : %d, %d " %(self.in_x, self.in_y)
+        print "af_size : %d, %d" %(new_x, new_y)
+        print "###"
+              
+        self.norm_im = cv.CreateImage((new_x, new_y),cv.IPL_DEPTH_8U, self.in_channels)
+        cv.Resize(self.in_image, self.norm_im)
+    
+        self.x_norm_center = int(ratio * self.x_center)
+        self.y_norm_center = int(ratio * self.y_center)
+
+        self.norm_x = new_x
+        self.norm_y = new_y
+    
     def create_video_output(self, x_size, y_size, x_point, y_point):
         """
         Creates image output, centering the face center with the required position
+        If eq_ratio is set to something different than one, input image is scaled
+        so that face/size = eq_ratio
         """
         self.out_im = cv.CreateImage((x_size, y_size),cv.IPL_DEPTH_8U, self.in_channels)
-        cv.Zero(self.out_im)
-        
+        cv.Zero(self.out_im)   
+
         # We want to place the input image so that the center of the face matches
-        # x_center and y_center
-        xtl = x_point - self.x_center
-        ytl = y_point - self.y_center
+        # x_center and y_center        
+        if self.normalize :          
+            xtl = x_point - self.x_norm_center
+            ytl = y_point - self.y_norm_center        
+        else:
+            xtl = x_point - self.x_center
+            ytl = y_point - self.y_center
+        
         rect = (xtl, ytl, self.in_x, self.in_y)
+        
         cv.SetImageROI(self.out_im, rect)
         
-        cv.Copy(self.in_image, self.out_im)
+        if self.normalize :          
+            cv.Copy(self.norm_im, self.out_im)
+        else:
+            cv.Copy(self.in_image, self.out_im)
+            
         cv.ResetImageROI(self.out_im) 
     
     def create_debug_output(self):
@@ -149,6 +200,10 @@ class Guy(object):
                         cv.RGB(0, 255, 0), 
                         3, 8, 0)
     
+            # updates out size
+            cv.GetSize
+            
+            
     def in_display(self, time=1000, im_x=640, im_y=480):
         """
         Displays the input image, for time ms.

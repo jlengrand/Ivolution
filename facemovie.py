@@ -72,53 +72,98 @@ class FaceMovie(object):
             a_guy.search_face(self.face_params)
             if a_guy.has_face(): # face(s) have been found
                 print "%d faces found for %s" % (a_guy.num_faces(), a_guy.name)
+            else:
+                print "Warning! No face found for %s" %(a_guy.name)
+    
+    def normalize_faces(self, reference=0):
+        """
+        Creates new images, normalized by face size
+        """
+        if reference == 0:
+            reference = self.guys[0].faces[0][0][3] # catch face size (width)
+            
+        for a_guy in self.guys:
+            if a_guy.has_face():
+                a_guy.normalize_face(reference)
     
     def find_out_dims(self):
         """
         Calculates best output image size and position depending on
         faces found in guys.
         """
+        # FIXME: badly done !
         for a_guy in self.guys:
             if a_guy.has_face():
+                if a_guy.normalize:
+                    print "======================"
+                    xc = a_guy.x_norm_center
+                    yc = a_guy.y_norm_center
+                    inx = a_guy.norm_x
+                    iny = a_guy.norm_y
+                else:
+                    xc = a_guy.x_center
+                    yc = a_guy.y_center
+                    inx = a_guy.in_x
+                    iny = a_guy.in_y
+                    
                 # update center
-                if a_guy.x_center > self.x_center:
-                    self.x_center = a_guy.x_center
-                if a_guy.y_center > self.y_center:
-                    self.y_center = a_guy.y_center
+                if xc > self.x_center:
+                    self.x_center = xc
+                if yc > self.y_center:
+                    self.y_center = yc
                 # update right part
-                if (a_guy.in_x - a_guy.x_center) > self.x_af:
-                    self.x_af = a_guy.in_x - a_guy.x_center
-                if (a_guy.in_y - a_guy.y_center) > self.y_af:
-                    self.y_af = a_guy.in_y - a_guy.y_center
+                if (inx - xc) > self.x_af:
+                    self.x_af = inx - xc
+                if (iny - yc) > self.y_af:
+                    self.y_af = iny - yc
         
         self.dim_x = self.x_af + self.x_center
         self.dim_y = self.y_af + self.y_center
     
-    def show_faces(self, time=1000, debug=True):
+    def show_faces(self, time=1000, equalize=True):
         """
         Show all faces that have been found for the guys.
-        The time for which each image will be diplayed can be chosen.
+        The time for which each image will be displayed can be chosen.
         Several modes can be chosen to adapt the result.
         """
+        prev_size = 0
         for a_guy in self.guys:
-            if a_guy.has_face():
-                a_guy.create_video_output(self.dim_x, self.dim_y, self.x_center, self.y_center)
+            if a_guy.has_face():     
+                a_guy.create_video_output(self.dim_x, 
+                                          self.dim_y, 
+                                          self.x_center, 
+                                          self.y_center, 
+                                          prev_size)
+                if equalize:
+                    prev_size = a_guy.faces[0][0][3]
                 a_guy.out_display(time)
 
-    def save_faces(self, out_folder, im_format="png", debug=True):
+    def show_debug(self, time=1000):
+        """
+        Show all faces that have been found for the guys, with a debug output.
+        The time for which each image will be displayed can be chosen.
+        Several modes can be chosen to adapt the result.
+        """    
+        for a_guy in self.guys:
+            if a_guy.has_face():
+                a_guy.create_debug_output()
+                a_guy.out_display(time)        
+
+    def save_faces(self, out_folder, im_format="png"):
         """
         Save all faces into out_folder, in the given image format
         Debug is used to draw rectangles around found faces
         """
         for a_guy in self.guys: 
-            if debug:
-                a_guy.create_debug_output()
-            else:
-                a_guy.create_video_output(self.dim_x, self.dim_y, self.x_center, self.y_center)
-
-            a_guy.save_result(out_folder, im_format)    
+            if a_guy.has_face():
+                print       self.dim_x, self.dim_y,self.x_center, self.y_center
+                a_guy.create_video_output(self.dim_x, 
+                                          self.dim_y, 
+                                          self.x_center, 
+                                          self.y_center)
+                a_guy.save_result(out_folder, im_format)    
                           
-    def save_movie(self, out_folder, debug=True):
+    def save_movie(self, out_folder, equalize=True):
         """
         Creates a movie with all faces found in the inputs.
         Guy is skipped if no face is found.
@@ -136,21 +181,17 @@ class FaceMovie(object):
                                       fps, 
                                       frameSize,
                                       1) 
-        if debug:
-            frame = cv.CreateImage(frameSize, 
-                                   cv.IPL_DEPTH_8U, 
-                                   3)
-    
+        prev_size = 0
         for a_guy in self.guys: 
-            if debug:
-                a_guy.create_debug_output()
-                cv.Resize(a_guy.out_im, frame)
-                if a_guy.has_face():
-                    cv.WriteFrame(my_video, frame)                
-            else:
-                a_guy.create_video_output(self.dim_x, self.dim_y, self.x_center, self.y_center)
-                if a_guy.has_face():
-                    cv.WriteFrame(my_video, a_guy.out_im)
+            if a_guy.has_face():
+                a_guy.create_video_output(self.dim_x, 
+                                          self.dim_y, 
+                                          self.x_center, 
+                                          self.y_center, 
+                                          prev_size)
+                if equalize:
+                    prev_size = a_guy.faces[0][0][3]
+                cv.WriteFrame(my_video, a_guy.out_im)
 
     def number_guys(self):
         """
@@ -162,7 +203,7 @@ if __name__ == "__main__":
     # quick and dirty tests
     root_fo = "C:\Users\jll\perso\FaceMovie"
     #in_fo = os.path.join(root_fo, "input\Axel_tsts")
-    in_fo = os.path.join(root_fo, "input\Axel")
+    in_fo = os.path.join(root_fo, "input\plouf")
     out_fo = os.path.join(root_fo, "output")
     par_fo = os.path.join(root_fo, "haarcascades")
     
@@ -172,9 +213,15 @@ if __name__ == "__main__":
     # I want to know the size of the output frame, knowing initial conditions
     my_movie.find_out_dims()
 
+    #for a_guy in my_movie.guys:
+    #    if a_guy.has_face:
+    #        try:
+    #            print a_guy.faces[0]
+    #        except IndexError:
+    #            print "Error"
     #my_movie.show_faces(1000)
-    #my_movie.save_faces("output", debug=False)
-    my_movie.save_movie("output", debug=False)
+    my_movie.save_faces("output")
+    #my_movie.save_movie("output")
     
     print "Facemovie finished !"
     
