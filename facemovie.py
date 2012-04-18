@@ -95,7 +95,6 @@ class FaceMovie(object):
         for a_guy in self.guys:
             if a_guy.has_face():
                 if a_guy.normalize:
-                    print "======================"
                     xc = a_guy.x_norm_center
                     yc = a_guy.y_norm_center
                     inx = a_guy.norm_x
@@ -119,35 +118,20 @@ class FaceMovie(object):
         
         self.dim_x = self.x_af + self.x_center
         self.dim_y = self.y_af + self.y_center
-    
+        
     def show_faces(self, time=1000, equalize=True):
         """
         Show all faces that have been found for the guys.
         The time for which each image will be displayed can be chosen.
         Several modes can be chosen to adapt the result.
         """
-        prev_size = 0
         for a_guy in self.guys:
             if a_guy.has_face():     
                 a_guy.create_video_output(self.dim_x, 
                                           self.dim_y, 
                                           self.x_center, 
-                                          self.y_center, 
-                                          prev_size)
-                if equalize:
-                    prev_size = a_guy.faces[0][0][3]
-                a_guy.out_display(time)
-
-    def show_debug(self, time=1000):
-        """
-        Show all faces that have been found for the guys, with a debug output.
-        The time for which each image will be displayed can be chosen.
-        Several modes can be chosen to adapt the result.
-        """    
-        for a_guy in self.guys:
-            if a_guy.has_face():
-                a_guy.create_debug_output()
-                a_guy.out_display(time)        
+                                          self.y_center)
+                a_guy.out_display(time)      
 
     def save_faces(self, out_folder, im_format="png"):
         """
@@ -156,7 +140,6 @@ class FaceMovie(object):
         """
         for a_guy in self.guys: 
             if a_guy.has_face():
-                print       self.dim_x, self.dim_y,self.x_center, self.y_center
                 a_guy.create_video_output(self.dim_x, 
                                           self.dim_y, 
                                           self.x_center, 
@@ -181,16 +164,12 @@ class FaceMovie(object):
                                       fps, 
                                       frameSize,
                                       1) 
-        prev_size = 0
         for a_guy in self.guys: 
             if a_guy.has_face():
                 a_guy.create_video_output(self.dim_x, 
                                           self.dim_y, 
                                           self.x_center, 
-                                          self.y_center, 
-                                          prev_size)
-                if equalize:
-                    prev_size = a_guy.faces[0][0][3]
+                                          self.y_center)
                 cv.WriteFrame(my_video, a_guy.out_im)
 
     def number_guys(self):
@@ -201,27 +180,22 @@ class FaceMovie(object):
 
 if __name__ == "__main__":
     # quick and dirty tests
-    root_fo = "C:\Users\jll\perso\FaceMovie"
+    root_fo = "C:\Users\jll\perso\workspace\FaceMovie"
     #in_fo = os.path.join(root_fo, "input\Axel_tsts")
-    in_fo = os.path.join(root_fo, "input\plouf")
+    in_fo = os.path.join(root_fo, "input\Axel")
     out_fo = os.path.join(root_fo, "output")
     par_fo = os.path.join(root_fo, "haarcascades")
     
     my_movie = FaceMovie(in_fo, out_fo, par_fo)
-    my_movie.list_guys()
-    my_movie.search_faces()
+    my_movie.list_guys() # find images in input folder
+    my_movie.search_faces() # search for images with faces
+    # I want to change images so that all faces have the same size
+    my_movie.normalize_faces() # sets all faces to the same size
     # I want to know the size of the output frame, knowing initial conditions
-    my_movie.find_out_dims()
+    my_movie.find_out_dims() # finds output minimal size to get all eyes in the same place
 
-    #for a_guy in my_movie.guys:
-    #    if a_guy.has_face:
-    #        try:
-    #            print a_guy.faces[0]
-    #        except IndexError:
-    #            print "Error"
     #my_movie.show_faces(1000)
-    my_movie.save_faces("output")
+    #my_movie.save_faces("output")
     #my_movie.save_movie("output")
     
     print "Facemovie finished !"
-    

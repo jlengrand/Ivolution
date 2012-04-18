@@ -116,30 +116,18 @@ class Guy(object):
         """
         Creates intermediate image, whose face fits reference size
         """
-        #TODO: implement
         self.normalize = 1
         
         ratio = reference / float(self.faces[0][0][3])
-        new_x = int(ratio * self.in_x)
-        new_y = int(ratio * self.in_y)
-            
-        print "reference : %d" %(reference)
-        print ratio
-        print "bef_f_size : %d" %(self.faces[0][0][3])
-        print "aft_f_size : %d" %(self.faces[0][0][3] * ratio)
-        print "bef_size : %d, %d " %(self.in_x, self.in_y)
-        print "af_size : %d, %d" %(new_x, new_y)
-        print "###"
-              
-        self.norm_im = cv.CreateImage((new_x, new_y),cv.IPL_DEPTH_8U, self.in_channels)
-        cv.Resize(self.in_image, self.norm_im)
-    
+        #defines the size of the image to have an equalized face
+        self.norm_x = int(ratio * self.in_x)
+        self.norm_y = int(ratio * self.in_y)
         self.x_norm_center = int(ratio * self.x_center)
         self.y_norm_center = int(ratio * self.y_center)
+      
+        self.norm_im = cv.CreateImage((self.norm_x, self.norm_y),cv.IPL_DEPTH_8U, self.in_channels)
+        cv.Resize(self.in_image, self.norm_im)
 
-        self.norm_x = new_x
-        self.norm_y = new_y
-    
     def create_video_output(self, x_size, y_size, x_point, y_point):
         """
         Creates image output, centering the face center with the required position
@@ -153,22 +141,25 @@ class Guy(object):
         # x_center and y_center        
         if self.normalize :          
             xtl = x_point - self.x_norm_center
-            ytl = y_point - self.y_norm_center        
+            ytl = y_point - self.y_norm_center
+            w = self.norm_x        
+            h = self.norm_y
         else:
             xtl = x_point - self.x_center
             ytl = y_point - self.y_center
-        
-        rect = (xtl, ytl, self.in_x, self.in_y)
-        
+            w = self.in_x
+            h = self.in_y
+            
+        rect = (xtl, ytl, w, h)
         cv.SetImageROI(self.out_im, rect)
         
-        if self.normalize :          
+        if self.normalize :
             cv.Copy(self.norm_im, self.out_im)
         else:
             cv.Copy(self.in_image, self.out_im)
             
         cv.ResetImageROI(self.out_im) 
-    
+
     def create_debug_output(self):
         """
         Creates output image
@@ -199,10 +190,6 @@ class Guy(object):
                         pt3, 
                         cv.RGB(0, 255, 0), 
                         3, 8, 0)
-    
-            # updates out size
-            cv.GetSize
-            
             
     def in_display(self, time=1000, im_x=640, im_y=480):
         """
