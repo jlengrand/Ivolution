@@ -156,20 +156,24 @@ class FaceMovie(object):
         Resize should be done somewhere else !
         """
         filename = os.path.join(out_folder, "output.avi")
-        fourcc = 0#-1
-        fps = 24 # not taken into account
-        frameSize = (self.dim_x, self.dim_y) 
+        fourcc = -1#0#-1
+        fps = 3 # not taken into account
+
+        frameSize = (self.dim_x, self.dim_y)     
         my_video = cv.CreateVideoWriter(filename, 
                                       fourcc, 
                                       fps, 
                                       frameSize,
-                                      1) 
-        for a_guy in self.guys: 
+                                      1)
+        ii = 0 
+        for a_guy in self.guys:
+            ii += 1 
             if a_guy.has_face():
+                print "frame %d" %(ii) 
                 a_guy.create_video_output(self.dim_x, 
                                           self.dim_y, 
                                           self.x_center, 
-                                          self.y_center)
+                                          self.y_center)         
                 cv.WriteFrame(my_video, a_guy.out_im)
 
     def number_guys(self):
@@ -196,6 +200,6 @@ if __name__ == "__main__":
     #choose your final step
     #my_movie.show_faces(1000)
     #my_movie.save_faces("output")
-    #my_movie.save_movie("output")
+    my_movie.save_movie("output")
     
     print "Facemovie finished !"

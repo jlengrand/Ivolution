@@ -154,6 +154,7 @@ class Guy(object):
         cv.SetImageROI(self.out_im, rect)
         
         if self.normalize :
+            print "###"
             cv.Copy(self.norm_im, self.out_im)
         else:
             cv.Copy(self.in_image, self.out_im)
