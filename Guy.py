@@ -219,7 +219,6 @@ class Guy(object):
         """
         Saves output image to the given format (given in extension)
         """
-        # check that format is a string ? ?
         file_name = self.name + "." + ext
         out_name = os.path.join(out_folder, file_name)
         print "Saving %s" %(out_name)

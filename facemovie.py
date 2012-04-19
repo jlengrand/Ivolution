@@ -181,7 +181,6 @@ class FaceMovie(object):
 if __name__ == "__main__":
     # quick and dirty tests
     root_fo = "C:\Users\jll\perso\workspace\FaceMovie"
-    #in_fo = os.path.join(root_fo, "input\Axel_tsts")
     in_fo = os.path.join(root_fo, "input\Axel")
     out_fo = os.path.join(root_fo, "output")
     par_fo = os.path.join(root_fo, "haarcascades")
@@ -194,6 +193,7 @@ if __name__ == "__main__":
     # I want to know the size of the output frame, knowing initial conditions
     my_movie.find_out_dims() # finds output minimal size to get all eyes in the same place
 
+    #choose your final step
     #my_movie.show_faces(1000)
     #my_movie.save_faces("output")
     #my_movie.save_movie("output")
