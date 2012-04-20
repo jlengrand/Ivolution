@@ -156,7 +156,7 @@ class FaceMovie(object):
         Resize should be done somewhere else !
         """
         filename = os.path.join(out_folder, "output.avi")
-        fourcc = -1#0#-1
+        fourcc = cv.CV_FOURCC('C', 'V', 'I', 'D')
         fps = 3 # not taken into account
 
         frameSize = (self.dim_x, self.dim_y)     
