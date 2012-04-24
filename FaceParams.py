@@ -10,13 +10,44 @@ class FaceParams(object):
     '''
     Simple class used to store parameters used for Face detection
     '''
-    def __init__(self, xml_folder, i_scale=2, h_scale=1.2, h_flags=0, mn=2):
+    def __init__(self, xml_folder, training_type, i_scale=2, h_scale=1.2, h_flags=0, mn=2):
         '''
         Constructor
         '''
+        # Creates dictionary for all types of training files
+        # some of them shall never be used. Perhaps would it be good to lower the dict size, or hide some of them
+        training_types = {#eyes
+                          'eyes':"haarcascade_eye", 
+                          'glasses':"haarcascade_eye_tree_eyeglasses",
+                          'left eye splits':"haarcascade_lefteye_2splits",
+                          'eye pair big':"haarcascade_mcs_eyepair_big",
+                          'eye pair small':"haarcascade_mcs_eyepair_small",
+                          'left eye':"haarcascade_mcs_lefteye",
+                          'right eye':"haarcascade_mcs_righteye",
+                          'right eye splits':"haarcascade_righteye_2splits",
+                          # frontal faces
+                          'frontal face alt':"haarcascade_frontalface_alt", 
+                          'frontal face alt2':"haarcascade_frontalface_alt2", 
+                          'frontal face':"haarcascade_frontalface_default", 
+                          #profile face
+                          'profile face':"haarcascade_profileface", 
+                          #body
+                          'full body':"haarcascade_fullbody", 
+                          'lower body':"haarcascade_lowerbody", 
+                          'upper body mcs':"haarcascade_mcs_upperbody", 
+                          'upper body':"haarcascade_upperbody", 
+                          #ear
+                          'left ear':"haarcascade_mcs_leftear", 
+                          'right ear':"haarcascade_mcs_rightear", 
+                          #mouth
+                          'mouth':"haarcascade_mcs_mouth",
+                          #nose
+                          'nose':"haarcascade_mcs_nose"
+                          }
+        # postpend .xml
+        cascade_name = training_types[training_type] + ".xml"
         # Setting up some default parameters for Face Detection
-        self.face_cascade = cv.Load(os.path.join(xml_folder, "haarcascade_frontalface_alt.xml"))
-        self.eye_cascade = cv.Load(os.path.join(xml_folder, "haarcascade_eye.xml"))
+        self.face_cascade = cv.Load(os.path.join(xml_folder, cascade_name))
 
         # To be defined more precisely
         self.min_size = (20,20)

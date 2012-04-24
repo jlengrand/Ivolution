@@ -25,7 +25,8 @@ class FaceMovie(object):
         self.guys = [] # List of pictures in source folder
         
         # Setting up some default parameters for Face Detection
-        self.face_params = FaceParams(self.params_source)        
+        training_type = "frontal face alt"
+        self.face_params = FaceParams(self.params_source, training_type)        
         
         # Position of the center in output images 
         self.x_center = 0

@@ -15,7 +15,7 @@ if __name__ == '__main__':
         in_fo = raw_input("indicate input folder:")
         out_fo = raw_input("indicate output folder:")
         par_fo = raw_input("indicate parameters folder:")
-    elif len(sys.argv) == 2:
+    elif len(sys.argv) == 4:
         print "I trust your inputs!"
         [in_fo, out_fo, par_fo] = sys.argv[1, :]
     else :
