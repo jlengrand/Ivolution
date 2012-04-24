@@ -30,8 +30,7 @@ This project is developed on a Windows (7) platform, but there should (and, as a
 
 ## License
 
-Not defined yet. Let's say that the code is public and that you can use it and modify it as you want. 
-I would simply love is a short message (like "Thank you !" or "You rock !" :p) if you find the project useful. 
+This project is released under the new BSD license (3 clause version). You can read more about the license in the LICENSE file. 
 
 ## Contact
 
