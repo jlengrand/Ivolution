@@ -23,6 +23,8 @@ class Facemoviefier():
         #inits Command Line Parser
         self.args = self.initCLParser()
         print self.args
+        print self.args['equalize']
+        
         # par folder should be known (contained somewhere in the installation)
         root_fo = "C:\Users\jll\perso\workspace\FaceMovie"
         par_fo = os.path.join(root_fo, "facemovie/haarcascades")
@@ -41,6 +43,13 @@ class Facemoviefier():
         parser.add_argument('-i', '--input',  help='Input folder of the images', required=True)
         # output folder
         parser.add_argument('-o', '--output', help='Output folder to save the results', required=True)
+        # equalize faces or not ? 
+        parser.add_argument('-e', 
+                            '--equalize', 
+                            help='If this option is activated, images are resized so that all faces have the same size', 
+                            action='store_true', 
+                            default=True)
+        
         
         args = vars(parser.parse_args())
 
@@ -53,45 +62,18 @@ class Facemoviefier():
         self.facemovie.list_guys() # find images in input folder
         self.facemovie.search_faces() # search for images with faces
         # I want to change images so that all faces have the same size
-        self.facemovie.normalize_faces() # sets all faces to the same size
+        if self.args['equalize']:
+            self.facemovie.normalize_faces() # sets all faces to the same size
         # I want to know the size of the output frame, knowing initial conditions
         self.facemovie.find_out_dims() # finds output minimal size to get all eyes in the same place
 
         #choose your final step
         #self.facemovie.show_faces(1000)
-        #self.facemovie.save_faces(self.args['output'])
-        self.facemovie.save_movie(self.args['output'])        
+        self.facemovie.save_faces(self.args['output'])
+        #self.facemovie.save_movie(self.args['output'])        
 
 
 if __name__ == '__main__':
-    print sys.argv
-    #We need input_folder, output_folder, param_folder for now
-    """
-    if len(sys.argv) == 4:
-        print "I trust your inputs!"
-        [in_fo, out_fo, par_fo] = sys.argv[1, :]
-    else :
-        print "Chosen automatic way!"
-        root_fo = "C:\Users\jll\perso\workspace\FaceMovie"
-        in_fo = os.path.join(root_fo, "data/input\Axel")
-        out_fo = os.path.join(root_fo, "data/output")
-        par_fo = os.path.join(root_fo, "facemovie/haarcascades")
-    """
-    
     my_job = Facemoviefier()
     my_job.run()
-    """
-    my_movie = Facemovie.FaceMovie(in_fo, out_fo, par_fo)
-    my_movie.list_guys() # find images in input folder
-    my_movie.search_faces() # search for images with faces
-    # I want to change images so that all faces have the same size
-    my_movie.normalize_faces() # sets all faces to the same size
-    # I want to know the size of the output frame, knowing initial conditions
-    my_movie.find_out_dims() # finds output minimal size to get all eyes in the same place
-
-    #choose your final step
-    #my_movie.show_faces(1000)
-    #my_movie.save_faces("output")
-    my_movie.save_movie("output")
-    """
     print "Facemovie finished !"
