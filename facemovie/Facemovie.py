@@ -17,19 +17,17 @@ class FaceMovie(object):
     Contains the core image processing functions.
     Supports the communication layer with the end user interface.
     '''
-    def __init__(self, in_folder, out_folder, param_folder):
+    def __init__(self, in_folder, out_folder, face_params):
         '''
         Constructor
         '''
         self.source= in_folder # Source folder for pictures
         self.out = out_folder # Folder to save outputs
-        self.params_source = param_folder # Folder in which xml files can be found
         
         self.guys = [] # List of pictures in source folder
         
-        # Setting up some default parameters for Face Detection
-        training_type = "frontal face alt"
-        self.face_params = FaceParams(self.params_source, training_type)        
+        # Retrieving parameters for Face Detection
+        self.face_params = face_params
         
         # Position of the center in output images 
         self.x_center = 0
