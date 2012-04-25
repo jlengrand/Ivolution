@@ -23,7 +23,6 @@ class Facemoviefier():
         #inits Command Line Parser
         self.args = self.initCLParser()
         print self.args
-        print self.args['equalize']
         
         # par folder should be known (contained somewhere in the installation)
         root_fo = "C:\Users\jll\perso\workspace\FaceMovie"
@@ -50,7 +49,13 @@ class Facemoviefier():
                             action='store_true', 
                             default=True)
         
-        
+        # type of output wanted (image, video, show)
+        parser.add_argument('-t', 
+                            '--type', 
+                            choices='vis',
+                            help='Selects the kind of output desired. Valid choices are v (video), i (images), s (show)', 
+                            default='v')        
+                
         args = vars(parser.parse_args())
 
         return args
@@ -68,9 +73,12 @@ class Facemoviefier():
         self.facemovie.find_out_dims() # finds output minimal size to get all eyes in the same place
 
         #choose your final step
-        #self.facemovie.show_faces(1000)
-        self.facemovie.save_faces(self.args['output'])
-        #self.facemovie.save_movie(self.args['output'])        
+        if self.args[type] == 's':
+            self.facemovie.show_faces(1000)
+        elif self.args[type] == 'i':
+            self.facemovie.save_faces(self.args['output'])
+        elif self.args[type] == 'v':
+            self.facemovie.save_movie(self.args['output'])        
 
 
 if __name__ == '__main__':
