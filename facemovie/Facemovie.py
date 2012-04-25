@@ -3,8 +3,11 @@ Created on 27 mars 2012
 
 @author: jll
 '''
-import cv
 import os
+import sys
+
+import cv
+
 import Guy
 from FaceParams import FaceParams
 

@@ -16,7 +16,7 @@ class FaceParams(object):
         '''
         # Creates dictionary for all types of training files
         # some of them shall never be used. Perhaps would it be good to lower the dict size, or hide some of them
-        training_types = {#eyes
+        self.training_types = {#eyes
                           'eyes':"haarcascade_eye", 
                           'glasses':"haarcascade_eye_tree_eyeglasses",
                           'left eye splits':"haarcascade_lefteye_2splits",
@@ -45,7 +45,7 @@ class FaceParams(object):
                           'nose':"haarcascade_mcs_nose"
                           }
         # postpend .xml
-        cascade_name = training_types[training_type] + ".xml"
+        cascade_name = self.training_types[training_type] + ".xml"
         # Setting up some default parameters for Face Detection
         self.face_cascade = cv.Load(os.path.join(xml_folder, cascade_name))
 
@@ -69,3 +69,13 @@ class FaceParams(object):
         print "Number of Haar flags: %d" % (self.haar_flags)
         print "Minimum number of neighbors: %d" % (self.min_neighbors)
         print "---------"
+        
+    def get_types(self):
+        """
+        Lists all possible types for training files
+        Returns list of string
+        """
+        types = []
+        for key, val in self.training_types.iteritems():
+            types.append(key)
+        return types
