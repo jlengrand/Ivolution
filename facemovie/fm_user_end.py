@@ -11,15 +11,14 @@ import argparse
 
 import Facemovie
 import FaceParams
+import training_types
 
 class Facemoviefier():
     """
     Class defining the interactions with the end user.
     Should be used as point of entry for all end users.
     """
-    
     def __init__(self):
-        
         #inits Command Line Parser
         self.args = self.initCLParser()
         print self.args
@@ -27,7 +26,7 @@ class Facemoviefier():
         # par folder should be known (contained somewhere in the installation)
         root_fo = "C:\Users\jll\perso\workspace\FaceMovie"
         par_fo = os.path.join(root_fo, "facemovie/haarcascades")
-        self.face_params = FaceParams.FaceParams(par_fo, "frontal face alt")    
+        self.face_params = FaceParams.FaceParams(par_fo, self.args['param'])    
         
         self.facemovie = Facemovie.FaceMovie(self.args['input'], self.args['output'], self.face_params)
 
@@ -55,7 +54,16 @@ class Facemoviefier():
                             choices='vis',
                             help='Selects the kind of output desired. Valid choices are v (video), i (images), s (show)', 
                             default='v')        
-                
+        
+        # TODO: Integrate face params file choice, with list of possibilities.
+        parser.add_argument('-p', 
+                            '--param', 
+                            choices=training_types.simple_set,
+                            help='Choose the desired file for training the recognition phaze. Should be chosen depending on the face presentation (profile, whole body, ...)', 
+                            default='frontal face alt')        
+        
+        
+        
         args = vars(parser.parse_args())
 
         return args
@@ -79,7 +87,6 @@ class Facemoviefier():
             self.facemovie.save_faces(self.args['output'])
         elif self.arg['type'] == 'v':
             self.facemovie.save_movie(self.args['output'])        
-
 
 if __name__ == '__main__':
     my_job = Facemoviefier()
