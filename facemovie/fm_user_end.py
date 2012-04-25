@@ -91,4 +91,4 @@ class Facemoviefier():
 if __name__ == '__main__':
     my_job = Facemoviefier()
     my_job.run()
-    print "Facemovie finished !"
+    print "Facemovie finished finally !"
