@@ -1,4 +1,4 @@
 *.pyc
-output/*
+data/output/*
 build
 dist
