@@ -24,8 +24,7 @@ class Facemoviefier():
         print self.args
         
         # par folder should be known (contained somewhere in the installation)
-        root_fo = "C:\Users\jll\perso\workspace\FaceMovie"
-        par_fo = os.path.join(root_fo, "facemovie/haarcascades")
+        par_fo = os.path.join(self.args['root'], "haarcascades")
         self.face_params = FaceParams.FaceParams(par_fo, self.args['param'])    
         
         self.facemovie = Facemovie.FaceMovie(self.args['input'], self.args['output'], self.face_params)
@@ -41,18 +40,22 @@ class Facemoviefier():
         parser.add_argument('-i', '--input',  help='Input folder of the images', required=True)
         # output folder
         parser.add_argument('-o', '--output', help='Output folder to save the results', required=True)
+        
+        # root folder
+        parser.add_argument('-r', '--root', help='Root folder where the application is placed', default=".")
+        
         # equalize faces or not ? 
         parser.add_argument('-e', 
                             '--equalize', 
-                            help='If this option is activated, images are resized so that all faces have the same size', 
-                            action='store_true', 
+                            help='If this option is activated, images will NOT be resized so that all faces have the same size', 
+                            action='store_false', 
                             default=True)
         
         # type of output wanted (image, video, show)
         parser.add_argument('-t', 
                             '--type', 
                             choices='vis',
-                            help='Selects the kind of output desired. Valid choices are v (video), i (images), s (show)', 
+                            help='Selects the kind of output desired. Valid choices are v (video), i (images), s (show). Default is video', 
                             default='v')        
         
         # TODO: Integrate face params file choice, with list of possibilities.

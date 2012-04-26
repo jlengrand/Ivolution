@@ -1,4 +1,4 @@
-#Take on picture of yourself a day, simply get the results!
+#Take one picture of yourself a day, simply get the results!
 
 
 **[FaceMovie](http://www.youtube.com/watch?v=JueOY7EtXrQ)** is a simple project that aims at helping you create videos of yourself over time, using photos as input.
@@ -19,6 +19,67 @@ The output is a video containing each image, where the face is always placed in 
 - Any other idea is welcome
 
 ## Getting started
+
+
+I have just started searching for a nice way to package the application in a single executable, which means if you want to test Facemovie you will have to directly run the code in the development branch.
+
+In this part, I will thus consider that you have Python 2.7 and OpenCV (and of course its Python bindings) installed on your machine. 
+To get the last version of Facemovie, simply clone the project from Github 
+```
+git clone git://github.com/jlengrand/FaceMovie.git
+```
+
+You will also need to have a bunch of photos of your face stored in a folder. Those images should contain only one person; and you should try to always keep the same angle with the camera.
+If you dont, some samples are included in the project (placed in data/input/Axel)
+
+Since version 0.4, Facemovie supports user interaction through the Facemovifier. That means that you should be able to run the application without modifying it.
+If you are like me, you ight want to start by calling the helper : 
+```
+$ python Facemoviefier -h
+```
+ which will list the available parameters in the application. 
+
+The simplest example you can run would be :
+```
+$ python Facemoviefier -i input_folder -o output_folder
+```
+, where input_folder and output_folder are strings.
+If you place yourself in the facemovie folder and run the application from here, this line should work :
+```
+$ python Facemoviefier -i "../data/input/Axel" -o "../data/output"
+```
+
+If you decide to run the Facemovifier from another location, you should update the folders accordingly, and use the root_folder option:
+```
+$ python Facemoviefier -i input_folder -o output_folder -r facemovie_folder_location
+```
+
+You might want to save images instead of a movie as output:
+```
+$ python Facemoviefier -i "../data/input/Axel" -o "../data/output" -t i
+```
+
+And if you have profile images, you can (must) also decide to change the file used for training the classifier:
+```
+$ python Facemoviefier -i "../data/input/Axel" -o "../data/output" -p "profile face"
+```
+An extensive list of training files is available while calling the helper.
+
+### Options available in the Facemoviefier
+
+**Required :**
+
+- -i, --input : 	Input folder of the images to be processed
+- -o, --output : 	Output folder where the final results will be saved
+
+**Optional :**
+
+- -h, --help :	Shows help message and exits
+- -r, --root : 	Location of the facemovie folder. Required if you run the Facemovifier from an external location
+- -e, --equalize : If this option is activated, images will NOT be resized so that all faces have the same size.
+- -p, --param:	Used to change the file used to train the classifier. Useful you want to detect something else than front faces.
+- -t, --type :	The type of output to be created. Can be either images, video or simple display (nothing written on disc).
+
 
 ## Libraries
 
