@@ -8,6 +8,8 @@ import os
 from context import facemovie
 from facemovie.Facemovie import FaceMovie
 
+import facemovie.training_types
+
 if __name__ == '__main__':
     root_fo = "C:\Users\jll\perso\workspace\FaceMovie"
     in_fo = os.path.join(root_fo, "data/input\Axel")
@@ -16,9 +18,6 @@ if __name__ == '__main__':
     
     my_movie = FaceMovie(in_fo, out_fo, par_fo)
     my_movie.list_guys() # find images in input folder
-    
-    # listing training files
-    print my_movie.face_params.get_types()
     
     #my_movie.search_faces() # search for images with faces
     # I want to change images so that all faces have the same size

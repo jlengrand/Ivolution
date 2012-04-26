@@ -44,13 +44,3 @@ class FaceParams(object):
         print "Number of Haar flags: %d" % (self.haar_flags)
         print "Minimum number of neighbors: %d" % (self.min_neighbors)
         print "---------"
-        
-    def get_types(self):
-        """
-        Lists all possible types for training files
-        Returns list of string
-        """
-        types = []
-        for key, val in self.training_types.iteritems():
-            types.append(key)
-        return types
