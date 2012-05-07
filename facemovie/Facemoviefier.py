@@ -6,7 +6,6 @@ Created on 29 mars 2012
 
 # This file should never be imported anywhere
 import os
-import sys
 import argparse
 
 import Facemovie
