@@ -96,16 +96,10 @@ class FaceMovie(object):
         # FIXME: badly done !
         for a_guy in self.guys:
             if a_guy.has_face():
-                if a_guy.normalize:
-                    xc = a_guy.x_norm_center
-                    yc = a_guy.y_norm_center
-                    inx = a_guy.norm_x
-                    iny = a_guy.norm_y
-                else:
-                    xc = a_guy.x_center
-                    yc = a_guy.y_center
-                    inx = a_guy.in_x
-                    iny = a_guy.in_y
+                xc = a_guy.x_center
+                yc = a_guy.y_center
+                inx = a_guy.in_x
+                iny = a_guy.in_y
                     
                 # update center
                 if xc > self.x_center:

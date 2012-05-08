@@ -41,14 +41,6 @@ class Guy(object):
         self.in_image = cv.CreateImage((self.in_x, self.in_y),cv.IPL_DEPTH_8U, self.in_channels)
         cv.Copy(image, self.in_image)
 
-        # defined for normalization
-        self.normalize = 0
-        self.norm_im = None
-        self.norm_x = None
-        self.norm_y = None
-        self.x_norm_center = 0
-        self.y_norm_center = 0
-
     def search_face(self, face_params):
         """
         Search on the picture for a face. 
@@ -94,6 +86,9 @@ class Guy(object):
         self.sort_faces()
         self.update_center() # finds center of face in image
         
+        del gray
+        del smallImage
+        
     def sort_faces(self):
         """
         sort faces by number of neighbours found, most probable one first
@@ -120,13 +115,17 @@ class Guy(object):
         
         ratio = reference / float(self.faces[0][0][3])
         #defines the size of the image to have an equalized face
-        self.norm_x = int(ratio * self.in_x)
-        self.norm_y = int(ratio * self.in_y)
-        self.x_norm_center = int(ratio * self.x_center)
-        self.y_norm_center = int(ratio * self.y_center)
+        norm_x = int(ratio * self.in_x)
+        norm_y = int(ratio * self.in_y)
       
-        self.norm_im = cv.CreateImage((self.norm_x, self.norm_y),cv.IPL_DEPTH_8U, self.in_channels)
-        cv.Resize(self.in_image, self.norm_im)
+        norm_im = cv.CreateImage((norm_x, norm_y),cv.IPL_DEPTH_8U, self.in_channels)
+        cv.Resize(self.in_image, norm_im)
+        self.in_image = norm_im # overriding in_image
+        # updates center
+        self.in_x = norm_x
+        self.in_y = norm_y
+        self.x_center = self.in_x / 2
+        self.y_center = self.in_y / 2
 
     def create_video_output(self, x_size, y_size, x_point, y_point):
         """
@@ -139,25 +138,15 @@ class Guy(object):
 
         # We want to place the input image so that the center of the face matches
         # x_center and y_center        
-        if self.normalize :          
-            xtl = x_point - self.x_norm_center
-            ytl = y_point - self.y_norm_center
-            w = self.norm_x        
-            h = self.norm_y
-        else:
-            xtl = x_point - self.x_center
-            ytl = y_point - self.y_center
-            w = self.in_x
-            h = self.in_y
+        xtl = x_point - self.x_center
+        ytl = y_point - self.y_center
+        w = self.in_x
+        h = self.in_y
             
         rect = (xtl, ytl, w, h)
         cv.SetImageROI(self.out_im, rect)
         
-        if self.normalize :
-            print "###"
-            cv.Copy(self.norm_im, self.out_im)
-        else:
-            cv.Copy(self.in_image, self.out_im)
+        cv.Copy(self.in_image, self.out_im)
             
         cv.ResetImageROI(self.out_im) 
 
