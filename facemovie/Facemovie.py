@@ -115,7 +115,7 @@ class FaceMovie(object):
         self.dim_x = self.x_af + self.x_center
         self.dim_y = self.y_af + self.y_center
         
-    def show_faces(self, time=1000, equalize=True):
+    def show_faces(self, mytime=1000, equalize=True):
         """
         Show all faces that have been found for the guys.
         The time for which each image will be displayed can be chosen.
@@ -123,11 +123,11 @@ class FaceMovie(object):
         """
         for a_guy in self.guys:
             if a_guy.has_face():     
-                a_guy.create_video_output(self.dim_x, 
+                out_im = a_guy.create_video_output(self.dim_x, 
                                           self.dim_y, 
                                           self.x_center, 
                                           self.y_center)
-                a_guy.out_display(time)      
+                self.out_display(out_im, a_guy.name, time=mytime)      
 
     def save_faces(self, out_folder, im_format="png"):
         """
@@ -136,11 +136,11 @@ class FaceMovie(object):
         """
         for a_guy in self.guys: 
             if a_guy.has_face():
-                a_guy.create_video_output(self.dim_x, 
+                out_im = a_guy.create_video_output(self.dim_x, 
                                           self.dim_y, 
                                           self.x_center, 
                                           self.y_center)
-                a_guy.save_result(out_folder, im_format)    
+                self.save_result(out_im, a_guy.name, out_folder, im_format)    
                           
     def save_movie(self, out_folder, equalize=True):
         """
@@ -166,14 +166,37 @@ class FaceMovie(object):
             ii += 1 
             if a_guy.has_face():
                 print "frame %d" %(ii) 
-                a_guy.create_video_output(self.dim_x, 
+                out_im = a_guy.create_video_output(self.dim_x, 
                                           self.dim_y, 
                                           self.x_center, 
                                           self.y_center)         
-                cv.WriteFrame(my_video, a_guy.out_im)
+                cv.WriteFrame(my_video, out_im)
 
     def number_guys(self):
         """
         Simply returns the number of guys in the current to-be movie
         """    
         return len(self.guys)
+    
+    def out_display(self, im, name, time=1000, im_x=640, im_y=480):
+        """
+        Displays the output image, for time ms.
+        Setting time to 0 causes the image to remains open.
+        Window name slightly changed to match output
+        """
+        win_name = name + " - out"
+        cv.NamedWindow(win_name, cv.CV_WINDOW_NORMAL)
+        cv.ResizeWindow(win_name, im_x, im_y) 
+        cv.ShowImage(win_name, im)
+        cv.WaitKey(time)
+        cv.DestroyWindow(win_name)
+        
+    def save_result(self, im, name, out_folder, ext):
+        """
+        Saves output image to the given format (given in extension)
+        """
+        file_name = name + "." + ext
+        out_name = os.path.join(out_folder, file_name)
+        print "Saving %s" %(out_name)
+        
+        cv.SaveImage(out_name, im)

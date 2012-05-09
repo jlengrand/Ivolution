@@ -18,13 +18,9 @@ class Guy(object):
         '''
         self.in_x = None
         self.in_y = None
-
-        self.out_x = None
-        self.out_y = None
         
         self.in_channels = image.nChannels
         self.name = image_id # Name of the picture used as input
-        self.out_im = None
         self.in_image = None # input image
         
         self.faces = [] # List of faces detected for this input 
@@ -133,8 +129,8 @@ class Guy(object):
         If eq_ratio is set to something different than one, input image is scaled
         so that face/size = eq_ratio
         """
-        self.out_im = cv.CreateImage((x_size, y_size),cv.IPL_DEPTH_8U, self.in_channels)
-        cv.Zero(self.out_im)   
+        out_im = cv.CreateImage((x_size, y_size),cv.IPL_DEPTH_8U, self.in_channels)
+        cv.Zero(out_im)   
 
         # We want to place the input image so that the center of the face matches
         # x_center and y_center        
@@ -144,22 +140,23 @@ class Guy(object):
         h = self.in_y
             
         rect = (xtl, ytl, w, h)
-        cv.SetImageROI(self.out_im, rect)
-        
-        cv.Copy(self.in_image, self.out_im)
-            
-        cv.ResetImageROI(self.out_im) 
+        cv.SetImageROI(out_im, rect)
+        cv.Copy(self.in_image, out_im)
+        cv.ResetImageROI(out_im) 
+
+        return out_im
 
     def create_debug_output(self):
         """
+        NOT FUNCTIONAL ANY MORE
         Creates output image
         If debug is set to true, output image is the input image with a red
         box around the most probable face.
         """
-        self.out_im = cv.CreateImage((self.in_x, self.in_y),cv.IPL_DEPTH_8U, self.in_channels)
-        cv.Zero(self.out_im) # put everything to 0
+        out_im = cv.CreateImage((self.in_x, self.in_y),cv.IPL_DEPTH_8U, self.in_channels)
+        cv.Zero(out_im) # put everything to 0
         
-        cv.Copy(self.in_image, self.out_im)
+        cv.Copy(self.in_image, out_im)
         if self.has_face():
             # some nice drawings
             ((x, y, w, h), n) = self.faces[0]
@@ -167,7 +164,7 @@ class Guy(object):
             # bounding box of each face and convert it to two CvPoints
             pt1 = (x, y)
             pt2 = ((x + w), (y + h))
-            cv.Rectangle(self.out_im, 
+            cv.Rectangle(out_im, 
                         pt1, 
                         pt2, 
                         cv.RGB(255, 0, 0), 
@@ -175,11 +172,12 @@ class Guy(object):
         
             # Adds point in the center
             pt3 = (self.x_center, self.y_center)
-            cv.Line(self.out_im, 
+            cv.Line(out_im, 
                         pt3, 
                         pt3, 
                         cv.RGB(0, 255, 0), 
                         3, 8, 0)
+        return out_im
             
     def in_display(self, time=1000, im_x=640, im_y=480):
         """
@@ -191,29 +189,6 @@ class Guy(object):
         cv.ShowImage(self.name, self.in_image)
         cv.WaitKey(time)    
         cv.DestroyWindow(self.name)
-        
-    def out_display(self, time=1000, im_x=640, im_y=480):
-        """
-        Displays the output image, for time ms.
-        Setting time to 0 causes the image to remains open.
-        Window name slightly changed to match output
-        """
-        win_name = self.name + " - out"
-        cv.NamedWindow(win_name, cv.CV_WINDOW_NORMAL)
-        cv.ResizeWindow(win_name, im_x, im_y) 
-        cv.ShowImage(win_name, self.out_im)
-        cv.WaitKey(time)
-        cv.DestroyWindow(win_name)
-
-    def save_result(self, out_folder, ext):
-        """
-        Saves output image to the given format (given in extension)
-        """
-        file_name = self.name + "." + ext
-        out_name = os.path.join(out_folder, file_name)
-        print "Saving %s" %(out_name)
-        
-        cv.SaveImage(out_name, self.out_im)
 
     def num_faces(self):
         """
