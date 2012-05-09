@@ -87,7 +87,7 @@ class Facemoviefier():
             self.facemovie.show_faces(1000)
         elif self.args['type'] == 'i':
             self.facemovie.save_faces(self.args['output'])
-        elif self.arg['type'] == 'v':
+        elif self.args['type'] == 'v':
             self.facemovie.save_movie(self.args['output'])        
 
 if __name__ == '__main__':
