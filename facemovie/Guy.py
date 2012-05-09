@@ -124,8 +124,8 @@ class Guy(object):
         # updates center
         self.in_x = norm_x
         self.in_y = norm_y
-        self.x_center = self.in_x / 2
-        self.y_center = self.in_y / 2
+        self.x_center = int(ratio * self.x_center)
+        self.y_center = int(ratio * self.y_center)
 
     def create_video_output(self, x_size, y_size, x_point, y_point):
         """
