@@ -91,7 +91,15 @@ This project is developed on a Windows (7) platform, but there should (and, as a
 
 ## License
 
-This project is released under the new BSD license (3 clause version). You can read more about the license in the LICENSE file. 
+This project is released under the new BSD license (3 clauses version). You can read more about the license in the LICENSE file. 
+
+## Acknowledgment
+
+This project comes from an idea of Axel Catoire, currently [travelling around the world](http://ungrandtour.blogspot.com/)  with his girlfriend.
+He also provides me with new pictures :).
+
+As a starter for my code, I used an excellent example from JAPSKUA, that you can find [here](http://japskua.wordpress.com/2010/08/04/detecting-eyes-with-python-opencv/)
+
 
 ## Contact
 
