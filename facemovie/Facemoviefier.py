@@ -49,6 +49,13 @@ class Facemoviefier():
                             help='If this option is activated, images will NOT be resized so that all faces have the same size', 
                             action='store_false', 
                             default=True)
+
+        # expand images or crop ? Default should be crop
+        parser.add_argument('-c', 
+                            '--crop', 
+                            help='If this option is activated, images will be cropped and black borders will not be added' , 
+                            action='store_true', 
+                            default=False)
         
         # type of output wanted (image, video, show)
         parser.add_argument('-t', 
@@ -79,16 +86,18 @@ class Facemoviefier():
         # I want to change images so that all faces have the same size
         if self.args['equalize']:
             self.facemovie.normalize_faces() # sets all faces to the same size
-        # I want to know the size of the output frame, knowing initial conditions
+        # I want to know the size of the output frame, knowing initial conditions    
         self.facemovie.find_out_dims() # finds output minimal size to get all eyes in the same place
+        if self.args['crop']:
+            self.facemovie.find_crop_dims() # finds output minimal size to get all eyes in the same place
 
         #choose your final step
-        if self.args['type'] == 's':
-            self.facemovie.show_faces(1000)
-        elif self.args['type'] == 'i':
-            self.facemovie.save_faces(self.args['output'])
-        elif self.args['type'] == 'v':
-            self.facemovie.save_movie(self.args['output'])        
+        #if self.args['type'] == 's':
+        #    self.facemovie.show_faces(1000)
+        #elif self.args['type'] == 'i':
+        #    self.facemovie.save_faces(self.args['output'])
+        #elif self.args['type'] == 'v':
+        #    self.facemovie.save_movie(self.args['output'])        
 
 if __name__ == '__main__':
     my_job = Facemoviefier()

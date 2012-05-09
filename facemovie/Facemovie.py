@@ -41,6 +41,11 @@ class FaceMovie(object):
         self.dim_x = 0
         self.dim_y = 0
         
+        # thumbmails
+        self.crop = False
+        self.width = [0, 0]
+        self.height = [0, 0]
+        
     def list_guys(self):
         """
         Aims at populating the guys list, using the source folder as an input. 
@@ -81,12 +86,44 @@ class FaceMovie(object):
         """
         Creates new images, normalized by face size
         """
+        # FIXME: May be enhanced by choosing a more educated reference
         if reference == 0:
             reference = self.guys[0].faces[0][0][3] # catch face size (width)
             
         for a_guy in self.guys:
             if a_guy.has_face():
                 a_guy.normalize_face(reference)
+    
+    def find_crop_dims(self):
+        """ 
+        Calculates smallest output image that can be used to avoid adding black borders on image
+        """
+        ht = 1000000 # space left above eyes
+        hb = 1000000 # space left beneath eyes
+        wl = 1000000 # space left left of eyes
+        wr = 1000000 # space left right of eyes
+        
+        for a_guy in self.guys:
+            if a_guy.has_face():
+                xc = a_guy.x_center
+                yc = a_guy.y_center
+                inx = a_guy.in_x
+                iny = a_guy.in_y
+                
+                # finding width    
+                if xc < wl:
+                    wl = xc
+                if (inx - xc) < wr:
+                    wr = inx - xc
+                # finding height
+                if yc < ht:
+                    ht = yc
+                if (iny - yc) < hb:
+                    hb = iny - yc
+                                      
+        self.width = [wl, wr]
+        self.height = [ht, hb]
+        self.crop = True
     
     def find_out_dims(self):
         """
@@ -114,7 +151,12 @@ class FaceMovie(object):
         
         self.dim_x = self.x_af + self.x_center
         self.dim_y = self.y_af + self.y_center
-        
+    
+    def crop_im(self, image):
+        """
+        If needed, crops the image to avoid having black borders. 
+        """
+    
     def show_faces(self, mytime=1000, equalize=True):
         """
         Show all faces that have been found for the guys.
@@ -127,6 +169,8 @@ class FaceMovie(object):
                                           self.dim_y, 
                                           self.x_center, 
                                           self.y_center)
+                if self.crop:
+                    out_im = self.crop_im(out_im)
                 self.out_display(out_im, a_guy.name, time=mytime)      
 
     def save_faces(self, out_folder, im_format="png"):
@@ -140,6 +184,8 @@ class FaceMovie(object):
                                           self.dim_y, 
                                           self.x_center, 
                                           self.y_center)
+                if self.crop:
+                    out_im = self.crop_im(out_im)
                 self.save_result(out_im, a_guy.name, out_folder, im_format)    
                           
     def save_movie(self, out_folder, equalize=True):
@@ -169,7 +215,9 @@ class FaceMovie(object):
                 out_im = a_guy.create_video_output(self.dim_x, 
                                           self.dim_y, 
                                           self.x_center, 
-                                          self.y_center)         
+                                          self.y_center) 
+                if self.crop:
+                    out_im = self.crop_im(out_im)        
                 cv.WriteFrame(my_video, out_im)
 
     def number_guys(self):
