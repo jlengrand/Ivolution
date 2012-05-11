@@ -89,6 +89,9 @@ class Facemoviefier():
         # I want to know the size of the output frame, knowing initial conditions    
         self.facemovie.find_out_dims() # finds output minimal size to get all eyes in the same place
         if self.args['crop']:
+            # TODO: additional parameters (2) may be added here. Add support for this
+            self.facemovie.set_crop_dims(100, 100) # TODO : do we need something else than pixel here ? It stinks due to face normalization.
+            # TODO : Change to number of face size
             self.facemovie.find_crop_dims() # finds output minimal size to get all eyes in the same place
 
         #choose your final step

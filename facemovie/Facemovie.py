@@ -43,8 +43,15 @@ class FaceMovie(object):
         
         # thumbmails
         self.crop = False
+        self.cropdims = [0, 0] # user defined desired dimensions for cropping
         self.width = [0, 0]
         self.height = [0, 0]
+        
+    def set_crop_dims(self, crop_x, crop_y):
+        """
+        Sets the cropping dimension in case they have been provided by the end user
+        """
+        self.cropdims = [crop_x, crop_y]
         
     def list_guys(self):
         """
@@ -103,26 +110,33 @@ class FaceMovie(object):
         wl = 1000000 # space left left of eyes
         wr = 1000000 # space left right of eyes
         
-        for a_guy in self.guys:
-            if a_guy.has_face():
-                xc = a_guy.x_center
-                yc = a_guy.y_center
-                inx = a_guy.in_x
-                iny = a_guy.in_y
-                
-                # finding width    
-                if xc < wl:
-                    wl = xc
-                if (inx - xc) < wr:
-                    wr = inx - xc
-                # finding height
-                if yc < ht:
-                    ht = yc
-                if (iny - yc) < hb:
-                    hb = iny - yc
-                                      
-        self.width = [wl, wr]
-        self.height = [ht, hb]
+        if self.cropdims != [0, 0]:
+            w = int(self.cropdims[0] / 2)
+            self.width = [w, w]
+            h = int(self.cropdims[1] / 2)
+            self.height = [h, h]
+        else:
+            for a_guy in self.guys:
+                if a_guy.has_face():
+                    xc = a_guy.x_center
+                    yc = a_guy.y_center
+                    inx = a_guy.in_x
+                    iny = a_guy.in_y
+                    
+                    # finding width    
+                    if xc < wl:
+                        wl = xc
+                    if (inx - xc) < wr:
+                        wr = inx - xc
+                    # finding height
+                    if yc < ht:
+                        ht = yc
+                    if (iny - yc) < hb:
+                        hb = iny - yc
+                                          
+            self.width = [wl, wr]
+            self.height = [ht, hb]
+            
         self.crop = True
     
     def find_out_dims(self):
