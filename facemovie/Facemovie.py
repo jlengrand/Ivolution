@@ -156,6 +156,25 @@ class FaceMovie(object):
         """
         If needed, crops the image to avoid having black borders. 
         """
+        # TODO : implement
+        width = self.width#[0, 0]
+        height = self.height#[0, 0]
+        out_im = cv.CreateImage((width[0] + width[1], height[0] + height[1]),cv.IPL_DEPTH_8U, image.nChannels)
+        cv.Zero(out_im)   
+    
+        xtl = self.x_center - width[0]
+        ytl = self.y_center - height[0]
+        w = width[0] + width[1]
+        h = height[0] + height[1]
+            
+        rect = (xtl, ytl, w, h)
+        
+        cv.SetImageROI(image, rect)
+        print cv.GetSize(out_im), cv.GetSize(image)
+        cv.Copy(image, out_im)
+        cv.ResetImageROI(image)     
+    
+        return out_im
     
     def show_faces(self, mytime=1000, equalize=True):
         """

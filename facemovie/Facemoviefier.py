@@ -92,12 +92,12 @@ class Facemoviefier():
             self.facemovie.find_crop_dims() # finds output minimal size to get all eyes in the same place
 
         #choose your final step
-        #if self.args['type'] == 's':
-        #    self.facemovie.show_faces(1000)
-        #elif self.args['type'] == 'i':
-        #    self.facemovie.save_faces(self.args['output'])
-        #elif self.args['type'] == 'v':
-        #    self.facemovie.save_movie(self.args['output'])        
+        if self.args['type'] == 's':
+            self.facemovie.show_faces(1000)
+        elif self.args['type'] == 'i':
+            self.facemovie.save_faces(self.args['output'])
+        elif self.args['type'] == 'v':
+            self.facemovie.save_movie(self.args['output'])        
 
 if __name__ == '__main__':
     my_job = Facemoviefier()
