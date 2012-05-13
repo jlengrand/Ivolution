@@ -6,4 +6,4 @@ ROOT="./facemovie"
 IN_DATA="data/input/Aurelie"
 OUT_DATA="data/output"
 
-python facemovie/Facemoviefier.py -r $ROOT -i $IN_DATA -o $OUT_DATA
+python ${ROOT}/Facemoviefier.py -r $ROOT -i $IN_DATA -o $OUT_DATA -t i
