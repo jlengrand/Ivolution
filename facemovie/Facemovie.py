@@ -47,6 +47,8 @@ class FaceMovie(object):
         self.width = [0, 0]
         self.height = [0, 0]
         
+        self.face_mean = [0, 0]
+        
     def set_crop_dims(self, crop_x, crop_y):
         """
         Sets the cropping dimension in case they have been provided by the end user
@@ -101,6 +103,24 @@ class FaceMovie(object):
             if a_guy.has_face():
                 a_guy.normalize_face(reference)
     
+    
+    def calc_mean_face(self):
+        """
+        Returns the mean size of all faces in input
+        Used to correctly crop images
+        """
+        tot_x = 0
+        tot_y = 0
+        nb_face = 0
+        for a_guy in self.guys:
+            if a_guy.has_face():
+                ((x, y, w, h), n) = a_guy.faces[0]
+                tot_x += w
+                tot_y += h
+                nb_face += 1
+                
+        self.face_mean = [float(tot_x) / nb_face, float(tot_y) / nb_face]
+    
     def find_crop_dims(self):
         """ 
         Calculates smallest output image that can be used to avoid adding black borders on image
@@ -111,9 +131,9 @@ class FaceMovie(object):
         wr = 1000000 # space left right of eyes
         
         if self.cropdims != [0, 0]:
-            w = int(self.cropdims[0] / 2)
+            w = int( (self.cropdims[0] * self.face_mean[0])  / 2)
             self.width = [w, w]
-            h = int(self.cropdims[1] / 2)
+            h = int((self.cropdims[1] * self.face_mean[1]) / 2)
             self.height = [h, h]
         else:
             for a_guy in self.guys:
@@ -165,6 +185,9 @@ class FaceMovie(object):
         
         self.dim_x = self.x_af + self.x_center
         self.dim_y = self.y_af + self.y_center
+        
+        # finishes by calculating average face size
+        self.calc_mean_face()
     
     def crop_im(self, image):
         """
@@ -184,7 +207,6 @@ class FaceMovie(object):
         rect = (xtl, ytl, w, h)
         
         cv.SetImageROI(image, rect)
-        print cv.GetSize(out_im), cv.GetSize(image)
         cv.Copy(image, out_im)
         cv.ResetImageROI(image)     
     

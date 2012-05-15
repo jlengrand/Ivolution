@@ -56,6 +56,12 @@ class Facemoviefier():
                             help='If this option is activated, images will be cropped and black borders will not be added' , 
                             action='store_true', 
                             default=False)
+
+        # Crop to custom dims if desired
+        parser.add_argument('-d', 
+                            '--cropdims', 
+                            help='Ignored if crop is not activated. Crops image to size x y' ,
+                            nargs = 2)
         
         # type of output wanted (image, video, show)
         parser.add_argument('-t', 
@@ -89,9 +95,9 @@ class Facemoviefier():
         # I want to know the size of the output frame, knowing initial conditions    
         self.facemovie.find_out_dims() # finds output minimal size to get all eyes in the same place
         if self.args['crop']:
-            # TODO: additional parameters (2) may be added here. Add support for this
-            self.facemovie.set_crop_dims(100, 100) # TODO : do we need something else than pixel here ? It stinks due to face normalization.
-            # TODO : Change to number of face size
+            if self.args['cropdims']:
+                self.facemovie.set_crop_dims(float(self.args['cropdims'][0]), float(self.args['cropdims'][1])) 
+                # TODO : do we need something else than pixel here ? It stinks due to face normalization. Change to number of face size
             self.facemovie.find_crop_dims() # finds output minimal size to get all eyes in the same place
 
         #choose your final step
