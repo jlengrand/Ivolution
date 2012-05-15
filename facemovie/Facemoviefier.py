@@ -70,14 +70,19 @@ class Facemoviefier():
                             help='Selects the kind of output desired. Valid choices are v (video), i (images), s (show). Default is video', 
                             default='v')        
         
+        # how to sort images. Default is file name
+        parser.add_argument('-s', 
+                            '--sort', 
+                            choices='ne',
+                            help='Choose which way images are sorted. Can be either using file name (n) or exif metadata (e). Default is n' , 
+                            default='n')
+        
         # TODO: Integrate face params file choice, with list of possibilities.
         parser.add_argument('-p', 
                             '--param', 
                             choices=training_types.simple_set,
                             help='Choose the desired file for training the recognition phaze. Should be chosen depending on the face presentation (profile, whole body, ...)', 
                             default='frontal face alt')        
-        
-        
         
         args = vars(parser.parse_args())
 
@@ -87,8 +92,11 @@ class Facemoviefier():
         """
         Runs all the steps needed to get the desired output
         """
-        self.facemovie.list_guys() # find images in input folder
-        self.facemovie.search_faces() # search for images with faces
+        #selects sorting method
+        if self.args['sort'] == 'e':
+            self.facemovie.sort_method = 'e';
+        self.facemovie.list_guys()
+        self.facemovie.search_faces()
         # I want to change images so that all faces have the same size
         if self.args['equalize']:
             self.facemovie.normalize_faces() # sets all faces to the same size

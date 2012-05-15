@@ -5,14 +5,14 @@ Created on 29 mars 2012
 '''
 import cv
 
-import os # needed only for main. Shall be removed
+import time
 
 class Guy(object):
     '''
     Represents the user on the people at a fixed time. 
     All data found for this time may be found here.
     '''
-    def __init__(self, image, image_id):
+    def __init__(self, image, image_id, date):
         '''
         Constructor
         '''
@@ -21,6 +21,7 @@ class Guy(object):
         
         self.in_channels = image.nChannels
         self.name = image_id # Name of the picture used as input
+        self.date = self.find_date(date) # date where image was taken
         self.in_image = None # input image
         
         self.faces = [] # List of faces detected for this input 
@@ -36,6 +37,17 @@ class Guy(object):
         # Creation of the images
         self.in_image = cv.CreateImage((self.in_x, self.in_y),cv.IPL_DEPTH_8U, self.in_channels)
         cv.Copy(image, self.in_image)
+
+    def find_date(self, date):
+        """
+        Transforms given string formatted date into proper date 
+        Used afterwards to sort images
+        """
+        try: 
+            my_date = time.strptime(date, "%Y:%m:%d %H:%M:%S")
+        except Exception:
+            my_date = time.time()
+        return my_date
 
     def search_face(self, face_params):
         """

@@ -7,9 +7,10 @@ import os
 import sys
 
 import cv
+import lib.exif as exif
 
 import Guy
-from FaceParams import FaceParams
+
 
 class FaceMovie(object):
     '''
@@ -48,6 +49,7 @@ class FaceMovie(object):
         self.height = [0, 0]
         
         self.face_mean = [0, 0]
+        self.sort_method = "n" # sorting by name or using metadata (n or e)
         
     def set_crop_dims(self, crop_x, crop_y):
         """
@@ -74,11 +76,26 @@ class FaceMovie(object):
         for token in files :
             image = cv.LoadImage(os.path.join(self.source, token))
             guy_name = os.path.splitext(token)[0]
-            a_guy = Guy.Guy(image, guy_name)
+            
+            try:
+                path = os.path.join(self.source, token)
+                guy_date = exif.parse(path)['DateTime']
+            except Exception:
+                guy_date = ''
+
+            a_guy = Guy.Guy(image, guy_name, guy_date)
          
             # populating guys
             self.guys.append(a_guy)
-
+       
+        # Sorting either by exif date or name
+        if self.sort_method == "e":
+            print "Sorting files using EXIF metadata"
+            self.guys.sort(key=lambda g: g.date)
+        else: # default is sort by name
+            print "Sorting files using file name"
+            self.guys.sort(key=lambda g: g.name)
+            
     def search_faces(self):
         """
         Searches for all faces in the guys we have
@@ -244,7 +261,6 @@ class FaceMovie(object):
                                           self.x_center, 
                                           self.y_center)
                 if self.crop:
-                    print self.crop
                     out_im = self.crop_im(out_im)
                 self.save_result(out_im, a_guy.name, out_folder, im_format)    
                           
