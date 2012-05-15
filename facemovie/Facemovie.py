@@ -157,7 +157,11 @@ class FaceMovie(object):
             self.width = [wl, wr]
             self.height = [ht, hb]
             
-        self.crop = True
+        if (sum(self.width) >= self.dim_x) or (sum(self.height) >= self.dim_y):
+            print "Cropping inactive : Maximum dimensions reached"
+            self.crop = False 
+        else:
+            self.crop = True
     
     def find_out_dims(self):
         """
@@ -240,6 +244,7 @@ class FaceMovie(object):
                                           self.x_center, 
                                           self.y_center)
                 if self.crop:
+                    print self.crop
                     out_im = self.crop_im(out_im)
                 self.save_result(out_im, a_guy.name, out_folder, im_format)    
                           
@@ -256,7 +261,12 @@ class FaceMovie(object):
         fourcc = cv.CV_FOURCC('C', 'V', 'I', 'D')
         fps = 3 # not taken into account
 
-        frameSize = (self.dim_x, self.dim_y)     
+        if self.crop:
+            width = self.width
+            height = self.height
+            frameSize = (width[0] + width[1], height[0] + height[1])
+        else:
+            frameSize = (self.dim_x, self.dim_y)     
         my_video = cv.CreateVideoWriter(filename, 
                                       fourcc, 
                                       fps, 
@@ -272,7 +282,7 @@ class FaceMovie(object):
                                           self.x_center, 
                                           self.y_center) 
                 if self.crop:
-                    out_im = self.crop_im(out_im)        
+                    out_im = self.crop_im(out_im)                            
                 cv.WriteFrame(my_video, out_im)
 
     def number_guys(self):
