@@ -34,11 +34,11 @@ complete_set = {#eyes
                   }
 
 simple_set = {# frontal faces
-                  'frontal face alt':"haarcascade_frontalface_alt",  
+                  'frontal_face':"haarcascade_frontalface_alt",  
                   #profile face
-                  'profile face':"haarcascade_profileface", 
+                  'profile_face':"haarcascade_profileface", 
                   #body
-                  'full body':"haarcascade_fullbody", 
-                  'lower body':"haarcascade_lowerbody", 
-                  'upper body':"haarcascade_upperbody", 
+                  'full_body':"haarcascade_fullbody", 
+                  'lower_body':"haarcascade_lowerbody", 
+                  'upper_body':"haarcascade_upperbody", 
                   }

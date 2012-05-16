@@ -6,6 +6,7 @@ Created on 29 mars 2012
 
 # This file should never be imported anywhere
 import os
+import sys
 import argparse
 
 import Facemovie
@@ -22,10 +23,10 @@ class Facemoviefier():
         self.args = self.initCLParser()
         print self.args
         
-        # par folder should be known (contained somewhere in the installation)
-        par_fo = os.path.join(self.args['root'], "haarcascades")
+    def init_facemovie(self):
+        # FIXME : par folder should be known (contained somewhere in the installation)
+        par_fo = os.path.join(self.args['root'], "haarcascades")        
         self.face_params = FaceParams.FaceParams(par_fo, self.args['param'])    
-        
         self.facemovie = Facemovie.FaceMovie(self.args['input'], self.args['output'], self.face_params)
 
     def initCLParser(self):
@@ -78,20 +79,34 @@ class Facemoviefier():
                             default='n')
         
         # TODO: Integrate face params file choice, with list of possibilities.
+        params = training_types.simple_set.keys()
+        params.append('?')
         parser.add_argument('-p', 
                             '--param', 
-                            choices=training_types.simple_set,
+                            choices=params,
                             help='Choose the desired file for training the recognition phaze. Should be chosen depending on the face presentation (profile, whole body, ...)', 
-                            default='frontal face alt')        
+                            default='frontal_facee')        
         
         args = vars(parser.parse_args())
-
         return args
         
     def run(self):
         """
         Runs all the steps needed to get the desired output
         """
+        # selects xml used to train the classifier 
+        if self.args['param'] == '?':
+            print "Available param files are :"
+            print "==="
+            for item in training_types.simple_set:
+                print item
+            print "==="                
+            print 'Please choose your param file (or let default value) and restart the application'
+            sys.exit(0)      
+        else:
+            # creates Facemovie object, loads param file
+            self.init_facemovie()
+        
         #selects sorting method
         if self.args['sort'] == 'e':
             self.facemovie.sort_method = 'e';
