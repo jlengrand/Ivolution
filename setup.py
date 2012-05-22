@@ -24,6 +24,7 @@ setup(
     keywords = "image_processing computer_vision one_picture_a_day photography",
     url = "https://github.com/jlengrand/FaceMovie",
     packages=['facemovie', 'facemovie.lib', 'facemovie.haarcascades'],
+    package_data={'facemovie': ['haarcascades/*.xml']}, # Adds xml files to the lib
     long_description=read('README.markdown'),
     classifiers=[
         "Development Status :: 3 - Alpha",
