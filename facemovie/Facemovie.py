@@ -7,9 +7,9 @@ import os
 import sys
 
 import cv
-import lib.exif as exif
+from facemovie.lib import exif
 
-import Guy
+from facemovie import Guy
 
 
 class FaceMovie(object):

@@ -6,7 +6,7 @@ Created on 30 mars 2012
 import cv
 import os
 
-import training_types
+from facemovie import training_types
 
 class FaceParams(object):
     '''

@@ -9,9 +9,9 @@ import os
 import sys
 import argparse
 
-import Facemovie
-import FaceParams
-import training_types
+from facemovie import Facemovie
+from facemovie import FaceParams
+from facemovie import training_types
 
 class Facemoviefier():
     """
@@ -25,7 +25,7 @@ class Facemoviefier():
         
     def init_facemovie(self):
         # FIXME : par folder should be known (contained somewhere in the installation)
-        par_fo = os.path.join(self.args['root'], "haarcascades")        
+        par_fo = os.path.join(self.args['root'], "haarcascades")
         self.face_params = FaceParams.FaceParams(par_fo, self.args['param'])    
         self.facemovie = Facemovie.FaceMovie(self.args['input'], self.args['output'], self.face_params)
 
@@ -35,6 +35,16 @@ class Facemoviefier():
         """
         parser = argparse.ArgumentParser(description="Creates a movie from a bunch of photos containing a Face.")
         
+        # TODO: Integrate face params file choice, with list of possibilities. (ncurses)
+        # First to check if user asks for information 
+        params = training_types.simple_set.keys()
+        params.append('?')
+        parser.add_argument('-p', 
+                            '--param', 
+                            choices=params,
+                            help='Choose the desired file for training the recognition phaze. Should be chosen depending on the face presentation (profile, whole body, ...)', 
+                            default='frontal_face')     
+    
         # --- Arguments to be processed (for now) ---
         #input folder
         parser.add_argument('-i', '--input',  help='Input folder of the images', required=True)
@@ -76,16 +86,7 @@ class Facemoviefier():
                             '--sort', 
                             choices='ne',
                             help='Choose which way images are sorted. Can be either using file name (n) or exif metadata (e). Default is n' , 
-                            default='n')
-        
-        # TODO: Integrate face params file choice, with list of possibilities.
-        params = training_types.simple_set.keys()
-        params.append('?')
-        parser.add_argument('-p', 
-                            '--param', 
-                            choices=params,
-                            help='Choose the desired file for training the recognition phaze. Should be chosen depending on the face presentation (profile, whole body, ...)', 
-                            default='frontal_facee')        
+                            default='n')       
         
         args = vars(parser.parse_args())
         return args
