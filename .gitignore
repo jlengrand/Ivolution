@@ -1,4 +1,5 @@
 *.pyc
-data/output/*
+data/*
 build
 dist
+MANIFEST
