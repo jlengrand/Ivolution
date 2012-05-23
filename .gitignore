@@ -1,5 +1,6 @@
 *.pyc
-data/*
+data
 build
 dist
 MANIFEST
+packaging

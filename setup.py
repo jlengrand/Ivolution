@@ -70,7 +70,8 @@ setup(
     ],
     platforms ={"Linux"},
 	data_files = haar_files,
-    options = {'py2exe': {'bundle_files': 1, 'includes': ['numpy'] } },
+    options = {'py2exe': {'bundle_files': 1, # do not include Python together with the executable
+                          'includes': ['numpy'] } },
     console=['facemovie/Facemoviefier.py'],
     zipfile = None,
 )
