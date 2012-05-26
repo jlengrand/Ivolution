@@ -21,7 +21,6 @@ class Facemoviefier():
     def __init__(self):
         #inits Command Line Parser
         self.args = self.initCLParser()
-        print self.args
         
     def init_facemovie(self):
         # FIXME : par folder should be known (contained somewhere in the installation)

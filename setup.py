@@ -43,7 +43,6 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 haar_files = find_data_files('facemovie','',['haarcascades/*.xml'])   
-print haar_files
 
 setup(
     name = "Facemovie",
