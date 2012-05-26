@@ -233,7 +233,7 @@ class FaceMovie(object):
     
         return out_im
     
-    def show_faces(self, mytime=1000, equalize=True):
+    def show_faces(self, mytime=1000):
         """
         Show all faces that have been found for the guys.
         The time for which each image will be displayed can be chosen.
@@ -264,7 +264,7 @@ class FaceMovie(object):
                     out_im = self.crop_im(out_im)
                 self.save_result(out_im, a_guy.name, out_folder, im_format)    
                           
-    def save_movie(self, out_folder, equalize=True):
+    def save_movie(self, out_folder, fps=3):
         """
         Creates a movie with all faces found in the inputs.
         Guy is skipped if no face is found.
@@ -275,7 +275,6 @@ class FaceMovie(object):
         """
         filename = os.path.join(out_folder, "output.avi")
         fourcc = cv.CV_FOURCC('C', 'V', 'I', 'D')
-        fps = 3 # not taken into account
 
         if self.crop:
             width = self.width

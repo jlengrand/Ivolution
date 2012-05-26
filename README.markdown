@@ -1,4 +1,4 @@
-#Take one picture of yourself a day, simply get the results!
+#Take one picture of yourself a day, automatically generate a movie!
 
 
 **[FaceMovie](http://www.youtube.com/watch?v=JueOY7EtXrQ)** is a simple project that aims at helping you create videos of yourself over time, using photos as input.
@@ -8,7 +8,7 @@ I started this project for a friend currently [travelling around the world](http
 The main idea is simple. The software takes a batch of images as input. The images are assumed to be named by date (so that an alphabetical order is also the chronological order).
 The output is a video containing each image, where the face is always placed in the same position. This way, people can actually see the face change over time.
 
-**[You can check out the last results in video here !](http://www.youtube.com/watch?v=JueOY7EtXrQ)**
+**[You can check out the last results in video here !](http://www.youtube.com/watch?v=2pUHK7Sf23I)**
 
 **In progress: **
 

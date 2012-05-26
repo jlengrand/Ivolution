@@ -86,6 +86,13 @@ class Facemoviefier():
                             choices='ne',
                             help='Choose which way images are sorted. Can be either using file name (n) or exif metadata (e). Default is n' , 
                             default='n')       
+
+        # Number of frames per second in saved image
+        parser.add_argument('--fps', 
+                            choices=range(2, 20),
+                            type=int,
+                            help='Choose the number of frames per second in the output video (between 2 and 20). Default is 3' , 
+                            default=3)       
         
         args = vars(parser.parse_args())
         return args
@@ -120,7 +127,6 @@ class Facemoviefier():
         if self.args['crop']:
             if self.args['cropdims']:
                 self.facemovie.set_crop_dims(float(self.args['cropdims'][0]), float(self.args['cropdims'][1])) 
-                # TODO : do we need something else than pixel here ? It stinks due to face normalization. Change to number of face size
             self.facemovie.find_crop_dims() # finds output minimal size to get all eyes in the same place
 
         #choose your final step
@@ -129,7 +135,7 @@ class Facemoviefier():
         elif self.args['type'] == 'i':
             self.facemovie.save_faces(self.args['output'])
         elif self.args['type'] == 'v':
-            self.facemovie.save_movie(self.args['output'])        
+            self.facemovie.save_movie(self.args['output'], self.args['fps'])        
 
 if __name__ == '__main__':
     my_job = Facemoviefier()

@@ -55,7 +55,6 @@ setup(
     url = "https://github.com/jlengrand/FaceMovie",
     download_url = "https://github.com/jlengrand/FaceMovie", # FIXME : To be updated
     packages=['facemovie', 'facemovie.lib', 'facemovie.haarcascades'],
-    #package_data={'facemovie': ['haarcascades/*.xml']}, # Adds xml files to the lib
     long_description=read('README.markdown'),
     classifiers=[
         "Development Status :: 3 - Alpha",
@@ -67,9 +66,8 @@ setup(
         "Operating System :: Microsoft",
         "Programming Language :: Python :: 2 :: Only",
     ],
-    platforms ={"Linux"},
 	data_files = haar_files,
-    options = {'py2exe': {'bundle_files': 1, # do not include Python together with the executable
+    options = {'py2exe': {'bundle_files': 1, # 3 dont bundle, 2 bundle but python interpreter, 1 bundle everything
                           'includes': ['numpy'] } },
     console=['facemovie/Facemoviefier.py'],
     zipfile = None,
