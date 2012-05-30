@@ -15,7 +15,49 @@ Due to its general implementation, FaceMovie may be used for faces, but also pro
 
 ## Getting started
 
-There are several ways to use Facemovie :
+
+There are several ways you can choose from to run Facemovie, each being developed below.
+Please not that you best pick as this stage would be to choose the executable. 
+
+### Windows executable (Default)
+
+This is the current safest and easiest solution for you. 
+
+Download the archive available [here](). By default, choose the full archive.
+The light archive is intended for users having Python2.7 already installed on their system.
+
+Uncompress the archive. It contains three elements :
+ - The executable itself, called Facemovifier.exe.
+ - A folder called haar_cascades. It contains files used by the executable. Leave it in the same location as the executable by default.
+ - This README
+
+ In order to check that everything is ready, open a command line in at the executable location and run the Facemovie helper : 
+ ```
+ $ cd my\installation\folder
+ $ Facemoviefier.exe -h
+ ``` 
+
+ You are now ready to use the Facemovie !
+
+### Github
+
+You can also simply clone the project from Github and use it as you wish. 
+```
+git clone git://github.com/jlengrand/FaceMovie.git
+```
+
+This is a very good solution if you already have Python2.7 and OpenCV installed on your system (see requirements chapter).
+
+To check the code, simply open a command line and try to run the Facemovifier : 
+ ```
+ $ cd my\cloned\folder
+ $ python facemovie\Facemoviefier.py -h
+ ``` 
+
+Scripts are available for Windows and Linux (called __run.sh__ and __run_windows.sh__) in order to help you run Facemovie. 
+
+
+
 - Download a single executable [here](). Choose the file corresponding to your architecture, unzip the archive and you're done !
   - Depending on your setup, you can choose installers including the Python interpreter or not. 
   - The executable ships with a folder called haar__cascades and containing elements needed for the recognition phaze of the algorithm. 
