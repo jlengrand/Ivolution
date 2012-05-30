@@ -8,7 +8,7 @@ I see a growing interest for projects where people take one picture of themselve
 When searching on the web, I realized that there was only one software allowing people to do this, the [everyday paid iphone app](everyday url). I hope that Facemovie could help some of you!
 The main difference with everyday is that Facemovie searches automatically for faces in the input images and compile them in the best possible way, so that your video lok awesome. 
 
-Due to its general implementation, FaceMovie may be used for faces, but also profiles (for projects showing [women along pregnancy for example](url pregnant women) or full body([for people workouting]()). The only limitation comes from you ! 
+Due to its general implementation, FaceMovie may be used for faces, but also profiles (for projects showing [women along pregnancy for example](http://www.youtube.com/watch?v=CG_KArKYTq4) or full body([for people workouting](http://www.youtube.com/watch?v=02Pzfv7JV48)). The only limitation comes from you ! 
 
 **[You can check out an example of video here.](http://www.youtube.com/watch?v=2pUHK7Sf23I)**
 
@@ -23,14 +23,14 @@ There are several ways to use Facemovie :
 - Install the Python package via pip. (see command here).
   - setup install
   - You'll need some libraries installed to run the code, but the Facemovifier command will be available in your Python interpreter. 
-- Clone the project from Github and use the code. For this, you will have to install [all the tool needed to run the Python code](see requirements).
+- Clone the project from Github and use the code. For this, you will have to install all the tool needed to run the Python code(see requirements chapter below).
 ```
 git clone git://github.com/jlengrand/FaceMovie.git
 ```
   - I created scripts for Windows and Linux in the repo, so that the code can be used easily.
   - This way, you'll get the last version of the code
 
-For each of the following commands, Facemovifier (ITALIQUE) should be replaced by FaceMovifier.exe or python Facemovifier depending on your installation method (executable or Python egg).
+For each of the following commands, __Facemovifier__ should be replaced by __FaceMovifier.exe__ or __python Facemovifier__ depending on your installation method (executable or Python egg).
 
 
 Once installed, let's start by calling the helper of Facemovie. It can be done by
@@ -111,38 +111,46 @@ This means that for example -d 2 2 will output square images, of size 2 x the si
 
 ## Libraries
 
-This piece of code is developed in [Python](http://www.python.org/), simply because I love it :P (and because it allows easy testing while developing Image Processing applications).
-I used Python 2.7 for development. 
-The only library needed to run the code for now is [Opencv](http://opencv.willowgarage.com/wiki/) (and by extension [Numpy](http://numpy.scipy.org/)). See [the documentation](http://opencv.willowgarage.com/wiki/InstallGuide) for more information. 
+The whole aplication is developed using [Python2.7.3](http://www.python.org/download/). Any Python2.7 should be enough though.
+To run the application, you'll also need to install [Opencv](http://opencv.willowgarage.com/wiki/).See [the documentation](http://opencv.willowgarage.com/wiki/InstallGuide) for more information. 
+
+I also used the excellent [exif library](http://sourceforge.net/projects/exif-py/) to enhance sorting capabilities. It is embedded in the code, and you will not need to install it.
 
 This project is developed on a Windows (7) platform, but there should (and, as a fanatic Linux User, will) be no compatibility problems with UNIX. 
+The Linux application will be made available through a Python egg, available on [Pypi](http://pypi.python.org/pypi).
 
-## TODO
+## Work in progress
 
-**In progress: **
+Facemovie is still under development, and you should consider it as work in progress.
+Lots of elements still have to be improved. 
 
-- The very central part of the code is finished. 
-- I currently work on video quality enhancement (compression, speed, fade effects, ...)
-- I plan to include a GUI to help people use the software, and later add support for a broader type of input images (profiles, eyes, glasses, . . .)
-- I also think about a way for user to help the software in case it struggles with images (by manually pointing face on problematic images?). 
-- Any other idea is welcome
+Here is a list of my next objectives : 
+
+ - Implement a simple GUI to avoid this ugly command line interface
+ - Allow manual interaction to help the algorithm. When no face is found, the software currently discard the image. I would allow the user to point the face himself.
+ - Implement a feature that detects and corrects roations (for when the face is not always straight)
+ - Enhance documentation and tests
+ - **Any idea is welcome !**
 
 ## License
 
-This project is released under the new BSD license (3 clauses version). You can read more about the license in the LICENSE file. 
+This project is released under the new BSD license (3 clauses version). You can read more about the license in the LICENSE file or direclty on [GNU's website](http://www.gnu.org/licenses/license-list.html#ModifiedBSD). 
 
 ## Acknowledgment
 
-This project comes from an idea of Axel Catoire, currently [travelling around the world](http://ungrandtour.blogspot.com/)  with his girlfriend.
-He also provides me with new pictures :).
-
+The idea of this project comes from an idea of Axel Catoire, currently [travelling around the world](http://ungrandtour.blogspot.com/) with his girlfriend.
 As a starter for my code, I used an excellent example from JAPSKUA, that you can find [here](http://japskua.wordpress.com/2010/08/04/detecting-eyes-with-python-opencv/)
+And I used Gene Cash's library to extract information from EXIF metadata in the images.
 
+## DISCLAIMER
+
+Facemovie works with your images, so I feel like I need to write something about data usage. 
+Facemovie is a work in progress, and I am not responsible for any corrpution it could cause to your data. 
+I never experienced any problem using the software, but you should always back up your data before using it.
 
 ## Contact
 
-I would enjoy having feedback if you like this idea, or even used it (even though you should change the source code to run it for now :) ). 
-I would also like to know if you have heard about any other solution to make this kind of stuff ! (Couldn't find any but this Iphone [app](http://everyday-app.com/) on the internet !)
+I would enjoy having feedback if you like this idea, or even used it. Send me a link to your creations so that I can put them here !
 Feel free to mail me for any comment or request. 
 
 You can contact me at julien at lengrand dot fr, or on my [current website](http://www.lengrand.fr).
