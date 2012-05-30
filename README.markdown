@@ -2,68 +2,78 @@
 
 
 **[FaceMovie](http://www.youtube.com/watch?v=JueOY7EtXrQ)** is a simple project that aims at helping you create videos of yourself over time, using photos as input.
-I see a growing interest for this kind of projects, where people take one picture of themselves a day for several months (years ?) and compile it into a [video](http://www.youtube.com/watch?v=6B26asyGKDo). 
-I started this project for a friend currently [travelling around the world](http://http://ungrandtour.blogspot.com/). He wanted to create a video of his face changes along the trip.
+Simply take several pictures of yourself in the same position, and decide when to compile everything into a video. Just indicate the location of your pictures, Facemovie does everything else for you. 
 
-The main idea is simple. The software takes a batch of images as input. The images are assumed to be named by date (so that an alphabetical order is also the chronological order).
-The output is a video containing each image, where the face is always placed in the same position. This way, people can actually see the face change over time.
+I see a growing interest for projects where people take one picture of themselves a day for several months (years ?) and compile it into a [video](http://www.youtube.com/watch?v=6B26asyGKDo). 
+When searching on the web, I realized that there was only one software allowing people to do this, the [everyday paid iphone app](everyday url). I hope that Facemovie could help some of you!
+The main difference with everyday is that Facemovie searches automatically for faces in the input images and compile them in the best possible way, so that your video lok awesome. 
 
-**[You can check out the last results in video here !](http://www.youtube.com/watch?v=2pUHK7Sf23I)**
+Due to its general implementation, FaceMovie may be used for faces, but also profiles (for projects showing [women along pregnancy for example](url pregnant women) or full body([for people workouting]()). The only limitation comes from you ! 
 
-**In progress: **
+**[You can check out an example of video here.](http://www.youtube.com/watch?v=2pUHK7Sf23I)**
 
-- The very central part of the code is finished. 
-- I currently work on video quality enhancement (compression, speed, fade effects, ...)
-- I plan to include a GUI to help people use the software, and later add support for a broader type of input images (profiles, eyes, glasses, . . .)
-- I also think about a way for user to help the software in case it struggles with images (by manually pointing face on problematic images?). 
-- Any other idea is welcome
 
 ## Getting started
 
-
-I have just started searching for a nice way to package the application in a single executable, which means if you want to test Facemovie you will have to directly run the code in the development branch.
-
-In this part, I will thus consider that you have Python 2.7 and OpenCV (and of course its Python bindings) installed on your machine. 
-To get the last version of Facemovie, simply clone the project from Github 
+There are several ways to use Facemovie :
+- Download a single executable [here](). Choose the file corresponding to your architecture, unzip the archive and you're done !
+  - Depending on your setup, you can choose installers including the Python interpreter or not. 
+  - The executable ships with a folder called haar__cascades and containing elements needed for the recognition phaze of the algorithm. 
+  Leave them in the same location as the executable by default.
+- Install the Python package via pip. (see command here).
+  - setup install
+  - You'll need some libraries installed to run the code, but the Facemovifier command will be available in your Python interpreter. 
+- Clone the project from Github and use the code. For this, you will have to install [all the tool needed to run the Python code](see requirements).
 ```
 git clone git://github.com/jlengrand/FaceMovie.git
 ```
+  - I created scripts for Windows and Linux in the repo, so that the code can be used easily.
+  - This way, you'll get the last version of the code
 
-You will also need to have a bunch of photos of your face stored in a folder. Those images should contain only one person; and you should try to always keep the same angle with the camera.
-If you dont, some samples are included in the project (placed in data/input/Axel)
+For each of the following commands, Facemovifier (ITALIQUE) should be replaced by FaceMovifier.exe or python Facemovifier depending on your installation method (executable or Python egg).
 
-Since version 0.4, Facemovie supports user interaction through the Facemovifier. That means that you should be able to run the application without modifying it.
-If you are like me, you ight want to start by calling the helper : 
-```
-$ python Facemoviefier -h
-```
- which will list the available parameters in the application. 
 
-The simplest example you can run would be :
+Once installed, let's start by calling the helper of Facemovie. It can be done by
 ```
-$ python Facemoviefier -i input_folder -o output_folder
+$ Facemoviefier -h
 ```
-, where input_folder and output_folder are strings.
-If you place yourself in the facemovie folder and run the application from here, this line should work :
-```
-$ python Facemoviefier -i "../data/input/Axel" -o "../data/output"
-```
+depending whether you used the installer or the Python egg. 
+This command will list all the available parameters that can be used.
 
-If you decide to run the Facemovifier from another location, you should update the folders accordingly, and use the root_folder option:
+The next step is to try to create you first video. It is no more complex than running the following in command line :
 ```
-$ python Facemoviefier -i input_folder -o output_folder -r facemovie_folder_location
+$ Facemoviefier -i input_folder -o output_folder
 ```
+Where input_folder is the repository where all your images are stored, and output_folder where you want the results to be saved. 
+If you don't have images, you can still test the application by downloading some samples [here](lien vers samples).
 
-You might want to save images instead of a movie as output:
+Here is a concrete example : 
 ```
-$ python Facemoviefier -i "../data/input/Axel" -o "../data/output" -t i
+$ Facemoviefier.exe -i "../data/input/samples" -o "../data/output"
 ```
 
-And if you have profile images, you can (must) also decide to change the file used for training the classifier:
+**NOTE : ** In order to get good results, your  images should contain only one person; and you should try to always keep the same angle with the camera for each of them.
+
+
+Facemovie needs the list of haar_cascades to correctly detect faces. This means that if you decide to run the Facemovie from another location, you should update the folders accordingly and use the root_folder option:
+``` 
+$ Facemoviefier -i input_folder -o output_folder -r haar_cascades_folder_location
 ```
-$ python Facemoviefier -i "../data/input/Axel" -o "../data/output" -p "profile face"
+
+
+Facemovie allows you to choose the type of output you want once the processing is done. This can be done by using the --type (-t) option. Here is the case where I save images instead of a movie in output.
 ```
-An extensive list of training files is available while calling the helper.
+$ Facemoviefier -i "../data/input/Axel" -o "../data/output" -t i
+```
+
+By default, Facemovie is searching for frontal faces. You can change this by setting up which profile to use using the --profile (-p) option:  
+```
+$ Facemoviefier -i "../data/input/Axel" -o "../data/output" -p "profile face"
+```
+An extensive list of training files is available while calling the helper, or by running the following command.
+```
+$ Facemoviefier -p ?
+```
 
 ### Options available in the Facemoviefier
 
@@ -77,8 +87,26 @@ An extensive list of training files is available while calling the helper.
 - -h, --help :	Shows help message and exits
 - -r, --root : 	Location of the facemovie folder. Required if you run the Facemovifier from an external location
 - -e, --equalize : If this option is activated, images will NOT be resized so that all faces have the same size.
-- -p, --param:	Used to change the file used to train the classifier. Useful you want to detect something else than front faces.
+- -p, --param :	Used to change the file used to train the classifier. Useful you want to detect something else than front faces.
+    Available parameters : 
+        - upper body.
+        - profile face.
+        - lower body.
+        - frontal face (default).
+        - full body.
 - -t, --type :	The type of output to be created. Can be either images, video or simple display (nothing written on disc).
+    Available types :
+        - video
+        - images
+        - simple graphical display
+- -e, --equalize : When this option is activated, Facemovie will **NOT** resize images so that faces always keep the same size. This may result in lower quality results but avoid resizing images. 
+- -s, --sort : The way used to sort images chronologically. Can be done either by using file names or EXIF metadata.
+    Available modes :
+        - name (default)
+        - EXIF 
+- -c, --crop : In this mode, final images are cropped so that only the desired part of the body is kept. This will remove parts of the input images, but will avoid addition of black borders in the output.
+- -d, --cropdims : Expects two floats here. Ignored if crop mode is not selected. This allows to choose the window to be cropped. The values are defined in "number of face size".
+This means that for example -d 2 2 will output square images, of size 2 x the size of the subject face.  
 
 
 ## Libraries
@@ -88,6 +116,16 @@ I used Python 2.7 for development.
 The only library needed to run the code for now is [Opencv](http://opencv.willowgarage.com/wiki/) (and by extension [Numpy](http://numpy.scipy.org/)). See [the documentation](http://opencv.willowgarage.com/wiki/InstallGuide) for more information. 
 
 This project is developed on a Windows (7) platform, but there should (and, as a fanatic Linux User, will) be no compatibility problems with UNIX. 
+
+## TODO
+
+**In progress: **
+
+- The very central part of the code is finished. 
+- I currently work on video quality enhancement (compression, speed, fade effects, ...)
+- I plan to include a GUI to help people use the software, and later add support for a broader type of input images (profiles, eyes, glasses, . . .)
+- I also think about a way for user to help the software in case it struggles with images (by manually pointing face on problematic images?). 
+- Any other idea is welcome
 
 ## License
 
