@@ -1,8 +1,12 @@
-'''
-Created on 25 avr. 2012
+"""
+.. module:: training_types
+   :platform: Unix, Windows
+   :synopsis: Dumb class aiming at regrouping all information concerning the trainers for classification.
+   Each entry is linked to a label, corresponding to a different type of recognition (frontal, profile, . . . )
 
-@author: jll
-'''
+.. moduleauthor:: Julien Lengrand-Lambert <jlengrand@gmail.com>
+
+"""
 # File used only to store a dictionary off all xml files used to train the classifier
 complete_set = {#eyes
                   'eyes':"haarcascade_eye", 

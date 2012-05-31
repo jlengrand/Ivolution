@@ -1,8 +1,12 @@
-'''
-Created on 29 mars 2012
+"""
+.. module:: FaceMovifier
+   :platform: Unix, Windows
+   :synopsis: Higher class of the application. Used to handle the command line interface.
+   Direclty interfaces user commands with FaceMovie actions.
 
-@author: jll
-'''
+.. moduleauthor:: Julien Lengrand-Lambert <jlengrand@gmail.com>
+
+"""
 
 # This file should never be imported anywhere
 import os
@@ -18,12 +22,17 @@ class Facemoviefier():
     Class defining the interactions with the end user.
     Should be used as point of entry for all end users.
     """
-    def __init__(self):
-        #inits Command Line Parser
+    def __init__(self):    
+        """
+        Inits the Command Line Parser on Startup
+        """
         self.args = self.initCLParser()
         
     def init_facemovie(self):
-        # FIXME : par folder should be known (contained somewhere in the installation)
+        """
+        Inits the Facemovie parameters, so that it can be run efficiently
+        FIXME : par folder should be known (contained somewhere in the installation)
+        """        
         par_fo = os.path.join(self.args['root'], "haarcascades")
         self.face_params = FaceParams.FaceParams(par_fo, self.args['param'])    
         self.facemovie = Facemovie.FaceMovie(self.args['input'], self.args['output'], self.face_params)
@@ -31,6 +40,7 @@ class Facemoviefier():
     def initCLParser(self):
         """
         Inits and Configures the command line parser designed to help the user configure the application 
+        Defines all possible options, and also creats the Helper. 
         """
         parser = argparse.ArgumentParser(description="Creates a movie from a bunch of photos containing a Face.")
         
@@ -100,6 +110,7 @@ class Facemoviefier():
     def run(self):
         """
         Runs all the steps needed to get the desired output
+        Checks which parameters have been run, and runs the algorithm accordingly.
         """
         # selects xml used to train the classifier 
         if self.args['param'] == '?':

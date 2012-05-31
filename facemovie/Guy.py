@@ -1,21 +1,29 @@
-'''
-Created on 29 mars 2012
+"""
+.. module:: Guy
+   :platform: Unix, Windows
+   :synopsis: Class defining a Guy in the sense of the FaceMovie. Corresponds 
+   to one input image. An input folder is transformed in fact to a list of guys.
 
-@author: jll
-'''
+.. moduleauthor:: Julien Lengrand-Lambert <jlengrand@gmail.com>
+
+"""
 import cv
 
 import time
 
 class Guy(object):
-    '''
-    Represents the user on the people at a fixed time. 
-    All data found for this time may be found here.
-    '''
+    """
+        A new Guy is declared for each input image. 
+        A Guy should have a face, and owns the input image.
+
+    """
     def __init__(self, image, image_id, date):
-        '''
-        Constructor
-        '''
+        """All data linked to an input image
+        Args:
+            image (IplImage)    : the input image, formatted as an OpenCV Image
+            image_id    (string)    : the name of the image, formatted as a string
+            date    (datetime)  :   the date where the input image was taken.
+        """
         self.in_x = None
         self.in_y = None
         
@@ -39,9 +47,16 @@ class Guy(object):
         cv.Copy(image, self.in_image)
 
     def find_date(self, date):
-        """
-        Transforms given string formatted date into proper date 
-        Used afterwards to sort images
+        """This function takes a date as a string, and returns a date object.
+        Used afterwards to sort images chronologically
+
+        Args:
+           date (str):  The date where the image was taken
+
+        Returns:
+           datetime.  Returns a date object according to time library.
+
+        In case of error, set the date to be the current time.
         """
         try: 
             my_date = time.strptime(date, "%Y:%m:%d %H:%M:%S")
@@ -54,6 +69,13 @@ class Guy(object):
         Search on the picture for a face. 
         Populates faces list. 
         This function is the only one containing scaling information
+
+        Set several Guy information, such as the face size, or the virtual center of the image
+
+        Args:
+           face_params (str):  The type of file to be used to train the classifier.
+
+        Once Faces have been found, they are listed and ordered
         """
         # Allocate the temporary images
         gray = cv.CreateImage((self.in_x, self.in_y), 
@@ -99,7 +121,14 @@ class Guy(object):
         
     def sort_faces(self):
         """
-        sort faces by number of neighbours found, most probable one first
+        Sorts faces by number of neighbours found, most probable one first
+
+        Args:
+           face_params (str):  The type of file to be used to train the classifier.
+
+        Returns:
+            A list of faces, ordered by probability
+            If no faces is found, returns a void list.
         """
         if self.has_face() : # needed ?
             self.faces.sort(key= lambda prob : prob[1], reverse=True)
@@ -109,6 +138,9 @@ class Guy(object):
     def update_center(self):
         """
         Using sorted faces, defines the new center of interest of the output image
+
+        Updates the center of the image, using the most probable face as reference. 
+        Íf no face was found, the center is not updated.
         """
         if self.has_face():
             ((x, y, w, h), n) = self.faces[0]
@@ -117,7 +149,12 @@ class Guy(object):
     
     def normalize_face(self, reference):
         """
-        Creates intermediate image, whose face fits reference size
+        Creates intermediate image, whose face fits reference size.
+        This method aloows faces to always keep the same size during all the video.
+        Changes the center of the image and adds a new resized image.
+
+        Args:
+           reference (int):  The refence size of the face (in pixels). Defined as the first face size for now
         """
         self.normalize = 1
         
@@ -140,6 +177,15 @@ class Guy(object):
         Creates image output, centering the face center with the required position
         If eq_ratio is set to something different than one, input image is scaled
         so that face/size = eq_ratio
+
+        Args:
+           x_size (int):  The size of the ouput image in x (in pixels)
+           y_size (int):  The size of the ouput image in y (in pixels)
+           x_point (int):  The center of the output image, where the Guy image has to fit in (in pixels)
+           y_point (int):  The center of the output image, where the Guy image has to fit in (in pixels)
+
+        Returns:
+            The ouput image, centered to fit with all other images
         """
         out_im = cv.CreateImage((x_size, y_size),cv.IPL_DEPTH_8U, self.in_channels)
         cv.Zero(out_im)   
@@ -160,7 +206,7 @@ class Guy(object):
 
     def create_debug_output(self):
         """
-        NOT FUNCTIONAL ANY MORE
+        **DEPRECATED**
         Creates output image
         If debug is set to true, output image is the input image with a red
         box around the most probable face.
@@ -195,6 +241,11 @@ class Guy(object):
         """
         Displays the input image, for time ms.
         Setting time to 0 causes the image to remains open.
+
+        Args:
+           time (int):  The time for which image stays diaplyed (in ms). 0 causes the frams to remain open
+           im_x (int):  The output of the display frame in x (in pixels)
+           im_y (int):  The output of the display frame in y (in pixels)
         """
         cv.NamedWindow(self.name, cv.CV_WINDOW_NORMAL)
         cv.ResizeWindow(self.name, im_x, im_y) 
@@ -205,12 +256,18 @@ class Guy(object):
     def num_faces(self):
         """
         Returns the number of faces found for this guy
+
+        Returns:
+            int The number of faces found for the input image
         """
         return len(self.faces)        
 
     def has_face(self):
         """
-        Returns True if at least one face has been found
+        Returns True of False whether images have been found for the current image or not.
+
+        Returns:
+            True if at least one face has been found
         """
         return (len(self.faces) > 0)
     

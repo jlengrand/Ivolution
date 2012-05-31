@@ -1,27 +1,43 @@
-'''
-Created on 27 mars 2012
+"""
+.. module:: Facemovie
+   :platform: Unix, Windows
+   :synopsis: Main class of the application. Contains the core image processing
+    functions.
+   Plays the role of a controller for the application, as it supports the
+    communication layer with the end user interface. 
 
-@author: jll
-'''
+.. moduleauthor:: Julien Lengrand-Lambert <jlengrand@gmail.com>
+
+"""
 import os
 import sys
 
 import cv
+
 from facemovie.lib import exif
-
 from facemovie import Guy
-
 
 class FaceMovie(object):
     '''
     Main class of the whole application. 
     Contains the core image processing functions.
-    Supports the communication layer with the end user interface.
+    Takes a bunch of parameters and a list of images and tries to create a 
+    video out of it.
+    Contains general methods, aimed at being used trough an interface.
     '''
     def __init__(self, in_folder, out_folder, face_params):
-        '''
-        Constructor
-        '''
+        """
+        Initializes all parameters of the application. Input and output folders
+         are defined, together with the classifier profile.
+
+        Args:
+            in_folder (string)    : the location where input files will be 
+                                    searched
+            out_folder    (string)    : the location where the outputs will be 
+                                        saved
+            face_param    (string)  :   the location of the profile file used 
+                                        to train the classifier
+        """
         self.source= in_folder # Source folder for pictures
         self.out = out_folder # Folder to save outputs
         
@@ -54,13 +70,19 @@ class FaceMovie(object):
     def set_crop_dims(self, crop_x, crop_y):
         """
         Sets the cropping dimension in case they have been provided by the end user
+
+        Args:
+            crop_x (int)    : dimension of the desired cropping in x (in number of face size)
+            crop_y (int)    : dimension of the desired cropping in y (in number of face size)
         """
         self.cropdims = [crop_x, crop_y]
         
     def list_guys(self):
         """
         Aims at populating the guys list, using the source folder as an input. 
-        Guys list shall be sorted by file name alphabetical order
+        Guys list shall be sorted chronologically.
+        In case no valid date is found, it is set to ''.
+
         """
         try:
             os.path.exists(self.source)
@@ -100,6 +122,10 @@ class FaceMovie(object):
         """
         Searches for all faces in the guys we have
         Results to be stored directly in guys
+
+        Takes each image one after the other, and create a guy out of it. 
+        The Face of each guy is searched.
+        In case no face is found, a warning is returned and Guy is set to None
         """
         for a_guy in self.guys:
             a_guy.search_face(self.face_params)
@@ -111,6 +137,11 @@ class FaceMovie(object):
     def normalize_faces(self, reference=0):
         """
         Creates new images, normalized by face size
+        A reference is given in input. The idea is to get all images to have the
+        same size in Guy.
+
+        KArgs:
+            reference (int)    : the reference size of the face that we want to have
         """
         # FIXME: May be enhanced by choosing a more educated reference
         if reference == 0:
@@ -125,6 +156,8 @@ class FaceMovie(object):
         """
         Returns the mean size of all faces in input
         Used to correctly crop images
+
+        **Designed for internal use only**
         """
         tot_x = 0
         tot_y = 0
@@ -139,8 +172,10 @@ class FaceMovie(object):
         self.face_mean = [float(tot_x) / nb_face, float(tot_y) / nb_face]
     
     def find_crop_dims(self):
-        """ 
+        """
         Calculates smallest output image that can be used to avoid adding black borders on image
+        It will later be used to create the final image. 
+        The idea is the same as for :func:find_out_dims , but while avoiding black brders.
         """
         ht = 1000000 # space left above eyes
         hb = 1000000 # space left beneath eyes
@@ -184,6 +219,10 @@ class FaceMovie(object):
         """
         Calculates best output image size and position depending on
         faces found in guys.
+        The system is simple. The output image should be as big as possible, 
+        and faces are always placed in the same position. Depending on that, 
+        the image input image is placed in the output at the correct position.
+        Black borders are set everywhere else.
         """
         # FIXME: badly done !
         for a_guy in self.guys:
@@ -213,6 +252,9 @@ class FaceMovie(object):
     def crop_im(self, image):
         """
         If needed, crops the image to avoid having black borders. 
+
+        Args:
+            image (IplImage)    : the image to be cropped
         """
         # TODO : implement
         width = self.width#[0, 0]
@@ -237,7 +279,9 @@ class FaceMovie(object):
         """
         Show all faces that have been found for the guys.
         The time for which each image will be displayed can be chosen.
-        Several modes can be chosen to adapt the result.
+
+        KArgs : 
+            mytime (int) : time for which the image should be displayed (in ms)
         """
         for a_guy in self.guys:
             if a_guy.has_face():     
@@ -252,7 +296,12 @@ class FaceMovie(object):
     def save_faces(self, out_folder, im_format="png"):
         """
         Save all faces into out_folder, in the given image format
-        Debug is used to draw rectangles around found faces
+
+        Args:
+            out_folder (string) : the location where to save the output image.
+
+        KArgs : 
+            mytime (int) : time for which the image should be displayed (in ms)
         """
         for a_guy in self.guys: 
             if a_guy.has_face():
@@ -269,9 +318,11 @@ class FaceMovie(object):
         Creates a movie with all faces found in the inputs.
         Guy is skipped if no face is found.
         
-        TODO : No codec involved !
-        TODO : Can FPS be changed?
-        Resize should be done somewhere else !
+        Args:
+            out_folder (string) : the location where to save the output image.
+
+        KArgs : 
+            fps (int) : the number of frames per second to be displayed in final video
         """
         filename = os.path.join(out_folder, "output.avi")
         fourcc = cv.CV_FOURCC('C', 'V', 'I', 'D')
@@ -303,7 +354,8 @@ class FaceMovie(object):
     def number_guys(self):
         """
         Simply returns the number of guys in the current to-be movie
-        """    
+        __Designed for interface use only__
+        """  
         return len(self.guys)
     
     def out_display(self, im, name, time=1000, im_x=640, im_y=480):
@@ -311,6 +363,13 @@ class FaceMovie(object):
         Displays the output image, for time ms.
         Setting time to 0 causes the image to remains open.
         Window name slightly changed to match output
+        Args:
+            im (IplImage)    : the image to be saved, formatted as an OpenCV Image
+            name    (string)    : the name of the image to be saved
+        KArgs :
+            time (int) : time for which the image should be displayed (in ms)
+            im_x (int) : output size of the displayed image (in pixels)
+            im_y (int) : output size of the displayed image (in pixels)
         """
         win_name = name + " - out"
         cv.NamedWindow(win_name, cv.CV_WINDOW_NORMAL)
@@ -322,6 +381,12 @@ class FaceMovie(object):
     def save_result(self, im, name, out_folder, ext):
         """
         Saves output image to the given format (given in extension)
+        
+        Args:
+            im (IplImage)    : the image to be saved, formatted as an OpenCV Image
+            name    (string)    : the name of the image to be saved
+            out_folder    (string)  : the location where to save the image
+            ext (string) : Format in which the image should be saved
         """
         file_name = name + "." + ext
         out_name = os.path.join(out_folder, file_name)

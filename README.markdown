@@ -10,7 +10,7 @@ The main difference with everyday is that Facemovie searches automatically for f
 
 Due to its general implementation, FaceMovie may be used for faces, but also profiles (for projects showing [women along pregnancy for example](http://www.youtube.com/watch?v=CG_KArKYTq4) or full body([for people workouting](http://www.youtube.com/watch?v=02Pzfv7JV48)). The only limitation comes from you ! 
 
-**[You can check out an example of video here.](http://www.youtube.com/watch?v=2pUHK7Sf23I)**
+**[You can check out an example of video here.](http://www.youtube.com/watch?v=2pUHK7Sf23I)**.
 
 
 ## Getting started
@@ -24,7 +24,7 @@ Please not that you best pick as this stage would be to choose the executable.
 This is the current safest and easiest solution for you. 
 
 Download the archive available [here](). By default, choose the full archive.
-The light archive is intended for users having Python2.7 already installed on their system.
+The light archive is intended for users having Python2.7 already installed on their system. In this case, a python.dll is given with the executable.
 
 Uncompress the archive. It contains three elements :
  - The executable itself, called Facemovifier.exe.
@@ -196,3 +196,5 @@ I would enjoy having feedback if you like this idea, or even used it. Send me a 
 Feel free to mail me for any comment or request. 
 
 You can contact me at julien at lengrand dot fr, or on my [current website](http://www.lengrand.fr).
+
+Version : 0.8.1
