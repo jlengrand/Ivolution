@@ -18,12 +18,17 @@ class Eye(object):
     """
     def __init__(self):
         """A facemovie redefinition of the human eye
-        Args:
-           x_pos    (int)   : x position of the eye in the image (in pixels)
-           y_pos    (int)   : y position of the eye in the image (in pixels)
-           x_size   (int)   : x size of the blob (in pixels)
-           y_size   (int)   : y size of the blob (in pixels)
-           conf     (float)   : confidence indice, indicating the probability of the target to actually be an eye
+
+        :param x_pos: x position of the eye in the image (in pixels)
+        :type x_pos: int
+        :param y_pos: y position of the eye in the image (in pixels)
+        :type y_pos: int        
+        :param x_size: x size of the blob (in pixels)
+        :type x_size: int
+        :param y_size: y size of the blob (in pixels)
+        :type y_size: int
+        :param conf: confidence indice, indicating the probability of the target to actually be an eye
+        :type conf: float
         """
         x_pos = None # x position of the eye in the image
         y_pos = None # y position of the eye in the image

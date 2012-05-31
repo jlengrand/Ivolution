@@ -31,7 +31,9 @@ class Facemoviefier():
     def init_facemovie(self):
         """
         Inits the Facemovie parameters, so that it can be run efficiently
-        FIXME : par folder should be known (contained somewhere in the installation)
+
+        ..note ::
+            FIXME : par folder should be known (contained somewhere in the installation)
         """        
         par_fo = os.path.join(self.args['root'], "haarcascades")
         self.face_params = FaceParams.FaceParams(par_fo, self.args['param'])    

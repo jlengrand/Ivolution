@@ -21,14 +21,19 @@ class FaceParams(object):
         some of them shall never be used. Perhaps would it be good to lower the dict size, or hide some of them
         postpend .xml
 
-        Args:
-            xml_folder (string)    : the location where xml files are located
-            training_type    (string)    : the type of profile we are going to use
-        KArgs:            
-            i_scale    (float)  :   Image scaling chosen for classification
-            h_scale    (float)  :   Haar scaling chosen for classification
-            h_flags    (int)    : the chosen number of haar flags
-            mn     (int)        : the Minimum number of neighbors to be defined
+        :param xml_folder: the location where xml files are located
+        :type xml_folder: string
+        :param training_type: the type of profile we are going to use
+        :type training_type: string
+
+        :param i_scale: Image scaling chosen for classification (2) 
+        :type i_scale: float
+        :param h_scale: Haar scaling chosen for classification (1.2) 
+        :type h_scale: float
+        :param h_flags: the chosen number of haar flags (0)
+        :type h_flags: int                                                
+        :param mn: the Minimum number of neighbors to be defined (2) 
+        :type mn: int                                        
         """
 
         cascade_name = training_types.simple_set[training_type] + ".xml"

@@ -19,10 +19,15 @@ class Guy(object):
     """
     def __init__(self, image, image_id, date):
         """All data linked to an input image
-        Args:
-            image (IplImage)    : the input image, formatted as an OpenCV Image
-            image_id    (string)    : the name of the image, formatted as a string
-            date    (datetime)  :   the date where the input image was taken.
+
+        :param image: the input image, formatted as an OpenCV Image
+        :type image: IplImage
+
+        :param image_id: the name of the image, formatted as a string
+        :type image_id: string
+
+        :param date: the date where the input image was taken.
+        :type date: datetime
         """
         self.in_x = None
         self.in_y = None
@@ -50,13 +55,11 @@ class Guy(object):
         """This function takes a date as a string, and returns a date object.
         Used afterwards to sort images chronologically
 
-        Args:
-           date (str):  The date where the image was taken
+        :param date: The date where the image was taken
+        :type date: string
 
-        Returns:
-           datetime.  Returns a date object according to time library.
-
-        In case of error, set the date to be the current time.
+        :returns:  datetime -- Returns a date object according to time library.
+        :raises: In case of error, set the date to be the current time.
         """
         try: 
             my_date = time.strptime(date, "%Y:%m:%d %H:%M:%S")
@@ -72,8 +75,8 @@ class Guy(object):
 
         Set several Guy information, such as the face size, or the virtual center of the image
 
-        Args:
-           face_params (str):  The type of file to be used to train the classifier.
+        :param face_params: The type of file to be used to train the classifier.
+        :type face_params: string
 
         Once Faces have been found, they are listed and ordered
         """
@@ -123,12 +126,10 @@ class Guy(object):
         """
         Sorts faces by number of neighbours found, most probable one first
 
-        Args:
-           face_params (str):  The type of file to be used to train the classifier.
+        :param face_params: The type of file to be used to train the classifier.
+        :type face_params: string
 
-        Returns:
-            A list of faces, ordered by probability
-            If no faces is found, returns a void list.
+        :returns:   A list of faces, ordered by probability. If no faces is found, returns a void list.
         """
         if self.has_face() : # needed ?
             self.faces.sort(key= lambda prob : prob[1], reverse=True)
@@ -140,7 +141,7 @@ class Guy(object):
         Using sorted faces, defines the new center of interest of the output image
 
         Updates the center of the image, using the most probable face as reference. 
-        Íf no face was found, the center is not updated.
+        If no face was found, the center is not updated.
         """
         if self.has_face():
             ((x, y, w, h), n) = self.faces[0]
@@ -153,8 +154,8 @@ class Guy(object):
         This method aloows faces to always keep the same size during all the video.
         Changes the center of the image and adds a new resized image.
 
-        Args:
-           reference (int):  The refence size of the face (in pixels). Defined as the first face size for now
+        :param reference: The refence size of the face (in pixels). Defined as the first face size for now
+        :type reference: int
         """
         self.normalize = 1
         
@@ -178,14 +179,17 @@ class Guy(object):
         If eq_ratio is set to something different than one, input image is scaled
         so that face/size = eq_ratio
 
-        Args:
-           x_size (int):  The size of the ouput image in x (in pixels)
-           y_size (int):  The size of the ouput image in y (in pixels)
-           x_point (int):  The center of the output image, where the Guy image has to fit in (in pixels)
-           y_point (int):  The center of the output image, where the Guy image has to fit in (in pixels)
+        :param x_size: The size of the ouput image in x (in pixels)
+        :type x_size: int
+        :param y_size: The size of the ouput image in y (in pixels)
+        :type y_size: int
+        :param x_point: The center of the output image, where the Guy image has to fit in (in pixels)
+        :type x_point: int
+        :param y_point: The center of the output image, where the Guy image has to fit in (in pixels)
+        :type y_point: int
 
-        Returns:
-            The ouput image, centered to fit with all other images
+        :returns:  IplImage --  The ouput image, centered to fit with all other images
+
         """
         out_im = cv.CreateImage((x_size, y_size),cv.IPL_DEPTH_8U, self.in_channels)
         cv.Zero(out_im)   
@@ -206,10 +210,12 @@ class Guy(object):
 
     def create_debug_output(self):
         """
-        **DEPRECATED**
         Creates output image
         If debug is set to true, output image is the input image with a red
         box around the most probable face.
+
+        .. note::
+            DEPRECATED
         """
         out_im = cv.CreateImage((self.in_x, self.in_y),cv.IPL_DEPTH_8U, self.in_channels)
         cv.Zero(out_im) # put everything to 0
@@ -242,10 +248,12 @@ class Guy(object):
         Displays the input image, for time ms.
         Setting time to 0 causes the image to remains open.
 
-        Args:
-           time (int):  The time for which image stays diaplyed (in ms). 0 causes the frams to remain open
-           im_x (int):  The output of the display frame in x (in pixels)
-           im_y (int):  The output of the display frame in y (in pixels)
+        :param time: The time for which image stays diaplyed (in ms). 0 causes the frams to remain open
+        :type time: int
+        :param im_x: The output of the display frame in x (in pixels)
+        :type im_x: int
+        :param im_y: The output of the display frame in y (in pixels)
+        :type im_y: int
         """
         cv.NamedWindow(self.name, cv.CV_WINDOW_NORMAL)
         cv.ResizeWindow(self.name, im_x, im_y) 
@@ -256,18 +264,16 @@ class Guy(object):
     def num_faces(self):
         """
         Returns the number of faces found for this guy
-
-        Returns:
-            int The number of faces found for the input image
-        """
+        
+        :returns:  int -- The number of faces found for the input image
+        """             
         return len(self.faces)        
 
     def has_face(self):
         """
         Returns True of False whether images have been found for the current image or not.
 
-        Returns:
-            True if at least one face has been found
+        :returns:  boolean -- True if at least one face has been found
         """
         return (len(self.faces) > 0)
     

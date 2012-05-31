@@ -19,11 +19,16 @@ class Face(object):
     def __init__(self):
         """A facemovie redifinition of the human face.
 
-           x_pos    (int)   : x position of the face in the image (in pixels)
-           y_pos    (int)   : y position of the face in the image (in pixels)
-           x_size   (int)   : x size of the blob (in pixels)
-           y_size   (int)   : y size of the blob (in pixels)
-           conf     (float)   : confidence indice, indicating the probability of the target to actually be an face
+        :param x_pos: x position of the face in the image (in pixels)
+        :type x_pos: int
+        :param y_pos: y position of the face in the image (in pixels)
+        :type y_pos: int
+        :param x_size: x size of the blob (in pixels)
+        :type x_size: int
+        :param y_size: y size of the blob (in pixels)
+        :type y_size: int
+        :param conf: confidence indice, indicating the probability of the target to actually be an face
+        :type conf: float                
         """
         x_center = None # x position of the face in the image
         y_center = None # y position of the face in the image

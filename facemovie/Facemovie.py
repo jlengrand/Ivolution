@@ -30,13 +30,12 @@ class FaceMovie(object):
         Initializes all parameters of the application. Input and output folders
          are defined, together with the classifier profile.
 
-        Args:
-            in_folder (string)    : the location where input files will be 
-                                    searched
-            out_folder    (string)    : the location where the outputs will be 
-                                        saved
-            face_param    (string)  :   the location of the profile file used 
-                                        to train the classifier
+        :param in_folder: the location where input files will be searched
+        :type in_folder: string
+        :param out_folder: the location where the outputs will be saved
+        :type out_folder: string
+        :param face_param: the location of the profile file used to train the classifier
+        :type face_param: string        
         """
         self.source= in_folder # Source folder for pictures
         self.out = out_folder # Folder to save outputs
@@ -71,9 +70,10 @@ class FaceMovie(object):
         """
         Sets the cropping dimension in case they have been provided by the end user
 
-        Args:
-            crop_x (int)    : dimension of the desired cropping in x (in number of face size)
-            crop_y (int)    : dimension of the desired cropping in y (in number of face size)
+        :param crop_x: dimension of the desired cropping in x (in number of face size)
+        :type crop_x: int
+        :param crop_y: dimension of the desired cropping in y (in number of face size)
+        :type crop_x: int        
         """
         self.cropdims = [crop_x, crop_y]
         
@@ -82,7 +82,6 @@ class FaceMovie(object):
         Aims at populating the guys list, using the source folder as an input. 
         Guys list shall be sorted chronologically.
         In case no valid date is found, it is set to ''.
-
         """
         try:
             os.path.exists(self.source)
@@ -140,8 +139,8 @@ class FaceMovie(object):
         A reference is given in input. The idea is to get all images to have the
         same size in Guy.
 
-        KArgs:
-            reference (int)    : the reference size of the face that we want to have
+        :param reference: the reference size of the face that we want to have (0)
+        :type reference: int
         """
         # FIXME: May be enhanced by choosing a more educated reference
         if reference == 0:
@@ -157,7 +156,7 @@ class FaceMovie(object):
         Returns the mean size of all faces in input
         Used to correctly crop images
 
-        **Designed for internal use only**
+        .. note:: Designed for internal use only
         """
         tot_x = 0
         tot_y = 0
@@ -252,11 +251,10 @@ class FaceMovie(object):
     def crop_im(self, image):
         """
         If needed, crops the image to avoid having black borders. 
-
-        Args:
-            image (IplImage)    : the image to be cropped
+        
+        :param image: the image to be cropped
+        :type image: IplImage
         """
-        # TODO : implement
         width = self.width#[0, 0]
         height = self.height#[0, 0]
         out_im = cv.CreateImage((width[0] + width[1], height[0] + height[1]),cv.IPL_DEPTH_8U, image.nChannels)
@@ -280,8 +278,8 @@ class FaceMovie(object):
         Show all faces that have been found for the guys.
         The time for which each image will be displayed can be chosen.
 
-        KArgs : 
-            mytime (int) : time for which the image should be displayed (in ms)
+        :param mytime: time for which the image should be displayed (in ms) (1000)
+        :type mytime: int
         """
         for a_guy in self.guys:
             if a_guy.has_face():     
@@ -297,11 +295,11 @@ class FaceMovie(object):
         """
         Save all faces into out_folder, in the given image format
 
-        Args:
-            out_folder (string) : the location where to save the output image.
+        :param out_folder: the location where to save the output image.
+        :type out_folder: string
 
-        KArgs : 
-            mytime (int) : time for which the image should be displayed (in ms)
+        :param im_format: Format in which the image should be saved ("png")
+        :type im_format: string        
         """
         for a_guy in self.guys: 
             if a_guy.has_face():
@@ -318,11 +316,11 @@ class FaceMovie(object):
         Creates a movie with all faces found in the inputs.
         Guy is skipped if no face is found.
         
-        Args:
-            out_folder (string) : the location where to save the output image.
-
-        KArgs : 
-            fps (int) : the number of frames per second to be displayed in final video
+        :param out_folder: the location where to save the output image.
+        :type out_folder: string
+        
+        :param fps: the number of frames per second to be displayed in final video (3)
+        :type fps: int       
         """
         filename = os.path.join(out_folder, "output.avi")
         fourcc = cv.CV_FOURCC('C', 'V', 'I', 'D')
@@ -354,7 +352,9 @@ class FaceMovie(object):
     def number_guys(self):
         """
         Simply returns the number of guys in the current to-be movie
-        __Designed for interface use only__
+        
+        .. note:: 
+            Designed for interface use only
         """  
         return len(self.guys)
     
@@ -363,13 +363,18 @@ class FaceMovie(object):
         Displays the output image, for time ms.
         Setting time to 0 causes the image to remains open.
         Window name slightly changed to match output
-        Args:
-            im (IplImage)    : the image to be saved, formatted as an OpenCV Image
-            name    (string)    : the name of the image to be saved
-        KArgs :
-            time (int) : time for which the image should be displayed (in ms)
-            im_x (int) : output size of the displayed image (in pixels)
-            im_y (int) : output size of the displayed image (in pixels)
+
+        :param im: the image to be saved, formatted as an OpenCV Image
+        :type im: IplImage
+        :param name: the name of the image to be saved
+        :type name: string 
+
+        :param time: time for which the image should be displayed (in ms) (1000)
+        :type time: int 
+        :param im_x: output size of the displayed image (in pixels) (640)
+        :type im_x: int 
+        :param im_y: output size of the displayed image (in pixels) (480)
+        :type im_y: int 
         """
         win_name = name + " - out"
         cv.NamedWindow(win_name, cv.CV_WINDOW_NORMAL)
@@ -382,11 +387,14 @@ class FaceMovie(object):
         """
         Saves output image to the given format (given in extension)
         
-        Args:
-            im (IplImage)    : the image to be saved, formatted as an OpenCV Image
-            name    (string)    : the name of the image to be saved
-            out_folder    (string)  : the location where to save the image
-            ext (string) : Format in which the image should be saved
+        :param im: the image to be saved, formatted as an OpenCV Image
+        :type im: IplImage 
+        :param name: the name of the image to be saved
+        :type name: string 
+        :param out_folder: the location where to save the image
+        :type out_folder: string         
+        :param ext: Format in which the image should be saved ("png")
+        :type ext: string        
         """
         file_name = name + "." + ext
         out_name = os.path.join(out_folder, file_name)
