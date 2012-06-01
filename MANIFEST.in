@@ -2,3 +2,8 @@ recursive-include test *.py
 recursive-include data\input\sample *
 recursive-include data\output
 recursive-include facemovie\haarcascades *.xml
+recursive-include docs *
+include CHANGES
+include LICENSE
+include *.sh
+include README.markdown

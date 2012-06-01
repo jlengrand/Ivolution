@@ -6,18 +6,17 @@ Simply take several pictures of yourself in the same position, and decide when t
 
 I see a growing interest for projects where people take one picture of themselves a day for several months (years ?) and compile it into a [video](http://www.youtube.com/watch?v=6B26asyGKDo). 
 When searching on the web, I realized that there was only one software allowing people to do this, the [everyday paid iphone app](everyday url). I hope that Facemovie could help some of you!
-The main difference with everyday is that Facemovie searches automatically for faces in the input images and compile them in the best possible way, so that your video lok awesome. 
+The main difference with everyday is that Facemovie searches automatically for faces in the input images and compile them in the best possible way, so that your video look awesome. 
 
 Due to its general implementation, FaceMovie may be used for faces, but also profiles (for projects showing [women along pregnancy for example](http://www.youtube.com/watch?v=CG_KArKYTq4) or full body([for people workouting](http://www.youtube.com/watch?v=02Pzfv7JV48)). The only limitation comes from you ! 
 
-**[You can check out an example of video here.](http://www.youtube.com/watch?v=2pUHK7Sf23I)**.
+**[You can check out an example here.](http://www.youtube.com/watch?v=2pUHK7Sf23I)**.
 
 
-## Getting started
-
+## Installation
 
 There are several ways you can choose from to run Facemovie, each being developed below.
-Please not that you best pick as this stage would be to choose the executable. 
+Please note that you best pick as this stage would be to choose the executable. 
 
 ### Windows executable (Default)
 
@@ -56,21 +55,15 @@ To check the code, simply open a command line and try to run the Facemovifier :
 
 Scripts are available for Windows and Linux (called __run.sh__ and __run_windows.sh__) in order to help you run Facemovie. 
 
+### Sample archive
 
+So that you can start playing with the FaceMovie even though you do not have a batch of images, I compiled some samples in a archive available [here](). 
+Simply uncompress it wherever you want, and use the image as input source !
 
-- Download a single executable [here](). Choose the file corresponding to your architecture, unzip the archive and you're done !
-  - Depending on your setup, you can choose installers including the Python interpreter or not. 
-  - The executable ships with a folder called haar__cascades and containing elements needed for the recognition phaze of the algorithm. 
-  Leave them in the same location as the executable by default.
-- Install the Python package via pip. (see command here).
-  - setup install
-  - You'll need some libraries installed to run the code, but the Facemovifier command will be available in your Python interpreter. 
-- Clone the project from Github and use the code. For this, you will have to install all the tool needed to run the Python code(see requirements chapter below).
-```
-git clone git://github.com/jlengrand/FaceMovie.git
-```
-  - I created scripts for Windows and Linux in the repo, so that the code can be used easily.
-  - This way, you'll get the last version of the code
+## Getting Started
+
+Now that FaceMovie is installed on your system, let's start playing with it !
+If you do not have images to play with, note that an [archive including samples] is available.
 
 For each of the following commands, __Facemovifier__ should be replaced by __FaceMovifier.exe__ or __python Facemovifier__ depending on your installation method (executable or Python egg).
 
@@ -121,22 +114,22 @@ $ Facemoviefier -p ?
 
 **Required :**
 
-- -i, --input : 	Input folder of the images to be processed
-- -o, --output : 	Output folder where the final results will be saved
+- -i, --input :   Input folder of the images to be processed
+- -o, --output :  Output folder where the final results will be saved
 
 **Optional :**
 
-- -h, --help :	Shows help message and exits
-- -r, --root : 	Location of the facemovie folder. Required if you run the Facemovifier from an external location
+- -h, --help :  Shows help message and exits
+- -r, --root :  Location of the facemovie folder. Required if you run the Facemovifier from an external location
 - -e, --equalize : If this option is activated, images will NOT be resized so that all faces have the same size.
-- -p, --param :	Used to change the file used to train the classifier. Useful you want to detect something else than front faces.
+- -p, --param : Used to change the file used to train the classifier. Useful you want to detect something else than front faces.
     Available parameters : 
         - upper body.
         - profile face.
         - lower body.
         - frontal face (default).
         - full body.
-- -t, --type :	The type of output to be created. Can be either images, video or simple display (nothing written on disc).
+- -t, --type :  The type of output to be created. Can be either images, video or simple display (nothing written on disc).
     Available types :
         - video
         - images
@@ -149,7 +142,6 @@ $ Facemoviefier -p ?
 - -c, --crop : In this mode, final images are cropped so that only the desired part of the body is kept. This will remove parts of the input images, but will avoid addition of black borders in the output.
 - -d, --cropdims : Expects two floats here. Ignored if crop mode is not selected. This allows to choose the window to be cropped. The values are defined in "number of face size".
 This means that for example -d 2 2 will output square images, of size 2 x the size of the subject face.  
-
 
 ## Libraries
 
@@ -173,6 +165,11 @@ Here is a list of my next objectives :
  - Implement a feature that detects and corrects roations (for when the face is not always straight)
  - Enhance documentation and tests
  - **Any idea is welcome !**
+
+## Other ressources
+
+A complete documentation for the code is available as an archive [here]().
+Simply uncompress the archive and open the index.html in your browser to access it. 
 
 ## License
 
