@@ -95,16 +95,16 @@ class FaceMovie(object):
         
         # loading images, create Guys and store it into guys
         for token in files :
-            image = cv.LoadImage(os.path.join(self.source, token))
+            guy_source = os.path.join(self.source, token)
+            image = cv.LoadImage(guy_source)
             guy_name = os.path.splitext(token)[0]
             
             try:
-                path = os.path.join(self.source, token)
-                guy_date = exif.parse(path)['DateTime']
+                guy_date = exif.parse(guy_source)['DateTime']
             except Exception:
                 guy_date = ''
 
-            a_guy = Guy.Guy(image, guy_name, guy_date)
+            a_guy = Guy.Guy(guy_name, guy_date, guy_source)
          
             # populating guys
             self.guys.append(a_guy)
@@ -340,7 +340,7 @@ class FaceMovie(object):
         for a_guy in self.guys:
             ii += 1 
             if a_guy.has_face():
-                print "frame %d" %(ii) 
+                print "Saving frame %d" %(ii) 
                 out_im = a_guy.create_video_output(self.dim_x, 
                                           self.dim_y, 
                                           self.x_center, 

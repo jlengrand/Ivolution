@@ -15,9 +15,8 @@ class Guy(object):
     """
         A new Guy is declared for each input image. 
         A Guy should have a face, and owns the input image.
-
     """
-    def __init__(self, image, image_id, date):
+    def __init__(self, image_id, date, source):
         """All data linked to an input image
 
         :param image: the input image, formatted as an OpenCV Image
@@ -32,25 +31,56 @@ class Guy(object):
         self.in_x = None
         self.in_y = None
         
-        self.in_channels = image.nChannels
         self.name = image_id # Name of the picture used as input
         self.date = self.find_date(date) # date where image was taken
-        self.in_image = None # input image
+        self.source = source
         
         self.faces = [] # List of faces detected for this input 
         
         # Some operations on variables
-        (self.in_x, self.in_y) = cv.GetSize(image) # image size in x, y
+        #image = self.load_image() # used to get size
+        self.in_x = 1280
+        self.in_y = 960
+        image = self.load_image()
+        (self.or_x, self.or_y) = cv.GetSize(image) # image size in x, y
+        #(self.in_x, self.in_y) = cv.GetSize(image) # image size in x, y
+        # FIXME : Time for me to find a better solution
+        self.in_channels = image.nChannels
         
         # Two variables used to define the new center of interest of the image
         # they are defined as the middle of input image at first
         self.x_center = self.in_x / 2
         self.y_center = self.in_y / 2
-        
-        # Creation of the images
-        self.in_image = cv.CreateImage((self.in_x, self.in_y),cv.IPL_DEPTH_8U, self.in_channels)
-        cv.Copy(image, self.in_image)
 
+    def load_image(self):
+        """
+        This function is used to load the image when needed. To reduce memory load, only its location is saved in real time
+        Returns an iplImage.
+        
+        :returns IplImage - the input image, not modified; loaded using self.source
+        """
+        # FIXME : Time for me to find a better solution
+        image = cv.LoadImage(self.source)
+        out = cv.CreateImage((self.in_x, self.in_y), cv.IPL_DEPTH_8U, image.nChannels) 
+        cv.Resize(image, out)
+        
+        return out
+
+    def load_normalized_image(self):
+        """
+        This function is used to load the normalized image when needed. Normalized images are used so that the face keeps the same size over time 
+        To reduce memory load, only the source image location is saved in real time
+        Returns an iplImage.
+        
+        :returns IplImage - the input image, normalized; loaded using self.source and resized afterwards
+        """    
+        
+        in_image = self.load_image()
+        norm_im = cv.CreateImage((self.in_x, self.in_y),cv.IPL_DEPTH_8U, self.in_channels)
+        cv.Resize(in_image, norm_im)
+        return norm_im # overriding in_image
+        
+        
     def find_date(self, date):
         """This function takes a date as a string, and returns a date object.
         Used afterwards to sort images chronologically
@@ -80,6 +110,10 @@ class Guy(object):
 
         Once Faces have been found, they are listed and ordered
         """
+        
+        # Load the input image
+        in_image = self.load_image()
+        
         # Allocate the temporary images
         gray = cv.CreateImage((self.in_x, self.in_y), 
                               cv.IPL_DEPTH_8U, 
@@ -90,7 +124,7 @@ class Guy(object):
                                     1)        
         
         # Converts color input image to grayscale
-        cv.CvtColor(self.in_image, gray, cv.CV_BGR2GRAY)
+        cv.CvtColor(in_image, gray, cv.CV_BGR2GRAY)
         # Scales input image for faster processing
         cv.Resize(gray, smallImage, cv.CV_INTER_LINEAR)
         # Equalizes the histogram
@@ -118,9 +152,6 @@ class Guy(object):
         # sorting faces to keep only the most probable one
         self.sort_faces()
         self.update_center() # finds center of face in image
-        
-        del gray
-        del smallImage
         
     def sort_faces(self):
         """
@@ -150,9 +181,9 @@ class Guy(object):
     
     def normalize_face(self, reference):
         """
-        Creates intermediate image, whose face fits reference size.
-        This method aloows faces to always keep the same size during all the video.
-        Changes the center of the image and adds a new resized image.
+        Searches for best size for intermediate image, whose face fits reference size.
+        This method allows faces to always keep the same size during all the video.
+        Changes the center of the image, so that the final image can be resized accordingly.
 
         :param reference: The refence size of the face (in pixels). Defined as the first face size for now
         :type reference: int
@@ -164,9 +195,6 @@ class Guy(object):
         norm_x = int(ratio * self.in_x)
         norm_y = int(ratio * self.in_y)
       
-        norm_im = cv.CreateImage((norm_x, norm_y),cv.IPL_DEPTH_8U, self.in_channels)
-        cv.Resize(self.in_image, norm_im)
-        self.in_image = norm_im # overriding in_image
         # updates center
         self.in_x = norm_x
         self.in_y = norm_y
@@ -203,7 +231,14 @@ class Guy(object):
             
         rect = (xtl, ytl, w, h)
         cv.SetImageROI(out_im, rect)
-        cv.Copy(self.in_image, out_im)
+        
+        # Load input image
+        if self.normalize :
+            in_image = self.load_normalized_image()
+        else:
+            in_image = self.load_image()
+            
+        cv.Copy(in_image, out_im)
         cv.ResetImageROI(out_im) 
 
         return out_im
@@ -220,7 +255,13 @@ class Guy(object):
         out_im = cv.CreateImage((self.in_x, self.in_y),cv.IPL_DEPTH_8U, self.in_channels)
         cv.Zero(out_im) # put everything to 0
         
-        cv.Copy(self.in_image, out_im)
+        # Load input image
+        if self.normalize :
+            in_image = self.load_normalized_image()
+        else:
+            in_image = self.load_image()
+        
+        cv.Copy(in_image, out_im)
         if self.has_face():
             # some nice drawings
             ((x, y, w, h), n) = self.faces[0]
@@ -241,6 +282,7 @@ class Guy(object):
                         pt3, 
                         cv.RGB(0, 255, 0), 
                         3, 8, 0)
+
         return out_im
             
     def in_display(self, time=1000, im_x=640, im_y=480):
@@ -255,9 +297,15 @@ class Guy(object):
         :param im_y: The output of the display frame in y (in pixels)
         :type im_y: int
         """
+        # Load input image
+        if self.normalize :
+            in_image = self.load_normalized_image()
+        else:
+            in_image = self.load_image()
+        
         cv.NamedWindow(self.name, cv.CV_WINDOW_NORMAL)
         cv.ResizeWindow(self.name, im_x, im_y) 
-        cv.ShowImage(self.name, self.in_image)
+        cv.ShowImage(self.name, in_image)
         cv.WaitKey(time)    
         cv.DestroyWindow(self.name)
 
