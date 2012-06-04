@@ -125,12 +125,14 @@ class Facemoviefier():
             sys.exit(0)      
         else:
             # creates Facemovie object, loads param file
+            print "Selected profile is : %s" %(self.args['param'])
             self.init_facemovie()
         
         #selects sorting method
         if self.args['sort'] == 'e':
             self.facemovie.sort_method = 'e';
         self.facemovie.list_guys()
+        print "==="
         self.facemovie.search_faces()
         # I want to change images so that all faces have the same size
         if self.args['equalize']:
@@ -138,19 +140,26 @@ class Facemoviefier():
         # I want to know the size of the output frame, knowing initial conditions    
         self.facemovie.find_out_dims() # finds output minimal size to get all eyes in the same place
         if self.args['crop']:
+            print "==="
+            print "Cropping output images"
             if self.args['cropdims']:
+                print "Custom cropping size chosen"
                 self.facemovie.set_crop_dims(float(self.args['cropdims'][0]), float(self.args['cropdims'][1])) 
             self.facemovie.find_crop_dims() # finds output minimal size to get all eyes in the same place
 
+        print "==="
         #choose your final step
         if self.args['type'] == 's':
+            print "Showing output faces :"
             self.facemovie.show_faces(1000)
         elif self.args['type'] == 'i':
+            print "Saving output images :"
             self.facemovie.save_faces(self.args['output'])
         elif self.args['type'] == 'v':
+            print "Saving output video :"
             self.facemovie.save_movie(self.args['output'], self.args['fps'])        
 
 if __name__ == '__main__':
     my_job = Facemoviefier()
     my_job.run()
-    print "Facemovie finished finally !"
+    print "FaceMovie exited successfully!"

@@ -340,7 +340,7 @@ class FaceMovie(object):
         for a_guy in self.guys:
             ii += 1 
             if a_guy.has_face():
-                print "Saving frame %d" %(ii) 
+                print "Saving frame %d / %d" %(ii, self.number_guys()) 
                 out_im = a_guy.create_video_output(self.dim_x, 
                                           self.dim_y, 
                                           self.x_center, 

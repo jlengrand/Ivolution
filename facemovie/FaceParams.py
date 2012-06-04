@@ -38,7 +38,6 @@ class FaceParams(object):
 
         cascade_name = training_types.simple_set[training_type] + ".xml"
         # Setting up some default parameters for Face Detection
-        print os.path.join(xml_folder, cascade_name)
         self.face_cascade = cv.Load(os.path.join(xml_folder, cascade_name))
 
         # To be defined more precisely
