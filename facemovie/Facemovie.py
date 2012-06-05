@@ -24,7 +24,7 @@ class FaceMovie(object):
     Takes a bunch of parameters and a list of images and tries to create a 
     video out of it.
     Contains general methods, aimed at being used trough an interface.
-    '''
+    '''    
     def __init__(self, in_folder, out_folder, face_params):
         """
         Initializes all parameters of the application. Input and output folders
@@ -37,6 +37,8 @@ class FaceMovie(object):
         :param face_param: the location of the profile file used to train the classifier
         :type face_param: string        
         """
+        self.CV_MAX_PIXEL = 13000 * 13000 # experimental maximal size of an IplImage
+        
         self.source= in_folder # Source folder for pictures
         self.out = out_folder # Folder to save outputs
         
@@ -98,7 +100,7 @@ class FaceMovie(object):
             guy_source = os.path.join(self.source, token)
             image = cv.LoadImage(guy_source)
             guy_name = os.path.splitext(token)[0]
-            
+            print guy_source
             try:
                 guy_date = exif.parse(guy_source)['DateTime']
             except Exception:
@@ -244,6 +246,11 @@ class FaceMovie(object):
         
         self.dim_x = self.x_af + self.x_center
         self.dim_y = self.y_af + self.y_center
+        
+        if self.dim_x * self.dim_y > self.CV_MAX_PIXEL:
+            print "Max size reached for large mode!"
+            print "You may want to switch to crop mode or reduce image resolution !"
+            sys.exit(0)
         
         # finishes by calculating average face size
         self.calc_mean_face()

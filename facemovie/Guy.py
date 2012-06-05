@@ -39,11 +39,9 @@ class Guy(object):
         
         # Some operations on variables
         #image = self.load_image() # used to get size
-        self.in_x = 1280
-        self.in_y = 960
         image = self.load_image()
-        (self.or_x, self.or_y) = cv.GetSize(image) # image size in x, y
-        #(self.in_x, self.in_y) = cv.GetSize(image) # image size in x, y
+        #(self.or_x, self.or_y) = cv.GetSize(image) # image size in x, y
+        (self.in_x, self.in_y) = cv.GetSize(image) # image size in x, y
         # FIXME : Time for me to find a better solution
         self.in_channels = image.nChannels
         
@@ -61,10 +59,10 @@ class Guy(object):
         """
         # FIXME : Time for me to find a better solution
         image = cv.LoadImage(self.source)
-        out = cv.CreateImage((self.in_x, self.in_y), cv.IPL_DEPTH_8U, image.nChannels) 
-        cv.Resize(image, out)
+        #out = cv.CreateImage((self.in_x, self.in_y), cv.IPL_DEPTH_8U, image.nChannels) 
+        #cv.Resize(image, out)
         
-        return out
+        return image
 
     def load_normalized_image(self):
         """
