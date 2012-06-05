@@ -50,6 +50,9 @@ class Guy(object):
         self.x_center = self.in_x / 2
         self.y_center = self.in_y / 2
 
+        self.normalize = False
+        self.ratio = 1.0
+
     def load_image(self):
         """
         This function is used to load the image when needed. To reduce memory load, only its location is saved in real time
@@ -186,7 +189,7 @@ class Guy(object):
         :param reference: The refence size of the face (in pixels). Defined as the first face size for now
         :type reference: int
         """
-        self.normalize = 1
+        self.normalize = True
         
         ratio = reference / float(self.faces[0][0][3])
         #defines the size of the image to have an equalized face
@@ -198,6 +201,8 @@ class Guy(object):
         self.in_y = norm_y
         self.x_center = int(ratio * self.x_center)
         self.y_center = int(ratio * self.y_center)
+        
+        self.ratio = ratio
 
     def create_video_output(self, x_size, y_size, x_point, y_point):
         """

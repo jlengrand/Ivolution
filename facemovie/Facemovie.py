@@ -59,6 +59,7 @@ class FaceMovie(object):
         self.dim_x = 0
         self.dim_y = 0
         
+        self.normalize = False
         # thumbmails
         self.crop = False
         self.cropdims = [0, 0] # user defined desired dimensions for cropping
@@ -144,6 +145,7 @@ class FaceMovie(object):
         :param reference: the reference size of the face that we want to have (0)
         :type reference: int
         """
+        self.normalize = True
         # FIXME: May be enhanced by choosing a more educated reference
         if reference == 0:
             reference = self.guys[0].faces[0][0][3] # catch face size (width)
@@ -255,6 +257,37 @@ class FaceMovie(object):
         # finishes by calculating average face size
         self.calc_mean_face()
     
+    def crop_im_new(self, a_guy):
+        if a_guy.normalize:
+            image = a_guy.load_normalized_image()
+        else :
+            image = a_guy.load_image()
+        
+        
+        width = self.width#[0, 0]
+        height = self.height#[0, 0]
+        out_im = cv.CreateImage((width[0] + width[1], height[0] + height[1]),cv.IPL_DEPTH_8U, image.nChannels)
+        cv.Zero(out_im)        
+        
+        ((x, y, w, h), n) = a_guy.faces[0]
+        # all should have the same w and h now ! What is different is the x and y !
+        w = int(w * a_guy.ratio)
+        h = int(h * a_guy.ratio)
+        xtl = a_guy.x_center  - width[0]
+        ytl = a_guy.y_center  - height[0]
+        w = width[0] + width[1]
+        h = height[0] + height[1]
+            
+        rect = (xtl, ytl, w, h)
+        
+        cv.SetImageROI(image, rect)
+        print "###"
+        print cv.GetSize(image), cv.GetSize(out_im)
+        cv.Copy(image, out_im)
+        cv.ResetImageROI(image)     
+    
+        return out_im
+        
     def crop_im(self, image):
         """
         If needed, crops the image to avoid having black borders. 
@@ -354,7 +387,8 @@ class FaceMovie(object):
                                           self.x_center, 
                                           self.y_center) 
                 if self.crop:
-                    out_im = self.crop_im(out_im)                            
+                    #out_im = self.crop_im(out_im)   
+                    out_im = self.crop_im_new(a_guy)                            
                 cv.WriteFrame(my_video, out_im)
 
     def number_guys(self):
