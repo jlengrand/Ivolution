@@ -156,7 +156,7 @@ class Facemoviefier():
             print "Saving output images :"
             self.facemovie.save_faces(self.args['output'])
         elif self.args['type'] == 'v':
-            print "Saving output video :"
+            print "Saving output video:"
             self.facemovie.save_movie(self.args['output'], self.args['fps'])        
 
 if __name__ == '__main__':

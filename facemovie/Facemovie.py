@@ -330,7 +330,8 @@ class FaceMovie(object):
             height = self.height
             frameSize = (width[0] + width[1], height[0] + height[1])
         else:
-            frameSize = (self.dim_x, self.dim_y)     
+            frameSize = (self.dim_x, self.dim_y)   
+        print "Speed is set to %d fps" %(fps)  
         my_video = cv.CreateVideoWriter(filename, 
                                       fourcc, 
                                       fps, 

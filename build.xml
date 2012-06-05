@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<project name="FaceMovie build script" default="print" basedir=".">
+
+	<taskdef resource="pyAntTasks.properties"/>
+	
+	<!-- Initialize properties and classpath  -->
+	<target name="init">
+
+		
+		<!-- Properties -->
+		<property name="src.dir" value="facemovie"/>
+		<property name="test.dir" value="test"/>
+		
+		<!-- Time -->
+		<tstamp>
+			<format property="TODAY" pattern="yyyy-MM-dd" />
+		</tstamp>	
+	</target>
+
+	<!--   -->
+	<target name="print" description="Just prints some information">
+	</target>
+		
+	<target name="compile" depends="init" >
+		<py-compile dir="${src.dir}" pythonpath="${src.dir}" optimize="0"/>
+	</target>		
+
+</project>
