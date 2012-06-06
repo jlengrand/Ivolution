@@ -8,10 +8,11 @@
 
 		
 		<!-- Properties -->
-		<property name="src.dir" value="facemovie"/>
-		<property name="test.dir" value="test"/>
-		<property name="doc.dir" value="doc"/>
-		<property name="pkg.dir" value="packaging"/>
+		<property name="base.dir" value="."/>
+		<property name="src.dir" value="${base.dir}/facemovie"/>
+		<property name="test.dir" value="${base.dir}/test"/>
+		<property name="doc.dir" location="${base.dir}/doc"/>
+		<property name="pkg.dir" value="${base.dir}/packaging"/>
 		
 		<!-- Time -->
 		<tstamp>
@@ -20,14 +21,18 @@
 	</target>
 
 	<!-- CLEAN : Removes all compiled stuff   -->
-	<target name="clean" description="Removes all compiled stuff">
+	<target name="clean" depends="init" description="Removes all compiled stuff">
 		<echo message="Removes build folder"/>
-		<delete dir="build"/>
+		<delete dir="${base.dir}/build"/>
 		<echo message="Removes dist folder"/>
-		<delete dir="dist"/>
+		<delete dir="${base.dir}/dist"/>
 		<echo message="Removes all compiled Python files"/>
 		<delete>
-		    <fileset dir="." includes="**/*.pyc"/>
+		    <fileset dir="${base.dir}" includes="**/*.pyc"/>
+		</delete>
+		<echo message="Removes old doc"/>
+		<delete includeEmptyDirs="true">
+		    <fileset dir="${doc.dir}/build" includes="**/*"/>
 		</delete>
 	</target>	
 	
@@ -36,6 +41,27 @@
 		<py-compile dir="${src.dir}" pythonpath="${src.dir}" optimize="0"/>
 		<py-compile dir="${test.dir}" pythonpath="${test.dir}" optimize="0"/>
 	</target>
+	
+	<!-- DOC : Generates documentation for the project -->
+	<target name="doc" depends="init,compile">
+		<exec dir="." executable="sphinx-build">
+			<arg line="${doc.dir}/source ${doc.dir}/build"/>
+		</exec>
+	</target>	
+	
+	
+	
+	
+	<target name="caca" depends="init,compile">
+		<py-doc pythonpath="$" destdir="${doc.dir}/build">
+			<fileset dir="${src.dir}">
+				<include name="**/*"/>
+			</fileset>
+		</py-doc>
+	</target>
+	
+	
+	
 	
 	<!--   -->
 	<target name="print" description="Just prints some information">
