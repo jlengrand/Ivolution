@@ -49,18 +49,12 @@
 		</exec>
 	</target>	
 	
-	
-	
-	
-	<target name="caca" depends="init,compile">
-		<py-doc pythonpath="$" destdir="${doc.dir}/build">
-			<fileset dir="${src.dir}">
-				<include name="**/*"/>
-			</fileset>
-		</py-doc>
+	<!-- EXE : Generates single Windows executable -->
+	<target name="exe" depends="init">
+		<py-run script="setup.py" pythonpath="${base.dir}" optimize="0">
+			<arg value="build"/>
+		</py-run>
 	</target>
-	
-	
 	
 	
 	<!--   -->
