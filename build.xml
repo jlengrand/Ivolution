@@ -13,6 +13,9 @@
 		<property name="test.dir" value="${base.dir}/test"/>
 		<property name="doc.dir" location="${base.dir}/doc"/>
 		<property name="pkg.dir" value="${base.dir}/packaging"/>
+		<!-- Specialized packaging folders -->
+		<property name="old.pkg.dir" value="${pkg.dir}/old"/>
+		<property name="curr.pkg.dir" value="${pkg.dir}/current"/>
 		
 		<!-- Time -->
 		<tstamp>
@@ -55,6 +58,18 @@
 			<arg value="build"/>
 		</py-run>
 	</target>
+	
+	<!-- package.clean : Moves old packages into proper folder  -->
+	<target name="package.clean" depends="init">
+		<move todir="${old.pkg.dir}">
+			<fileset dir="${curr.pkg.dir}">
+		    	<include name="*/*"/>
+		    </fileset>
+		</move>
+		<delete includeEmptyDirs="true">
+			<fileset dir="${curr.pkg.dir}" includes="**/*"/>
+		</delete>
+	</target>	
 	
 	
 	<!--   -->
