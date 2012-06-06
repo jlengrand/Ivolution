@@ -3,13 +3,15 @@
 
 	<taskdef resource="pyAntTasks.properties"/>
 	
-	<!-- Initialize properties and classpath  -->
+	<!-- INIT : Initialize properties and classpath  -->
 	<target name="init">
 
 		
 		<!-- Properties -->
 		<property name="src.dir" value="facemovie"/>
 		<property name="test.dir" value="test"/>
+		<property name="doc.dir" value="doc"/>
+		<property name="pkg.dir" value="packaging"/>
 		
 		<!-- Time -->
 		<tstamp>
@@ -17,12 +19,26 @@
 		</tstamp>	
 	</target>
 
+	<!-- CLEAN : Removes all compiled stuff   -->
+	<target name="clean" description="Removes all compiled stuff">
+		<echo message="Removes build folder"/>
+		<delete dir="build"/>
+		<echo message="Removes dist folder"/>
+		<delete dir="dist"/>
+		<echo message="Removes all compiled Python files"/>
+		<delete>
+		    <fileset dir="." includes="**/*.pyc"/>
+		</delete>
+	</target>	
+	
+	<!-- COMPILE : Checks that all Python files compile before packaging -->
+	<target name="compile" depends="init" >
+		<py-compile dir="${src.dir}" pythonpath="${src.dir}" optimize="0"/>
+		<py-compile dir="${test.dir}" pythonpath="${test.dir}" optimize="0"/>
+	</target>
+	
 	<!--   -->
 	<target name="print" description="Just prints some information">
 	</target>
-		
-	<target name="compile" depends="init" >
-		<py-compile dir="${src.dir}" pythonpath="${src.dir}" optimize="0"/>
-	</target>		
 
 </project>
