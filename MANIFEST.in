@@ -6,4 +6,4 @@ recursive-include docs *
 include CHANGES
 include LICENSE
 include *.sh
-include README.markdown
+include README.rst

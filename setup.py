@@ -10,7 +10,6 @@ import os
 import glob
 
 import py2exe
-
 import facemovie
 
 sys.argv.append('py2exe')
@@ -46,7 +45,7 @@ haar_files = find_data_files('facemovie','',['haarcascades/*.xml'])
 
 setup(
     name = "Facemovie",
-    version = "0.4",
+    version = "0.9",
     author = "Julien Lengrand-Lambert",
     author_email = "jlengrand@gmail.com",
     description = ("An application aiming at creating a video of faces for people taking 'one picture a day' of themselves"),
@@ -55,7 +54,7 @@ setup(
     url = "https://github.com/jlengrand/FaceMovie",
     download_url = "https://github.com/jlengrand/FaceMovie", # FIXME : To be updated
     packages=['facemovie', 'facemovie.lib', 'facemovie.haarcascades'],
-    long_description=read('README.markdown'),
+    long_description=read('README.rst'),
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Topic :: Multimedia :: Graphics",

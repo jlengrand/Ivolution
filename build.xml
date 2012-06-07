@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
-<project name="FaceMovie build script" default="print" basedir=".">
+<project name="FaceMovie build script" default="compile" basedir=".">
 
 	<taskdef resource="pyAntTasks.properties"/>
 	
 	<!-- INIT : Initialize properties and classpath  -->
 	<target name="init">
-
 		
 		<!-- Properties -->
+		<property name="old.version" value="0.8"/>		
 		<property name="version" value="0.9"/>		
 		
 		<property name="base.dir" value="."/>		
@@ -22,7 +22,7 @@
 		<property name="curr.pkg.dir" value="${pkg.dir}/current"/>
 		<property name="new.pkg.dir" value="${curr.pkg.dir}/${version}"/>
 		
-		
+		<property name="pipy.pkg.dir" value="${base.dir}/dist/fm_pipy"/>
 		<!-- Archive files -->
 		<property name="haar.zip" value="${new.pkg.dir}/haarcascades.zip"/>
 		<property name="samples.zip" value="${new.pkg.dir}/samples.zip"/>
@@ -48,6 +48,7 @@
 		<delete includeEmptyDirs="true">
 		    <fileset dir="${doc.dir}/build" includes="**/*"/>
 		</delete>
+		<delete file="${base.dir}/README.rst"/>
 	</target>	
 	
 	<!-- COMPILE : Checks that all Python files compile before packaging -->
@@ -58,13 +59,16 @@
 	
 	<!-- DOC : Generates documentation for the project -->
 	<target name="doc" depends="init,compile">
-		<exec dir="." executable="sphinx-build">
+		<exec dir="${base.dir}" executable="sphinx-build">
 			<arg line="${doc.dir}/source ${doc.dir}/build"/>
 		</exec>
 	</target>	
 	
 	<!-- EXE : Generates single Windows executable -->
 	<target name="exe" depends="init">
+		<exec dir="${base.dir}" executable="pandoc.exe">
+			<arg line="${base.dir}/README.markdown -o ${base.dir}/README.rst"/>
+		</exec>
 		<py-run script="setup.py" pythonpath="${base.dir}" optimize="0">
 			<arg value="build"/>
 		</py-run>
@@ -84,7 +88,7 @@
 	</target>	
 
 	<!-- package.create : Creates the new output folder and saves static data in it  -->
-	<target name="package.create" depends="init">
+	<target name="package.create" depends="init,clean,compile">
 		<echo message="Creating output folder"/>
 		<mkdir dir="${new.pkg.dir}"/>
 		
@@ -108,8 +112,8 @@
 	</target>
 	
 	<!-- package.win : Creates the application package for Windows  -->
-	<target name="package.win" depends="init,package.create">
-		<echo message="Creating Windows archive"/>		
+	<target name="package.win" depends="init,package.create,exe">
+		<echo message="Creating Windows Executable archive"/>		
 		<delete file="${exe.zip}"/>
 		<zip destfile="${exe.zip}">
 			<zipfileset dir="${base.dir}/dist" includes="Facemoviefier.exe"/>
@@ -117,9 +121,31 @@
 			<zipfileset dir="${haar.dir}" excludes="*.py" prefix="haarcascades"/>
 		</zip>		
 	</target>
-	
-	<!--   -->
-	<target name="print" description="Just prints some information">
+
+	<!-- package.pipy : Creates the application package for Windows  -->
+	<target name="package.pipy" depends="init,package.create">
+		<echo message="Creating Windows Pipy archive"/>		
+		<exec dir="${base.dir}" executable="pandoc.exe">
+			<arg line="${base.dir}/README.markdown -o ${base.dir}/README.rst"/>
+		</exec>
+		<py-run script="setup.py" pythonpath="${base.dir}" optimize="0">
+			<arg value="sdist"/>
+		</py-run>
+		<copy file="${base.dir}/dist/Facemovie-${version}.zip" todir="${new.pkg.dir}"/>
+	</target>
+
+	<!-- package.doc : Creates the source documentation package -->
+	<target name="package.doc" depends="init,package.create,doc">
+		<echo message="Creating Documentation archive"/>
+		<zip destfile="${new.pkg.dir}/doc.zip"
+		    basedir="${doc.dir}/build"
+			update="true"
+		/>
+	</target>
+
+	<!-- Whole packaging   -->
+	<target name="package" depends="init,package.clean,package.create,package.win,package.pipy,package.doc" description="Performs all packaging">
+		<echo message="Packaging all information"/>
 	</target>
 
 </project>
