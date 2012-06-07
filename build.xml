@@ -8,14 +8,25 @@
 
 		
 		<!-- Properties -->
-		<property name="base.dir" value="."/>
+		<property name="version" value="0.9"/>		
+		
+		<property name="base.dir" value="."/>		
 		<property name="src.dir" value="${base.dir}/facemovie"/>
+		<property name="haar.dir" value="${src.dir}/haarcascades"/>
 		<property name="test.dir" value="${base.dir}/test"/>
 		<property name="doc.dir" location="${base.dir}/doc"/>
 		<property name="pkg.dir" value="${base.dir}/packaging"/>
+		<property name="samples.dir" value="data/inputs/samples"/>
 		<!-- Specialized packaging folders -->
 		<property name="old.pkg.dir" value="${pkg.dir}/old"/>
 		<property name="curr.pkg.dir" value="${pkg.dir}/current"/>
+		<property name="new.pkg.dir" value="${curr.pkg.dir}/${version}"/>
+		
+		
+		<!-- Archive files -->
+		<property name="haar.zip" value="${new.pkg.dir}/haarcascades.zip"/>
+		<property name="samples.zip" value="${new.pkg.dir}/samples.zip"/>
+		<property name="exe.zip" value="${new.pkg.dir}/Facemovie-${version}-exe.zip"/>
 		
 		<!-- Time -->
 		<tstamp>
@@ -59,6 +70,7 @@
 		</py-run>
 	</target>
 	
+	<!-- PACKAGING  -->
 	<!-- package.clean : Moves old packages into proper folder  -->
 	<target name="package.clean" depends="init">
 		<move todir="${old.pkg.dir}">
@@ -70,7 +82,41 @@
 			<fileset dir="${curr.pkg.dir}" includes="**/*"/>
 		</delete>
 	</target>	
+
+	<!-- package.create : Creates the new output folder and saves static data in it  -->
+	<target name="package.create" depends="init">
+		<echo message="Creating output folder"/>
+		<mkdir dir="${new.pkg.dir}"/>
+		
+		<echo message="Compressing HaarCascades"/>
+		<delete file="${haar.zip}"/>
+		<zip destfile="${haar.zip}" update="true">
+			<zipfileset dir="${haar.dir}" prefix="haarcascades"  excludes="*.py"/>
+		</zip>
+
+		<echo message="Compressing Samples"/>
+		<delete file="${samples.zip}"/>
+		<zip destfile="${samples.zip}" update="true">
+			<zipfileset dir="${samples.dir}" prefix="samples"  excludes="*.py"/>
+		</zip>
+		
+		<echo message="Compressing Samples"/>
+		<delete file="${samples.zip}"/>
+		<zip destfile="${samples.zip}" update="true">
+			<zipfileset dir="${samples.dir}" prefix="samples"  excludes="*.py"/>
+		</zip>		
+	</target>
 	
+	<!-- package.win : Creates the application package for Windows  -->
+	<target name="package.win" depends="init,package.create">
+		<echo message="Creating Windows archive"/>		
+		<delete file="${exe.zip}"/>
+		<zip destfile="${exe.zip}">
+			<zipfileset dir="${base.dir}/dist" includes="Facemoviefier.exe"/>
+			<zipfileset dir="${base.dir}" includes="README.markdown"/>
+			<zipfileset dir="${haar.dir}" excludes="*.py" prefix="haarcascades"/>
+		</zip>		
+	</target>
 	
 	<!--   -->
 	<target name="print" description="Just prints some information">
