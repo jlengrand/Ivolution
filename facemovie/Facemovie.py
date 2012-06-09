@@ -11,6 +11,7 @@
 """
 import os
 import sys
+import sys
 
 import cv
 
@@ -363,7 +364,12 @@ class FaceMovie(object):
         :type fps: int       
         """
         filename = os.path.join(out_folder, "output.avi")
-        fourcc = cv.CV_FOURCC('C', 'V', 'I', 'D')
+        # Codec is OS dependant.
+        # FIXME : Find an unified version
+        if "win" in sys.platform:
+            fourcc = cv.CV_FOURCC('C', 'V', 'I', 'D')
+        else: # some kind of Linux platform
+        	fourcc = cv.CV_FOURCC('I', '4', '2', '0')
 
         if self.crop:
             width = self.width
