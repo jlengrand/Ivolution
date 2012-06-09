@@ -9,7 +9,8 @@ import sys
 import os
 import glob
 
-import py2exe
+if "win" in sys.platform:
+    import py2exe
 import facemovie
 
 sys.argv.append('py2exe')
