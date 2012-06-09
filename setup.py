@@ -46,14 +46,14 @@ haar_files = find_data_files('facemovie','',['haarcascades/*.xml'])
 
 setup(
     name = "Facemovie",
-    version = "0.4",
+    version = "0.8.1",
     author = "Julien Lengrand-Lambert",
     author_email = "jlengrand@gmail.com",
-    description = ("An application aiming at creating a video of faces for people taking 'one picture a day' of themselves"),
+    description = ("Take one picture of yourself a day, automatically generate a movie!"),
     license = "BSD License",
     keywords = "image_processing computer_vision one_picture_a_day photography",
-    url = "https://github.com/jlengrand/FaceMovie",
-    download_url = "https://github.com/jlengrand/FaceMovie", # FIXME : To be updated
+    url = "http://jlengrand.github.com/FaceMovie/",
+    download_url = "http://jlengrand.github.com/FaceMovie/", # FIXME : To be updated
     packages=['facemovie', 'facemovie.lib', 'facemovie.haarcascades'],
     long_description=read('README.markdown'),
     classifiers=[
@@ -69,6 +69,6 @@ setup(
 	data_files = haar_files,
     options = {'py2exe': {'bundle_files': 1, # 3 dont bundle, 2 bundle but python interpreter, 1 bundle everything
                           'includes': ['numpy'] } },
-    console=['facemovie/Facemoviefier.py'],
+    console=['Facemoviefier.py'],
     zipfile = None,
 )

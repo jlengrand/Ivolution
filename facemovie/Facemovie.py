@@ -14,8 +14,8 @@ import sys
 
 import cv
 
-from facemovie.lib import exif
-from facemovie import Guy
+from lib import exif
+import Guy
 
 class FaceMovie(object):
     '''
