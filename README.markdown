@@ -1,7 +1,7 @@
-#Take one picture of yourself a day, automatically generate a movie!
+#[Take one picture of yourself a day, automatically generate a movie!](http://jlengrand.github.com/FaceMovie/)
 
 
-**[FaceMovie](http://www.youtube.com/watch?v=JueOY7EtXrQ)** is a simple project that aims at helping you create videos of yourself over time, using photos as input.
+**[FaceMovie](http://www.youtube.com/watch?v=9ZpKnSjvmXo)** is a simple project that aims at helping you create videos of yourself over time, using photos as input.
 Simply take several pictures of yourself in the same position, and decide when to compile everything into a video. Just indicate the location of your pictures, Facemovie does everything else for you. 
 
 I see a growing interest for projects where people take one picture of themselves a day for several months (years ?) and compile it into a [video](http://www.youtube.com/watch?v=6B26asyGKDo). 
@@ -9,8 +9,6 @@ When searching on the web, I realized that there was only one software allowing 
 The main difference with everyday is that Facemovie searches automatically for faces in the input images and compile them in the best possible way, so that your video look awesome. 
 
 Due to its general implementation, FaceMovie may be used for faces, but also profiles (for projects showing [women along pregnancy for example](http://www.youtube.com/watch?v=CG_KArKYTq4) or full body([for people workouting](http://www.youtube.com/watch?v=02Pzfv7JV48)). The only limitation comes from you ! 
-
-**[You can check out an example here.](http://www.youtube.com/watch?v=2pUHK7Sf23I)**.
 
 
 ## Installation

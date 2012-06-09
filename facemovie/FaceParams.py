@@ -9,7 +9,7 @@
 import cv
 import os
 
-from facemovie import training_types
+import training_types
 
 class FaceParams(object):
     '''
