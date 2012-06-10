@@ -85,7 +85,7 @@ class FaceMovie(object):
         """
         Aims at populating the guys list, using the source folder as an input. 
         Guys list shall be sorted chronologically.
-        In case no valid date is found, it is set to ''.
+        .. note::In case no valid date is found, it is set to ''.
         """
         try:
             os.path.exists(self.source)
@@ -393,7 +393,6 @@ class FaceMovie(object):
             fourcc = cv.CV_FOURCC('C', 'V', 'I', 'D')
         else: # some kind of Linux platform
         	#fourcc = cv.CV_FOURCC('I', '4', '2', '0')
-        	print "Trying new codec for Ignacio"
         	fourcc = cv.CV_FOURCC('F', 'M', 'P', '4')
 
         if self.crop:
