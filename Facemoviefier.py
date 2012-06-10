@@ -64,13 +64,6 @@ class Facemoviefier():
         
         # root folder
         parser.add_argument('-r', '--root', help='Root folder where the application is placed', default=".")
-        
-        # equalize faces or not ? 
-        parser.add_argument('-e', 
-                            '--equalize', 
-                            help='If this option is activated, images will NOT be resized so that all faces have the same size', 
-                            action='store_false', 
-                            default=True)
 
         # expand images or crop ? Default should be crop
         parser.add_argument('-c', 
@@ -135,8 +128,7 @@ class Facemoviefier():
         print "==="
         self.facemovie.search_faces()
         # I want to change images so that all faces have the same size
-        if self.args['equalize']:
-            self.facemovie.normalize_faces() # sets all faces to the same size
+        self.facemovie.normalize_faces() # sets all faces to the same size
         # I want to know the size of the output frame, knowing initial conditions    
         self.facemovie.find_out_dims() # finds output minimal size to get all eyes in the same place
         if self.args['crop']:
