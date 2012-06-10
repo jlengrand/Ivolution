@@ -93,27 +93,28 @@ class FaceMovie(object):
         except : # find precise exception
             print "ERROR : Source folder not found ! Exiting. . ." 
             sys.exit(0)
-            
-        # just listing directory. Lets be more secure later
-        files = os.listdir(self.source)
-        
+                
         # loading images, create Guys and store it into guys
-        for token in files :
-            if os.path.isfile(os.path.join(self.source, token)):
-                guy_source = os.path.join(self.source, token)
-                image = cv.LoadImage(guy_source)
-                guy_name = os.path.splitext(token)[0]
-                print guy_source
+        for root, _, files in os.walk(self.source):
+            for a_file in files:
+                guy_source = os.path.join(root, a_file)
                 try:
-                    guy_date = exif.parse(guy_source)['DateTime']
-                except Exception:
-                    guy_date = ''
+                    image = cv.LoadImage(guy_source)
+                    guy_name = os.path.splitext(a_file)[0]
+                    try:
+                        guy_date = exif.parse(guy_source)['DateTime']
+                    except Exception:
+                        guy_date = ''
 
-                a_guy = Guy.Guy(guy_name, guy_date, guy_source)
-             
-                # populating guys
-                self.guys.append(a_guy)
+                    a_guy = Guy.Guy(guy_name, guy_date, guy_source)
+                 
+                    # populating guys
+                    self.guys.append(a_guy)
+                except:
+                    print "=> Problem loading %s. Not an image file" %(guy_source)
        
+        print "==="
+
         # Sorting either by exif date or name
         if self.sort_method == "e":
             print "Sorting files using EXIF metadata"
@@ -121,7 +122,7 @@ class FaceMovie(object):
         else: # default is sort by name
             print "Sorting files using file name"
             self.guys.sort(key=lambda g: g.name)
-            
+
     def search_faces(self):
         """
         Searches for all faces in the guys we have
