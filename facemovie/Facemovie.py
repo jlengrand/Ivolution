@@ -99,19 +99,20 @@ class FaceMovie(object):
         
         # loading images, create Guys and store it into guys
         for token in files :
-            guy_source = os.path.join(self.source, token)
-            image = cv.LoadImage(guy_source)
-            guy_name = os.path.splitext(token)[0]
-            print guy_source
-            try:
-                guy_date = exif.parse(guy_source)['DateTime']
-            except Exception:
-                guy_date = ''
+            if os.path.isfile(os.path.join(self.source, token)):
+                guy_source = os.path.join(self.source, token)
+                image = cv.LoadImage(guy_source)
+                guy_name = os.path.splitext(token)[0]
+                print guy_source
+                try:
+                    guy_date = exif.parse(guy_source)['DateTime']
+                except Exception:
+                    guy_date = ''
 
-            a_guy = Guy.Guy(guy_name, guy_date, guy_source)
-         
-            # populating guys
-            self.guys.append(a_guy)
+                a_guy = Guy.Guy(guy_name, guy_date, guy_source)
+             
+                # populating guys
+                self.guys.append(a_guy)
        
         # Sorting either by exif date or name
         if self.sort_method == "e":
