@@ -369,7 +369,8 @@ class FaceMovie(object):
         if "win" in sys.platform:
             fourcc = cv.CV_FOURCC('C', 'V', 'I', 'D')
         else: # some kind of Linux platform
-        	fourcc = cv.CV_FOURCC('I', '4', '2', '0')
+        	#fourcc = cv.CV_FOURCC('I', '4', '2', '0')
+        	fourcc = cv.CV_FOURCC('F', 'M', 'P', '4')
 
         if self.crop:
             width = self.width
