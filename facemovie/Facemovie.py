@@ -137,7 +137,25 @@ class FaceMovie(object):
             else:
                 print "Warning! No face found for %s" %(a_guy.name)
     
-    def normalize_faces(self, reference=0):
+    def find_reference(self):
+        """
+        Searched for the best face size we want to have. 
+        Defined (for now), as the smallest of all found faces.
+
+        :returns int - the reference size of the bounding square for faces.
+        """
+        references = []
+        for a_guy in self.guys:
+            if a_guy.has_face():
+                references.append(a_guy.faces[0][0][3]) # catch face size (width)
+
+        if len(references) == 0:
+            print "No face has been found in the whole repository! Exiting. . . "
+            sys.exit(0)
+
+        return min(references)
+
+    def normalize_faces(self):
         """
         Creates new images, normalized by face size
         A reference is given in input. The idea is to get all images to have the
@@ -147,14 +165,12 @@ class FaceMovie(object):
         :type reference: int
         """
         self.normalize = True
-        # FIXME: May be enhanced by choosing a more educated reference
-        if reference == 0:
-            reference = self.guys[0].faces[0][0][3] # catch face size (width)
-            
+
+        reference = self.find_reference()
+
         for a_guy in self.guys:
             if a_guy.has_face():
                 a_guy.normalize_face(reference)
-    
     
     def calc_mean_face(self):
         """
@@ -259,6 +275,12 @@ class FaceMovie(object):
         self.calc_mean_face()
     
     def crop_im_new(self, a_guy):
+        """
+        If needed, crops the image to avoid having black borders. 
+        
+        :param image: the image to be cropped
+        :type image: IplImage
+        """        
         if a_guy.normalize:
             image = a_guy.load_normalized_image()
         else :
