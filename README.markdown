@@ -1,11 +1,11 @@
 #[Take one picture of yourself a day, automatically generate a movie!](http://jlengrand.github.com/FaceMovie/)
 
 
-**[FaceMovie](http://www.youtube.com/watch?v=9ZpKnSjvmXo)** is a simple project that aims at helping you create videos of yourself over time, using photos as input.
+**[FaceMovie](http://jlengrand.github.com/FaceMovie)** is a simple project that aims at helping you create videos of yourself over time, using photos as input.
 Simply take several pictures of yourself in the same position, and decide when to compile everything into a video. Just indicate the location of your pictures, Facemovie does everything else for you. 
 
 I see a growing interest for projects where people take one picture of themselves a day for several months (years ?) and compile it into a [video](http://www.youtube.com/watch?v=6B26asyGKDo). 
-When searching on the web, I realized that there was only one software allowing people to do this, the [everyday paid iphone app](everyday url). I hope that Facemovie could help some of you!
+When searching on the web, I realized that there was only one software allowing people to do this : the [everyday paid iphone app](http://www.everyday-app.com). I hope that Facemovie can help some of you!
 The main difference with everyday is that Facemovie searches automatically for faces in the input images and compile them in the best possible way, so that your video look awesome. 
 
 Due to its general implementation, FaceMovie may be used for faces, but also profiles (for projects showing [women along pregnancy for example](http://www.youtube.com/watch?v=CG_KArKYTq4) or full body([for people workouting](http://www.youtube.com/watch?v=02Pzfv7JV48)). The only limitation comes from you ! 
@@ -14,14 +14,12 @@ Due to its general implementation, FaceMovie may be used for faces, but also pro
 ## Installation
 
 There are several ways you can choose from to run Facemovie, each being developed below.
-Please note that you best pick as this stage would be to choose the executable. 
 
 ### Windows executable (Default)
 
-This is the current safest and easiest solution for you. 
+This is the current easiest solution, as it runs out of the box. 
 
-Download the archive available [here](). By default, choose the full archive.
-The light archive is intended for users having Python2.7 already installed on their system. In this case, a python.dll is given with the executable.
+Download the archive available [here](https://dl.dropbox.com/u/4286043/GH/FaceMovie/packaging/packages/Facemovie_0.8.zip). 
 
 Uncompress the archive. It contains three elements :
  - The executable itself, called Facemovifier.exe.
@@ -48,20 +46,28 @@ This is a very good solution if you already have Python2.7 and OpenCV installed 
 To check the code, simply open a command line and try to run the Facemovifier : 
  ```
  $ cd my\cloned\folder
- $ python facemovie\Facemoviefier.py -h
+ $ python Facemoviefier.py -h
  ``` 
 
-Scripts are available for Windows and Linux (called __run.sh__ and __run_windows.sh__) in order to help you run Facemovie. 
+### Pipy
+
+The Linux application is also available through a Python egg, available on [Pypi](http://pypi.python.org/pypi/Facemovie/0.8).
+You can then simply install Facemovie using [pip] (http://pypi.python.org/pypi/pip): 
+```
+$ pip install Facemovie
+```
+
+You will need to have OpenCV with Python bindings to use it. (See requirements chapter)
 
 ### Sample archive
 
-So that you can start playing with the FaceMovie even though you do not have a batch of images, I compiled some samples in a archive available [here](). 
-Simply uncompress it wherever you want, and use the image as input source !
+So that you can start playing with the FaceMovie even though you do not have a batch of images, I compiled some samples in a archive available [here](https://dl.dropbox.com/u/4286043/GH/FaceMovie/packaging/ressources/samples.zip). 
+Simply uncompress it wherever you want, and use the images as input source !
 
 ## Getting Started
 
 Now that FaceMovie is installed on your system, let's start playing with it !
-If you do not have images to play with, note that an [archive including samples] is available.
+If you do not have images to play with, note that an [archive including samples](https://dl.dropbox.com/u/4286043/GH/FaceMovie/packaging/ressources/samples.zip) is available.
 
 For each of the following commands, __Facemovifier__ should be replaced by __FaceMovifier.exe__ or __python Facemovifier__ depending on your installation method (executable or Python egg).
 
@@ -78,14 +84,13 @@ The next step is to try to create you first video. It is no more complex than ru
 $ Facemoviefier -i input_folder -o output_folder
 ```
 Where input_folder is the repository where all your images are stored, and output_folder where you want the results to be saved. 
-If you don't have images, you can still test the application by downloading some samples [here](lien vers samples).
 
 Here is a concrete example : 
 ```
 $ Facemoviefier.exe -i "../data/input/samples" -o "../data/output"
 ```
 
-**NOTE : ** In order to get good results, your  images should contain only one person; and you should try to always keep the same angle with the camera for each of them.
+**NOTE : ** In order to get good results, your images should contain only one person; and you should try to always keep the same angle with the camera for each of them.
 
 
 Facemovie needs the list of haar_cascades to correctly detect faces. This means that if you decide to run the Facemovie from another location, you should update the folders accordingly and use the root_folder option:
@@ -119,7 +124,6 @@ $ Facemoviefier -p ?
 
 - -h, --help :  Shows help message and exits
 - -r, --root :  Location of the facemovie folder. Required if you run the Facemovifier from an external location
-- -e, --equalize : If this option is activated, images will NOT be resized so that all faces have the same size.
 - -p, --param : Used to change the file used to train the classifier. Useful you want to detect something else than front faces.
     Available parameters : 
         - upper body.
@@ -131,8 +135,7 @@ $ Facemoviefier -p ?
     Available types :
         - video
         - images
-        - simple graphical display
-- -e, --equalize : When this option is activated, Facemovie will **NOT** resize images so that faces always keep the same size. This may result in lower quality results but avoid resizing images. 
+        - simple graphical display 
 - -s, --sort : The way used to sort images chronologically. Can be done either by using file names or EXIF metadata.
     Available modes :
         - name (default)
@@ -146,10 +149,11 @@ This means that for example -d 2 2 will output square images, of size 2 x the si
 The whole aplication is developed using [Python2.7.3](http://www.python.org/download/). Any Python2.7 should be enough though.
 To run the application, you'll also need to install [Opencv](http://opencv.willowgarage.com/wiki/).See [the documentation](http://opencv.willowgarage.com/wiki/InstallGuide) for more information. 
 
+**NOTE : ** Note that the opencv package available in Ubuntu's synaptic is outdated and should NOT be used. Follow the [ubuntu install guide](http://opencv.willowgarage.com/wiki/InstallGuide%20%3A%20Debian) to install the latest OpenCV version.
+
 I also used the excellent [exif library](http://sourceforge.net/projects/exif-py/) to enhance sorting capabilities. It is embedded in the code, and you will not need to install it.
 
-This project is developed on a Windows (7) platform, but there should (and, as a fanatic Linux User, will) be no compatibility problems with UNIX. 
-The Linux application will be made available through a Python egg, available on [Pypi](http://pypi.python.org/pypi).
+This project has been successfully tested on Windows 7 and Ubuntu 12.04 platforms.
 
 ## Work in progress
 
@@ -166,8 +170,9 @@ Here is a list of my next objectives :
 
 ## Other ressources
 
-A complete documentation for the code is available as an archive [here]().
-Simply uncompress the archive and open the index.html in your browser to access it. 
+- [Complete documentation for the code.](https://dl.dropbox.com/u/4286043/GH/FaceMovie/packaging/doc/Facemovie_0.8_doc.zip)
+- [Samples available to test the code.](http://dl.dropbox.com/u/4286043/GH/FaceMovie/packaging/ressources/samples.zip)
+- [List of available haar cascades.](https://dl.dropbox.com/u/4286043/GH/FaceMovie/packaging/ressources/haarcascades.zip)
 
 ## License
 
