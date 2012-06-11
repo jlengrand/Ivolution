@@ -4,4 +4,5 @@ Adds custom codec for Linux video support (Thanks to Ignacio Martinez)
 Removes normalize option from user interface
 Adds an ant script for task automation
 Solves several dependency problems by moving files
+Solves bug in reference choice for face normalization
 ----
