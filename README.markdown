@@ -59,11 +59,6 @@ $ pip install Facemovie
 
 You will need to have OpenCV with Python bindings to use it. (See requirements chapter)
 
-### Sample archive
-
-So that you can start playing with the FaceMovie even though you do not have a batch of images, I compiled some samples in a archive available [here](https://dl.dropbox.com/u/4286043/GH/FaceMovie/packaging/ressources/samples.zip). 
-Simply uncompress it wherever you want, and use the images as input source !
-
 ## Getting Started
 
 Now that FaceMovie is installed on your system, let's start playing with it !
@@ -149,7 +144,10 @@ This means that for example -d 2 2 will output square images, of size 2 x the si
 The whole aplication is developed using [Python2.7.3](http://www.python.org/download/). Any Python2.7 should be enough though.
 To run the application, you'll also need to install [Opencv](http://opencv.willowgarage.com/wiki/).See [the documentation](http://opencv.willowgarage.com/wiki/InstallGuide) for more information. 
 
-**NOTE : ** Note that the opencv package available in Ubuntu's synaptic is outdated and should NOT be used. Follow the [ubuntu install guide](http://opencv.willowgarage.com/wiki/InstallGuide%20%3A%20Debian) to install the latest OpenCV version.
+**NOTE : ** If you are using Ubuntu 12.04, best of luck ! The opencv package is available in the main repo. Simply run :
+```
+$ sudo aptitude install python-opencv libcv2.3 libcvaux2.3 libhighgui2.3 libopencv-contrib2.3 libopencv-gpu2.3 python-numpy
+```
 
 I also used the excellent [exif library](http://sourceforge.net/projects/exif-py/) to enhance sorting capabilities. It is embedded in the code, and you will not need to install it.
 
@@ -159,14 +157,7 @@ This project has been successfully tested on Windows 7 and Ubuntu 12.04 platform
 
 Facemovie is still under development, and you should consider it as work in progress.
 Lots of elements still have to be improved. 
-
-Here is a list of my next objectives : 
-
- - Implement a simple GUI to avoid this ugly command line interface
- - Allow manual interaction to help the algorithm. When no face is found, the software currently discard the image. I would allow the user to point the face himself.
- - Implement a feature that detects and corrects roations (for when the face is not always straight)
- - Enhance documentation and tests
- - **Any idea is welcome !**
+You can **[have a look here](https://github.com/jlengrand/FaceMovie/issues?state=open)** to see my next objectives.
 
 ## Other ressources
 
@@ -193,7 +184,7 @@ I never experienced any problem using the software, but you should always back u
 ## Contact
 
 I would enjoy having feedback if you like this idea, or even used it. Send me a link to your creations so that I can put them here !
-Feel free to mail me for any comment or request. 
+**Feel free to [write some words here](https://github.com/jlengrand/FaceMovie/issues?state=open)** for any comment or request. 
 
 You can contact me at julien at lengrand dot fr, or on my [current website](http://www.lengrand.fr).
 
