@@ -112,11 +112,14 @@ $ Facemoviefier -p ?
 
 **Required :**
 
+```
 - -i, --input :   Input folder of the images to be processed
 - -o, --output :  Output folder where the final results will be saved
+```
 
 **Optional :**
 
+```
 - -h, --help :  Shows help message and exits
 - -r, --root :  Location of the facemovie folder. Required if you run the Facemovifier from an external location
 - -p, --param : Used to change the file used to train the classifier. Useful you want to detect something else than front faces.
@@ -138,6 +141,7 @@ $ Facemoviefier -p ?
 - -c, --crop : In this mode, final images are cropped so that only the desired part of the body is kept. This will remove parts of the input images, but will avoid addition of black borders in the output.
 - -d, --cropdims : Expects two floats here. Ignored if crop mode is not selected. This allows to choose the window to be cropped. The values are defined in "number of face size".
 This means that for example -d 2 2 will output square images, of size 2 x the size of the subject face.  
+```
 
 ## Libraries
 
