@@ -1,7 +1,7 @@
 #[Take one picture of yourself a day, automatically generate a movie!](http://jlengrand.github.com/FaceMovie/)
 
 
-**[FaceMovie](http://jlengrand.github.com/FaceMovie)** is a simple project that aims at helping you create videos of yourself over time, using photos as input.
+**FaceMovie** is a simple project that aims at helping you create videos of yourself over time, using photos as input.
 Simply take several pictures of yourself in the same position, and decide when to compile everything into a video. Just indicate the location of your pictures, Facemovie does everything else for you. 
 
 I see a growing interest for projects where people take one picture of themselves a day for several months (years ?) and compile it into a [video](http://www.youtube.com/watch?v=6B26asyGKDo). 
@@ -19,7 +19,7 @@ There are several ways you can choose from to run Facemovie, each being develope
 
 This is the current easiest solution, as it runs out of the box. 
 
-Download the archive available [here](https://dl.dropbox.com/u/4286043/GH/FaceMovie/packaging/packages/Facemovie_0.8.zip). 
+Download the archive available **[here](https://dl.dropbox.com/u/4286043/GH/FaceMovie/Facemovie-0.8.2-exe.zip)**. 
 
 Uncompress the archive. It contains three elements :
  - The executable itself, called Facemovifier.exe.
@@ -41,8 +41,6 @@ You can also simply clone the project from Github and use it as you wish.
 git clone git://github.com/jlengrand/FaceMovie.git
 ```
 
-This is a very good solution if you already have Python2.7 and OpenCV installed on your system (see requirements chapter).
-
 To check the code, simply open a command line and try to run the Facemovifier : 
  ```
  $ cd my\cloned\folder
@@ -57,14 +55,14 @@ You can then simply install Facemovie using [pip] (http://pypi.python.org/pypi/p
 $ pip install Facemovie
 ```
 
-You will need to have OpenCV with Python bindings to use it. (See requirements chapter)
+
 
 ## Getting Started
 
 Now that FaceMovie is installed on your system, let's start playing with it !
-If you do not have images to play with, note that an [archive including samples](https://dl.dropbox.com/u/4286043/GH/FaceMovie/packaging/ressources/samples.zip) is available.
+If you do not have images to play with, note that an [archive including samples](https://dl.dropbox.com/u/4286043/GH/FaceMovie/samples.zip) is available.
 
-For each of the following commands, __Facemovifier__ should be replaced by __FaceMovifier.exe__ or __python Facemovifier__ depending on your installation method (executable or Python egg).
+For each of the following commands, __Facemovifier__ should be replaced by __FaceMovifier.exe__ or __python Facemovifier__ depending on your installation method.
 
 
 Once installed, let's start by calling the helper of Facemovie. It can be done by
@@ -87,14 +85,12 @@ $ Facemoviefier.exe -i "../data/input/samples" -o "../data/output"
 
 **NOTE : ** In order to get good results, your images should contain only one person; and you should try to always keep the same angle with the camera for each of them.
 
-
 Facemovie needs the list of haar_cascades to correctly detect faces. This means that if you decide to run the Facemovie from another location, you should update the folders accordingly and use the root_folder option:
 ``` 
 $ Facemoviefier -i input_folder -o output_folder -r haar_cascades_folder_location
 ```
 
-
-Facemovie allows you to choose the type of output you want once the processing is done. This can be done by using the --type (-t) option. Here is the case where I save images instead of a movie in output.
+Facemovie also allows you to choose the type of output you want once the processing is done. This can be done by using the --type (-t) option. Here is the case where I save images instead of a movie in output.
 ```
 $ Facemoviefier -i "../data/input/Axel" -o "../data/output" -t i
 ```
@@ -146,7 +142,7 @@ This means that for example -d 2 2 will output square images, of size 2 x the si
 ## Libraries
 
 The whole aplication is developed using [Python2.7.3](http://www.python.org/download/). Any Python2.7 should be enough though.
-To run the application, you'll also need to install [Opencv](http://opencv.willowgarage.com/wiki/).See [the documentation](http://opencv.willowgarage.com/wiki/InstallGuide) for more information. 
+To run the application, you'll also need to install [Opencv](http://opencv.willowgarage.com/wiki/).
 
 **NOTE : ** If you are using Ubuntu 12.04, best of luck ! The opencv package is available in the main repo. Simply run :
 ```
@@ -165,9 +161,12 @@ You can **[have a look here](https://github.com/jlengrand/FaceMovie/issues?state
 
 ## Other ressources
 
-- [Complete documentation for the code.](https://dl.dropbox.com/u/4286043/GH/FaceMovie/packaging/doc/Facemovie_0.8_doc.zip)
-- [Samples available to test the code.](http://dl.dropbox.com/u/4286043/GH/FaceMovie/packaging/ressources/samples.zip)
-- [List of available haar cascades.](https://dl.dropbox.com/u/4286043/GH/FaceMovie/packaging/ressources/haarcascades.zip)
+The complete documentation for the code is **[available here](https://dl.dropbox.com/u/4286043/GH/FaceMovie/Facemovie-0.8.2_doc/index.html)**.
+
+But you might also want to download :
+- [Complete documentation for the code.](https://dl.dropbox.com/u/4286043/GH/FaceMovie/doc.zip)
+- [Samples available to test the code.](https://dl.dropbox.com/u/4286043/GH/FaceMovie/samples.zip)
+- [List of available haar cascades.](https://dl.dropbox.com/u/4286043/GH/FaceMovie/haarcascades.zip)
 
 ## License
 
