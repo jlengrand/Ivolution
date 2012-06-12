@@ -8,7 +8,7 @@
 		
 		<!-- Properties -->
 		<property name="old.version" value="0.8"/>		
-		<property name="version" value="0.9"/>		
+		<property name="version" value="0.8.2"/>		
 		
 		<property name="base.dir" value="."/>		
 		<property name="src.dir" value="${base.dir}/facemovie"/>
@@ -66,6 +66,9 @@
 	
 	<!-- EXE : Generates single Windows executable -->
 	<target name="exe" depends="init">
+		<exec dir="${base.dir}" executable="pandoc.exe">
+					<arg line="${base.dir}/README.markdown -o ${base.dir}/README.rst"/>
+		</exec>
 		<py-run script="setup.py" pythonpath="${base.dir}" optimize="0">
 			<arg value="build"/>
 		</py-run>
@@ -122,9 +125,6 @@
 	<!-- package.pipy : Creates the application package for Windows  -->
 	<target name="package.pipy" depends="init,package.create">
 		<echo message="Creating Windows Pipy archive"/>		
-		<exec dir="${base.dir}" executable="pandoc.exe">
-			<arg line="${base.dir}/README.markdown -o ${base.dir}/README.rst"/>
-		</exec>
 		<py-run script="setup.py" pythonpath="${base.dir}" optimize="0">
 			<arg value="sdist"/>
 		</py-run>

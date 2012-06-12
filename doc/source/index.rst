@@ -20,7 +20,7 @@ FaceMovie
 Facemoviefier
 =============
 
-.. automodule:: facemovie.Facemoviefier
+.. automodule:: Facemoviefier
    :members:
 
 Eye

@@ -192,4 +192,4 @@ I would enjoy having feedback if you like this idea, or even used it. Send me a 
 
 You can contact me at julien at lengrand dot fr, or on my [current website](http://www.lengrand.fr).
 
-Version : 0.8.1
+Version : 0.8.2

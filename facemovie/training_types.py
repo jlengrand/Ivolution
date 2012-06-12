@@ -1,8 +1,7 @@
 """
 .. module:: training_types
    :platform: Unix, Windows
-   :synopsis: Dumb class aiming at regrouping all information concerning the trainers for classification.
-   Each entry is linked to a label, corresponding to a different type of recognition (frontal, profile, . . . )
+   :synopsis: Dumb class aiming at regrouping all information concerning the trainers for classification. Each entry is linked to a label, corresponding to a different type of recognition (frontal, profile, . . . )
 
 .. moduleauthor:: Julien Lengrand-Lambert <jlengrand@gmail.com>
 

@@ -46,7 +46,7 @@ haar_files = find_data_files('facemovie','',['haarcascades/*.xml'])
 
 setup(
     name = "Facemovie",
-    version = "0.8.1",
+    version = "0.8.2",
     author = "Julien Lengrand-Lambert",
     author_email = "jlengrand@gmail.com",
     description = ("Take one picture of yourself a day, automatically generate a movie!"),
@@ -54,7 +54,7 @@ setup(
     keywords = "image_processing computer_vision one_picture_a_day photography",
     url = "http://jlengrand.github.com/FaceMovie/",
     download_url = "http://jlengrand.github.com/FaceMovie/",
-    packages=['facemovie', 'facemovie.lib', 'facemovie.haarcascades'],
+    packages=['facemovie', 'facemovie.lib', 'haarcascades'],
     long_description=read('README.rst'),
     classifiers=[
         "Development Status :: 3 - Alpha",

@@ -1,8 +1,7 @@
 """
 .. module:: FaceMovifier
    :platform: Unix, Windows
-   :synopsis: Higher class of the application. Used to handle the command line interface.
-   Direclty interfaces user commands with FaceMovie actions.
+   :synopsis: Higher class of the application. Used to handle the command line interface. Direclty interfaces user commands with FaceMovie actions.
 
 .. moduleauthor:: Julien Lengrand-Lambert <jlengrand@gmail.com>
 

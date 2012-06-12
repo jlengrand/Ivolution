@@ -1,8 +1,7 @@
 """
 .. module:: Guy
    :platform: Unix, Windows
-   :synopsis: Class defining a Guy in the sense of the FaceMovie. Corresponds 
-   to one input image. An input folder is transformed in fact to a list of guys.
+   :synopsis: Class defining a Guy in the sense of the FaceMovie. Corresponds to one input image. An input folder is transformed in fact to a list of guys.
 
 .. moduleauthor:: Julien Lengrand-Lambert <jlengrand@gmail.com>
 

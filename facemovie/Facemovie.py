@@ -1,10 +1,7 @@
 """
 .. module:: Facemovie
    :platform: Unix, Windows
-   :synopsis: Main class of the application. Contains the core image processing
-    functions.
-   Plays the role of a controller for the application, as it supports the
-    communication layer with the end user interface. 
+   :synopsis: Main class of the application. Contains the core image processing functions.Plays the role of a controller for the application, as it supports the communication layer with the end user interface. 
 
 .. moduleauthor:: Julien Lengrand-Lambert <jlengrand@gmail.com>
 
