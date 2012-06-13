@@ -1,0 +1,256 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Facemovie by jlengrand</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/jlengrand/FaceMovie">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/jlengrand/FaceMovie/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/jlengrand/FaceMovie/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Facemovie</h1>
+          <p>Take one picture of yourself a day, automatically generate a movie!</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/jlengrand">jlengrand</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>Take one picture of yourself a day, automatically generate a movie!</h1>
+
+<p><strong><a href="http://www.youtube.com/watch?v=JueOY7EtXrQ">FaceMovie</a></strong> is a simple project that aims at helping you create videos of yourself over time, using photos as input.
+Simply take several pictures of yourself in the same position, and decide when to compile everything into a video. Just indicate the location of your pictures, Facemovie does everything else for you. </p>
+
+<p>I see a growing interest for projects where people take one picture of themselves a day for several months (years ?) and compile it into a <a href="http://www.youtube.com/watch?v=6B26asyGKDo">video</a>. 
+When searching on the web, I realized that there was only one software allowing people to do this, the <a href="everyday%20url">everyday paid iphone app</a>. I hope that Facemovie could help some of you!
+The main difference with everyday is that Facemovie searches automatically for faces in the input images and compile them in the best possible way, so that your video look awesome. </p>
+
+<p>Due to its general implementation, FaceMovie may be used for faces, but also profiles (for projects showing <a href="http://www.youtube.com/watch?v=CG_KArKYTq4">women along pregnancy for example</a> or full body(<a href="http://www.youtube.com/watch?v=02Pzfv7JV48">for people workouting</a>). The only limitation comes from you ! </p>
+
+<p><strong><a href="http://www.youtube.com/watch?v=2pUHK7Sf23I">You can check out an example here.</a></strong>.</p>
+
+<h2>Installation</h2>
+
+<p>There are several ways you can choose from to run Facemovie, each being developed below.
+Please note that you best pick as this stage would be to choose the executable. </p>
+
+<h3>Windows executable (Default)</h3>
+
+<p>This is the current safest and easiest solution for you. </p>
+
+<p>Download the archive available <a href="">here</a>. By default, choose the full archive.
+The light archive is intended for users having Python2.7 already installed on their system. In this case, a python.dll is given with the executable.</p>
+
+<p>Uncompress the archive. It contains three elements :</p>
+
+<ul>
+<li>The executable itself, called Facemovifier.exe.</li>
+<li>A folder called haar_cascades. It contains files used by the executable. Leave it in the same location as the executable by default.</li>
+<li>
+<p>This README</p>
+
+<p>In order to check that everything is ready, open a command line in at the executable location and run the Facemovie helper : </p>
+
+<pre><code>$ cd my\installation\folder
+$ Facemoviefier.exe -h
+</code></pre>
+
+<p>You are now ready to use the Facemovie !</p>
+</li>
+</ul><h3>Github</h3>
+
+<p>You can also simply clone the project from Github and use it as you wish. </p>
+
+<pre><code>git clone git://github.com/jlengrand/FaceMovie.git
+</code></pre>
+
+<p>This is a very good solution if you already have Python2.7 and OpenCV installed on your system (see requirements chapter).</p>
+
+<p>To check the code, simply open a command line and try to run the Facemovifier : </p>
+
+<pre><code> $ cd my\cloned\folder
+ $ python facemovie\Facemoviefier.py -h
+</code></pre>
+
+<p>Scripts are available for Windows and Linux (called <strong>run.sh</strong> and <strong>run_windows.sh</strong>) in order to help you run Facemovie. </p>
+
+<h3>Sample archive</h3>
+
+<p>So that you can start playing with the FaceMovie even though you do not have a batch of images, I compiled some samples in a archive available <a href="">here</a>. 
+Simply uncompress it wherever you want, and use the image as input source !</p>
+
+<h2>Getting Started</h2>
+
+<p>Now that FaceMovie is installed on your system, let's start playing with it !
+If you do not have images to play with, note that an [archive including samples] is available.</p>
+
+<p>For each of the following commands, <strong>Facemovifier</strong> should be replaced by <strong>FaceMovifier.exe</strong> or <strong>python Facemovifier</strong> depending on your installation method (executable or Python egg).</p>
+
+<p>Once installed, let's start by calling the helper of Facemovie. It can be done by</p>
+
+<pre><code>$ Facemoviefier -h
+</code></pre>
+
+<p>depending whether you used the installer or the Python egg. 
+This command will list all the available parameters that can be used.</p>
+
+<p>The next step is to try to create you first video. It is no more complex than running the following in command line :</p>
+
+<pre><code>$ Facemoviefier -i input_folder -o output_folder
+</code></pre>
+
+<p>Where input_folder is the repository where all your images are stored, and output_folder where you want the results to be saved. 
+If you don't have images, you can still test the application by downloading some samples <a href="lien%20vers%20samples">here</a>.</p>
+
+<p>Here is a concrete example : </p>
+
+<pre><code>$ Facemoviefier.exe -i "../data/input/samples" -o "../data/output"
+</code></pre>
+
+<p>*<em>NOTE : *</em> In order to get good results, your  images should contain only one person; and you should try to always keep the same angle with the camera for each of them.</p>
+
+<p>Facemovie needs the list of haar_cascades to correctly detect faces. This means that if you decide to run the Facemovie from another location, you should update the folders accordingly and use the root_folder option:</p>
+
+<pre><code>$ Facemoviefier -i input_folder -o output_folder -r haar_cascades_folder_location
+</code></pre>
+
+<p>Facemovie allows you to choose the type of output you want once the processing is done. This can be done by using the --type (-t) option. Here is the case where I save images instead of a movie in output.</p>
+
+<pre><code>$ Facemoviefier -i "../data/input/Axel" -o "../data/output" -t i
+</code></pre>
+
+<p>By default, Facemovie is searching for frontal faces. You can change this by setting up which profile to use using the --profile (-p) option:  </p>
+
+<pre><code>$ Facemoviefier -i "../data/input/Axel" -o "../data/output" -p "profile face"
+</code></pre>
+
+<p>An extensive list of training files is available while calling the helper, or by running the following command.</p>
+
+<pre><code>$ Facemoviefier -p ?
+</code></pre>
+
+<h3>Options available in the Facemoviefier</h3>
+
+<p><strong>Required :</strong></p>
+
+<ul>
+<li>-i, --input :   Input folder of the images to be processed</li>
+<li>-o, --output :  Output folder where the final results will be saved</li>
+</ul><p><strong>Optional :</strong></p>
+
+<ul>
+<li>-h, --help :  Shows help message and exits</li>
+<li>-r, --root :  Location of the facemovie folder. Required if you run the Facemovifier from an external location</li>
+<li>-e, --equalize : If this option is activated, images will NOT be resized so that all faces have the same size.</li>
+<li>-p, --param : Used to change the file used to train the classifier. Useful you want to detect something else than front faces.
+Available parameters : 
+    - upper body.
+    - profile face.
+    - lower body.
+    - frontal face (default).
+    - full body.</li>
+<li>-t, --type :  The type of output to be created. Can be either images, video or simple display (nothing written on disc).
+Available types :
+    - video
+    - images
+    - simple graphical display</li>
+<li>-e, --equalize : When this option is activated, Facemovie will <strong>NOT</strong> resize images so that faces always keep the same size. This may result in lower quality results but avoid resizing images. </li>
+<li>-s, --sort : The way used to sort images chronologically. Can be done either by using file names or EXIF metadata.
+Available modes :
+    - name (default)
+    - EXIF </li>
+<li>-c, --crop : In this mode, final images are cropped so that only the desired part of the body is kept. This will remove parts of the input images, but will avoid addition of black borders in the output.</li>
+<li>-d, --cropdims : Expects two floats here. Ignored if crop mode is not selected. This allows to choose the window to be cropped. The values are defined in "number of face size".
+This means that for example -d 2 2 will output square images, of size 2 x the size of the subject face.<br>
+</li>
+</ul><h2>Libraries</h2>
+
+<p>The whole aplication is developed using <a href="http://www.python.org/download/">Python2.7.3</a>. Any Python2.7 should be enough though.
+To run the application, you'll also need to install <a href="http://opencv.willowgarage.com/wiki/">Opencv</a>.See <a href="http://opencv.willowgarage.com/wiki/InstallGuide">the documentation</a> for more information. </p>
+
+<p>I also used the excellent <a href="http://sourceforge.net/projects/exif-py/">exif library</a> to enhance sorting capabilities. It is embedded in the code, and you will not need to install it.</p>
+
+<p>This project is developed on a Windows (7) platform, but there should (and, as a fanatic Linux User, will) be no compatibility problems with UNIX. 
+The Linux application will be made available through a Python egg, available on <a href="http://pypi.python.org/pypi">Pypi</a>.</p>
+
+<h2>Work in progress</h2>
+
+<p>Facemovie is still under development, and you should consider it as work in progress.
+Lots of elements still have to be improved. </p>
+
+<p>Here is a list of my next objectives : </p>
+
+<ul>
+<li>Implement a simple GUI to avoid this ugly command line interface</li>
+<li>Allow manual interaction to help the algorithm. When no face is found, the software currently discard the image. I would allow the user to point the face himself.</li>
+<li>Implement a feature that detects and corrects roations (for when the face is not always straight)</li>
+<li>Enhance documentation and tests</li>
+<li><strong>Any idea is welcome !</strong></li>
+</ul><h2>Other ressources</h2>
+
+<p>A complete documentation for the code is available as an archive <a href="">here</a>.
+Simply uncompress the archive and open the index.html in your browser to access it. </p>
+
+<h2>License</h2>
+
+<p>This project is released under the new BSD license (3 clauses version). You can read more about the license in the LICENSE file or direclty on <a href="http://www.gnu.org/licenses/license-list.html#ModifiedBSD">GNU's website</a>. </p>
+
+<h2>Acknowledgment</h2>
+
+<p>The idea of this project comes from an idea of Axel Catoire, currently <a href="http://ungrandtour.blogspot.com/">travelling around the world</a> with his girlfriend.
+As a starter for my code, I used an excellent example from JAPSKUA, that you can find <a href="http://japskua.wordpress.com/2010/08/04/detecting-eyes-with-python-opencv/">here</a>
+And I used Gene Cash's library to extract information from EXIF metadata in the images.</p>
+
+<h2>DISCLAIMER</h2>
+
+<p>Facemovie works with your images, so I feel like I need to write something about data usage. 
+Facemovie is a work in progress, and I am not responsible for any corrpution it could cause to your data. 
+I never experienced any problem using the software, but you should always back up your data before using it.</p>
+
+<h2>Contact</h2>
+
+<p>I would enjoy having feedback if you like this idea, or even used it. Send me a link to your creations so that I can put them here !
+Feel free to mail me for any comment or request. </p>
+
+<p>You can contact me at julien at lengrand dot fr, or on my <a href="http://www.lengrand.fr">current website</a>.</p>
+
+<p>Version : 0.8.1</p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-32302207-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
