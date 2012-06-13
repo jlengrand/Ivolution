@@ -108,7 +108,7 @@ class FaceMovie(object):
                     # populating guys
                     self.guys.append(a_guy)
                 except:
-                    print "=> Problem loading %s. Not an image file" %(guy_source)
+                    print "=> Skipping %s. Not an image file" %(guy_source)
        
         print "==="
 
@@ -132,7 +132,8 @@ class FaceMovie(object):
         for a_guy in self.guys:
             a_guy.search_face(self.face_params)
             if a_guy.has_face(): # face(s) have been found
-                print "%d faces found for %s" % (a_guy.num_faces(), a_guy.name)
+                #print "%d faces found for %s" % (a_guy.num_faces(), a_guy.name)
+                print "Face found for %s" % (a_guy.name)
             else:
                 print "Warning! No face found for %s" %(a_guy.name)
     
@@ -384,13 +385,14 @@ class FaceMovie(object):
         :param fps: the number of frames per second to be displayed in final video (3)
         :type fps: int       
         """
+        MAX_OUT_DIM_X = 1900
+
         filename = os.path.join(out_folder, "output.avi")
         # Codec is OS dependant.
         # FIXME : Find an unified version
         if "win" in sys.platform:
             fourcc = cv.CV_FOURCC('C', 'V', 'I', 'D')
-        else: # some kind of Linux platform
-        	#fourcc = cv.CV_FOURCC('I', '4', '2', '0')
+        else: # some kind of Linux/Unix platform
         	fourcc = cv.CV_FOURCC('F', 'M', 'P', '4')
 
         if self.crop:
@@ -399,6 +401,17 @@ class FaceMovie(object):
             frameSize = (width[0] + width[1], height[0] + height[1])
         else:
             frameSize = (self.dim_x, self.dim_y)   
+
+        ###
+        # FIXME : Find a proper solution for that
+        # Quick fix while thinking
+        # Some dimensions seem to cause output problems in the end. 
+        # We resize to a well known size
+        out_x = 1900
+        out_y = int((out_x * frameSize[1]) / float(frameSize[0]))
+        frameSize = (out_x, out_y)   
+        ###
+
         print "Speed is set to %d fps" %(fps)  
         my_video = cv.CreateVideoWriter(filename, 
                                       fourcc, 
@@ -416,8 +429,17 @@ class FaceMovie(object):
                                           self.y_center) 
                 if self.crop:
                     #out_im = self.crop_im(out_im)   
-                    out_im = self.crop_im_new(a_guy)                            
-                cv.WriteFrame(my_video, out_im)
+                    out_im = self.crop_im_new(a_guy)     
+
+                ###
+                # Quick fix while thinking
+                # Some dimensions seem to cause output problems in the end. 
+                # We resize to a well known size
+                imm = cv.CreateImage(frameSize, out_im.depth, out_im.nChannels)
+                cv.Resize(out_im, imm) 
+                cv.WriteFrame(my_video, imm)
+                ###
+                #cv.WriteFrame(my_video, out_im)
 
     def number_guys(self):
         """
