@@ -66,6 +66,8 @@ class FaceMovie(object):
         
         self.face_mean = [0, 0]
         self.sort_method = "n" # sorting by name or using metadata (n or e)
+
+        self.weight_steps = 5 # number of images to be inserted between each frame to reduce violent switch
         
     def set_crop_dims(self, crop_x, crop_y):
         """
@@ -373,7 +375,7 @@ class FaceMovie(object):
                 if self.crop:
                     out_im = self.crop_im(out_im)
                 self.save_result(out_im, a_guy.name, out_folder, im_format)    
-                          
+
     def save_movie(self, out_folder, fps=3):
         """
         Creates a movie with all faces found in the inputs.
@@ -388,12 +390,79 @@ class FaceMovie(object):
         MAX_OUT_DIM_X = 1900
 
         filename = os.path.join(out_folder, "output.avi")
-        # Codec is OS dependant.
         # FIXME : Find an unified version
         if "win" in sys.platform:
             fourcc = cv.CV_FOURCC('C', 'V', 'I', 'D')
         else: # some kind of Linux/Unix platform
         	fourcc = cv.CV_FOURCC('F', 'M', 'P', '4')
+
+        if self.crop:
+            width = self.width
+            height = self.height
+            frameSize = (width[0] + width[1], height[0] + height[1])
+        else:
+            frameSize = (self.dim_x, self.dim_y)   
+
+        ###
+        # FIXME : Find a proper solution for that
+        # Quick fix while thinking
+        # Some dimensions seem to cause output problems in the end. 
+        # We resize to a well known size
+        out_x = 1900
+        out_y = int((out_x * frameSize[1]) / float(frameSize[0]))
+        frameSize = (out_x, out_y)   
+        ###
+
+        print "Speed is set to %d fps" %(fps)  
+        my_video = cv.CreateVideoWriter(filename, 
+                                      fourcc, 
+                                      fps, 
+                                      frameSize,
+                                      1)
+        ii = 0 
+        for a_guy in self.guys:
+            ii += 1 
+            if a_guy.has_face():
+                print "Saving frame %d / %d" %(ii, self.number_guys()) 
+                out_im = a_guy.create_video_output(self.dim_x, 
+                                          self.dim_y, 
+                                          self.x_center, 
+                                          self.y_center) 
+                if self.crop:
+                    #out_im = self.crop_im(out_im)   
+                    out_im = self.crop_im_new(a_guy)     
+
+                ###
+                # Quick fix while thinking
+                # Some dimensions seem to cause output problems in the end. 
+                # We resize to a well known size
+                imm = cv.CreateImage(frameSize, out_im.depth, out_im.nChannels)
+                cv.Resize(out_im, imm) 
+
+
+                cv.WriteFrame(my_video, imm)
+                ###
+                #cv.WriteFrame(my_video, out_im)
+
+def save_movie_old(self, out_folder, fps=3):
+        """
+        Creates a movie with all faces found in the inputs.
+        Guy is skipped if no face is found.
+        
+        :param out_folder: the location where to save the output image.
+        :type out_folder: string
+        
+        :param fps: the number of frames per second to be displayed in final video (3)
+        :type fps: int       
+        """
+        MAX_OUT_DIM_X = 1900
+
+        filename = os.path.join(out_folder, "output.avi")
+        # FIXME : Find an unified version
+        if "win" in sys.platform:
+            fourcc = cv.CV_FOURCC('C', 'V', 'I', 'D')
+        else: # some kind of Linux/Unix platform
+            fourcc = cv.CV_FOURCC('F', 'M', 'P', '4')
 
         if self.crop:
             width = self.width
