@@ -35,15 +35,24 @@ class FaceMovie(object):
         :param face_param: the location of the profile file used to train the classifier
         :type face_param: string        
         """
-        self.CV_MAX_PIXEL = 13000 * 13000 # experimental maximal size of an IplImage
-        
+
+        ###checked params
         self.source= in_folder # Source folder for pictures
         self.out = out_folder # Folder to save outputs
-        
-        self.guys = [] # List of pictures in source folder
-        
         # Retrieving parameters for Face Detection
         self.face_params = face_params
+
+
+        self.sort_method = "n" # sorting by name or using metadata (n or e)
+
+        ###                
+
+        self.CV_MAX_PIXEL = 13000 * 13000 # experimental maximal size of an IplImage
+        
+
+        self.guys = [] # List of pictures in source folder
+        
+
         
         # Position of the center in output images 
         self.x_center = 0
@@ -65,26 +74,20 @@ class FaceMovie(object):
         self.height = [0, 0]
         
         self.face_mean = [0, 0]
-        self.sort_method = "n" # sorting by name or using metadata (n or e)
 
         self.weight_steps = 5 # number of images to be inserted between each frame to reduce violent switch
         
-    def set_crop_dims(self, crop_x, crop_y):
-        """
-        Sets the cropping dimension in case they have been provided by the end user
 
-        :param crop_x: dimension of the desired cropping in x (in number of face size)
-        :type crop_x: int
-        :param crop_y: dimension of the desired cropping in y (in number of face size)
-        :type crop_x: int        
-        """
-        self.cropdims = [crop_x, crop_y]
-        
+    ### checked methods
+
     def list_guys(self):
         """
         Aims at populating the guys list, using the source folder as an input. 
-        Guys list shall be sorted chronologically.
-        .. note::In case no valid date is found, it is set to ''.
+        Guys list can be sorted either by name, or using metadata.
+        In case source folder is not found; Exits.
+        Non Image files are skipped. 
+        Source folder is searched recursively. All subfolders are also processed.
+        .. note::In case no valid date is found for metadata mode, it is set to ''.
         """
         try:
             os.path.exists(self.source)
@@ -111,9 +114,17 @@ class FaceMovie(object):
                     self.guys.append(a_guy)
                 except:
                     print "=> Skipping %s. Not an image file" %(guy_source)
-       
-        print "==="
 
+        self.sort_guys()
+        print "INFO : %d guys found in source folder." %(self.number_guys())
+        print "==="        
+
+    def sort_guys(self):
+        """
+        Guys list has just been populated, but elements are not ordered yet.
+        Sorts the elements of the list either by name or by date, depending on the chosen mode.
+
+        """
         # Sorting either by exif date or name
         if self.sort_method == "e":
             print "Sorting files using EXIF metadata"
@@ -121,6 +132,18 @@ class FaceMovie(object):
         else: # default is sort by name
             print "Sorting files using file name"
             self.guys.sort(key=lambda g: g.name)
+    ###
+
+    def set_crop_dims(self, crop_x, crop_y):
+        """
+        Sets the cropping dimension in case they have been provided by the end user
+
+        :param crop_x: dimension of the desired cropping in x (in number of face size)
+        :type crop_x: int
+        :param crop_y: dimension of the desired cropping in y (in number of face size)
+        :type crop_x: int        
+        """
+        self.cropdims = [crop_x, crop_y]
 
     def search_faces(self):
         """
@@ -444,7 +467,7 @@ class FaceMovie(object):
                 ###
                 #cv.WriteFrame(my_video, out_im)
 
-def save_movie_old(self, out_folder, fps=3):
+    def save_movie_old(self, out_folder, fps=3):
         """
         Creates a movie with all faces found in the inputs.
         Guy is skipped if no face is found.
