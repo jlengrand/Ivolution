@@ -47,36 +47,35 @@ class FaceMovie(object):
 
         ###                
 
-        self.CV_MAX_PIXEL = 13000 * 13000 # experimental maximal size of an IplImage
+        #self.CV_MAX_PIXEL = 13000 * 13000 # experimental maximal size of an IplImage
         
 
         self.guys = [] # List of pictures in source folder
         
-
-        
         # Position of the center in output images 
-        self.x_center = 0
-        self.y_center = 0
+        #self.x_center = 0
+        #self.y_center = 0
 
         # minimum size needed on right of center
-        self.x_af = 0
-        self.y_af = 0
+        #self.x_af = 0
+        #self.y_af = 0
         
         # Needed minimum size of output image
-        self.dim_x = 0
-        self.dim_y = 0
+        #self.dim_x = 0
+        #self.dim_y = 0
         
-        self.normalize = False
+        #self.normalize = False
         # thumbmails
-        self.crop = False
-        self.cropdims = [0, 0] # user defined desired dimensions for cropping
-        self.width = [0, 0]
-        self.height = [0, 0]
+        #self.crop = False
+        #self.cropdims = [0, 0] # user defined desired dimensions for cropping
+        #self.width = [0, 0]
+        #self.height = [0, 0]
         
         self.face_mean = [0, 0]
 
         self.weight_steps = 5 # number of images to be inserted between each frame to reduce violent switch
         
+        self.reference = 0 # final face size desired
 
     ### checked methods
 
@@ -150,10 +149,6 @@ class FaceMovie(object):
             else:
                 print "Warning! No face found for %s" %(a_guy.name)
         
-        # removes guys that have no faces
-        self.number_guys = self.clean_guys()
-
-
     def clean_guys(self):
         """
         Removes all guys for who no face has been found.
@@ -161,18 +156,24 @@ class FaceMovie(object):
         """
         return [a_guy for a_guy in self.guys if a_guy.has_face()] 
 
-    ###   
-
-    def set_crop_dims(self, crop_x, crop_y):
+    def prepare_faces(self):
         """
-        Sets the cropping dimension in case they have been provided by the end user
-
-        :param crop_x: dimension of the desired cropping in x (in number of face size)
-        :type crop_x: int
-        :param crop_y: dimension of the desired cropping in y (in number of face size)
-        :type crop_x: int        
+        Searches for all faces and keep only the one that may be properly used.
+        Images without face are discarded.
+        The program is exited in case no face is found.
+        Searches for the reference size. If will be used later for image resizing, so that
+        all faces have the same size.
         """
-        self.cropdims = [crop_x, crop_y]
+        self.search_faces()
+        # removes guys that have no faces
+        self.guys = self.clean_guys()
+
+        if self.number_guys() == 0:
+            print "No face has been found in the whole repository! Exiting. . . "
+            sys.exit(0)
+
+        # normalize faces to make them clean
+        self.reference = self.find_reference() # sets all faces to the same size
 
     def find_reference(self):
         """
@@ -186,11 +187,38 @@ class FaceMovie(object):
             if a_guy.has_face():
                 references.append(a_guy.faces[0][0][3]) # catch face size (width)
 
-        if len(references) == 0:
-            print "No face has been found in the whole repository! Exiting. . . "
-            sys.exit(0)
-
         return min(references)
+
+
+    def find_final_dimensions(self, mode, cropdims=(0, 0)):
+        """
+        Finds the final dimensions that will be needed to create the output.
+        Depending on the desired output, it can be 
+         - (default) the maximal size of the image, by overlapping all images and adding black borders.
+         - (crop) the maximal size of the image by overlapping all the images, without adding any black borders
+        - (custom crop) A chosen user size, defined as x * y times the head size.
+        """
+        if mode == "default":
+            # TODO : implement
+            print "DEFAULT"
+        elif mode == "crop":
+            # TODO : implement
+        elif mode == "custom crop":
+            # TODO : implement
+            print "uses cropdims"
+        # XXX: to implement
+    ###   
+
+    def set_crop_dims(self, crop_x, crop_y):
+        """
+        Sets the cropping dimension in case they have been provided by the end user
+
+        :param crop_x: dimension of the desired cropping in x (in number of face size)
+        :type crop_x: int
+        :param crop_y: dimension of the desired cropping in y (in number of face size)
+        :type crop_x: int        
+        """
+        self.cropdims = [crop_x, crop_y]
 
     def normalize_faces(self):
         """
