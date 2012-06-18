@@ -132,19 +132,7 @@ class FaceMovie(object):
         else: # default is sort by name
             print "Sorting files using file name"
             self.guys.sort(key=lambda g: g.name)
-    ###
-
-    def set_crop_dims(self, crop_x, crop_y):
-        """
-        Sets the cropping dimension in case they have been provided by the end user
-
-        :param crop_x: dimension of the desired cropping in x (in number of face size)
-        :type crop_x: int
-        :param crop_y: dimension of the desired cropping in y (in number of face size)
-        :type crop_x: int        
-        """
-        self.cropdims = [crop_x, crop_y]
-
+    
     def search_faces(self):
         """
         Searches for all faces in the guys we have
@@ -161,7 +149,31 @@ class FaceMovie(object):
                 print "Face found for %s" % (a_guy.name)
             else:
                 print "Warning! No face found for %s" %(a_guy.name)
-    
+        
+        # removes guys that have no faces
+        self.number_guys = self.clean_guys()
+
+
+    def clean_guys(self):
+        """
+        Removes all guys for who no face has been found.
+        This avoids all has_face loops in the rest of the application       
+        """
+        return [a_guy for a_guy in self.guys if a_guy.has_face()] 
+
+    ###   
+
+    def set_crop_dims(self, crop_x, crop_y):
+        """
+        Sets the cropping dimension in case they have been provided by the end user
+
+        :param crop_x: dimension of the desired cropping in x (in number of face size)
+        :type crop_x: int
+        :param crop_y: dimension of the desired cropping in y (in number of face size)
+        :type crop_x: int        
+        """
+        self.cropdims = [crop_x, crop_y]
+
     def find_reference(self):
         """
         Searched for the best face size we want to have. 

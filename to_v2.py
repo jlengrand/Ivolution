@@ -23,6 +23,7 @@ face_params = FaceParams.FaceParams(xml_fo, 'frontal_face')
 facemovie = Facemovie.FaceMovie(in_fo, out_fo, face_params)
 facemovie.list_guys()
 
+facemovie.search_faces()
 
 
 print "Exiting..."
