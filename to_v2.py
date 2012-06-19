@@ -26,8 +26,10 @@ facemovie.list_guys()
 facemovie.prepare_faces()
 facemovie.find_final_dimensions("default", cropdims=(0, 0))
 
+print "###"
 print facemovie.dim_x, facemovie.dim_y
 print facemovie.x_center, facemovie.y_center
-print facemovie.save_out_movie(out_fo, 3)     
+print "###"
+facemovie.save_out_movie(out_fo, 3)     
 
 print "Exiting..."

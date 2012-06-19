@@ -47,7 +47,7 @@ class FaceMovie(object):
 
         ###                
 
-        #self.CV_MAX_PIXEL = 13000 * 13000 # experimental maximal size of an IplImage
+        self.CV_MAX_PIXEL = 13000 * 13000 # experimental maximal size of an IplImage
         
 
         self.guys = [] # List of pictures in source folder
@@ -421,6 +421,9 @@ class FaceMovie(object):
             print "You may want to switch to crop mode or reduce image resolution !"
             sys.exit(0)
         
+        print "MAX DIMS : "
+        print self.dim_x, self.dim_y
+
         # finishes by calculating average face size
         self.calc_mean_face()
     

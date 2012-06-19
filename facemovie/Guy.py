@@ -250,6 +250,55 @@ class Guy(object):
 
         return out_im
 
+    def create_output(self, x_size, y_size, x_point, y_point):
+        """
+        Creates image output, centering the face center with the required position
+        If eq_ratio is set to something different than one, input image is scaled
+        so that face/size = eq_ratio
+
+        :param x_size: The size of the ouput image in x (in pixels)
+        :type x_size: int
+        :param y_size: The size of the ouput image in y (in pixels)
+        :type y_size: int
+        :param x_point: The center of the output image, where the Guy image has to fit in (in pixels)
+        :type x_point: int
+        :param y_point: The center of the output image, where the Guy image has to fit in (in pixels)
+        :type y_point: int
+
+        :returns:  IplImage --  The ouput image, centered to fit with all other images
+
+        """
+        out_im = cv.CreateImage((x_size, y_size),cv.IPL_DEPTH_8U, self.in_channels)
+        cv.Zero(out_im)   
+
+        # We want to place the input image so that the center of the face matches
+        # x_center and y_center      
+        x_center = int(self.ratio * self.x_center)
+        y_center = int(self.ratio * self.y_center)
+
+        in_x = int(self.ratio * self.in_x)
+        in_y = int(self.ratio * self.in_y)
+
+        xtl = x_point - x_center
+        ytl = y_point - y_center
+        w = in_x
+        h = in_y
+            
+        rect = (xtl, ytl, w, h)
+        cv.SetImageROI(out_im, rect)
+        
+        # Load input image
+        in_image = self.load_image()
+        norm_im = cv.CreateImage((in_x, in_y),cv.IPL_DEPTH_8U, self.in_channels)
+        cv.Resize(in_image, norm_im)
+
+        print cv.GetSize(in_image), cv.GetSize(out_im), cv.GetSize(norm_im)
+
+        cv.Copy(norm_im, out_im)
+        cv.ResetImageROI(out_im) 
+
+        return out_im
+
     def create_debug_output(self):
         """
         Creates output image
