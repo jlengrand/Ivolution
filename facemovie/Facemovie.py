@@ -74,6 +74,8 @@ class FaceMovie(object):
 
         self.weight_steps = 5 # number of images to be inserted between each frame to reduce violent switch
 
+        self.speed = [2, 5, 9]# this one should be internal. Number of fps for the video
+
     ### checked methods
 
     def list_guys(self):
@@ -287,7 +289,7 @@ class FaceMovie(object):
         # else:
         #     self.crop = True
 
-    def save_out_movie(self, out_folder, fps=3):
+    def save_out_movie(self, out_folder, speed=2):
         """
         Creates a movie with all faces found in the inputs.
         Guy is skipped if no face is found.
@@ -308,10 +310,11 @@ class FaceMovie(object):
 
         frameSize = (self.dim_x, self.dim_y)   
 
-        print "Speed is set to %d fps" %(fps)  
+        pace = ["slow", "normal", "fast"]
+        print "Speed is set to %s" %(pace[speed - 1])  
         my_video = cv.CreateVideoWriter(filename, 
                                       fourcc, 
-                                      fps, 
+                                      self.speed[speed - 1], 
                                       frameSize,
                                       1)
         ii = 0 

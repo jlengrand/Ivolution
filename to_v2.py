@@ -40,6 +40,6 @@ print "###"
 print facemovie.dim_x, facemovie.dim_y
 print facemovie.x_center, facemovie.y_center
 print "###"
-facemovie.save_out_movie(out_fo, 3)      
+facemovie.save_out_movie(out_fo, 2)      
 
 print "Exiting..."
