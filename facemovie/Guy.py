@@ -268,6 +268,48 @@ class Guy(object):
 
         return out_im
 
+    def create_crop_output(self, x_size, y_size, x_point, y_point):
+        """
+        Creates image output, centering the face center with the required position
+        In this case, the image from which we have to select a ROI is the normalized image. 
+        The output image shall be smaller than all other images.
+
+        :param x_size: The size of the ouput image in x (in pixels)
+        :type x_size: int
+        :param y_size: The size of the ouput image in y (in pixels)
+        :type y_size: int
+        :param x_point: The location of the Guy image center, after image has been cropped(in pixels)
+        :type x_point: int
+        :param y_point: The location of the Guy image center, after image has been cropped(in pixels)
+        :type y_point: int
+
+        :returns:  IplImage --  The ouput image, centered to fit with all other images
+
+        """
+        out_im = cv.CreateImage((x_size, y_size),cv.IPL_DEPTH_8U, self.in_channels)
+        cv.Zero(out_im)   
+  
+        (w, h) = self.resized_dims()
+        (x_center, y_center) = self.resized_center()
+
+        xtl = x_center - x_point # position of top left corner in output image
+        ytl = y_center - y_point # position of top left corner in output image
+        
+        rect = (xtl, ytl, x_size, y_size) # creating the bounding rectangle on output image
+
+        # Load input image and resizes it to fit with what we want
+        in_image = self.load_image()
+        norm_im = cv.CreateImage((w, h),cv.IPL_DEPTH_8U, self.in_channels)
+        cv.Resize(in_image, norm_im)
+        
+        cv.SetImageROI(norm_im, rect)
+
+        # creating the final out image
+        cv.Copy(norm_im, out_im)
+        cv.ResetImageROI(out_im) 
+
+        return out_im
+
     def create_output(self, x_size, y_size, x_point, y_point):
         """
         Creates image output, centering the face center with the required position
@@ -304,8 +346,6 @@ class Guy(object):
         in_image = self.load_image()
         norm_im = cv.CreateImage((w, h),cv.IPL_DEPTH_8U, self.in_channels)
         cv.Resize(in_image, norm_im)
-
-        #print cv.GetSize(in_image), cv.GetSize(out_im), cv.GetSize(norm_im)
 
         # creating the final out image
         cv.Copy(norm_im, out_im)

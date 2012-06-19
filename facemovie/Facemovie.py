@@ -44,11 +44,10 @@ class FaceMovie(object):
 
 
         self.sort_method = "n" # sorting by name or using metadata (n or e)
+        self.mode = "default" # can be crop or default. 
 
         ###                
-
         self.CV_MAX_PIXEL = 13000 * 13000 # experimental maximal size of an IplImage
-        
 
         self.guys = [] # List of pictures in source folder
         
@@ -57,8 +56,8 @@ class FaceMovie(object):
         self.y_center = 0
 
         # minimum size needed on right of center
-        self.x_af = 0
-        self.y_af = 0
+        #self.x_af = 0
+        #self.y_af = 0
         
         # Needed minimum size of output image
         self.dim_x = 0
@@ -195,7 +194,7 @@ class FaceMovie(object):
 
         return min(references)
 
-    def find_final_dimensions(self, mode, cropdims=(0, 0)):
+    def find_final_dimensions(self, cropdims=(0, 0)):
         """
         Finds the final dimensions that will be needed to create the output.
         Depending on the desired output, it can be 
@@ -203,17 +202,14 @@ class FaceMovie(object):
          - (crop) the maximal size of the image by overlapping all the images, without adding any black borders
         - (custom crop) A chosen user size, defined as x * y times the head size.
         """
-        if mode == "default":
-            # TODO : implement
+        if self.mode == "default":
             self.find_default_dims()
-            print "DEFAULT"
-        elif mode == "crop":
+        elif self.mode == "crop":
+            self.find_crop_dims()
+        elif self.mode == "custom crop":
             # TODO : implement
-            print "crop"
-        elif mode == "custom crop":
-            # TODO : implement
-            print "uses cropdims"
-        # XXX: to implement
+            print "custom crop is not yet implemented"
+            raise Exception
     
     def find_default_dims(self):
         """
@@ -225,6 +221,8 @@ class FaceMovie(object):
         Black borders are set everywhere else.
         """
         # FIXME: badly done !
+        x_af = 0
+        y_af = 0
         for a_guy in self.guys:
             (xc, yc) = a_guy.resized_center()
             (inx, iny) = a_guy.resized_dims()
@@ -235,13 +233,13 @@ class FaceMovie(object):
             if yc > self.y_center:
                 self.y_center = yc
             # update right part
-            if (inx - xc) > self.x_af:
-                self.x_af = inx - xc
-            if (iny - yc) > self.y_af:
-                self.y_af = iny - yc
+            if (inx - xc) > x_af:
+                x_af = inx - xc
+            if (iny - yc) > y_af:
+                y_af = iny - yc
         
-        self.dim_x = self.x_af + self.x_center
-        self.dim_y = self.y_af + self.y_center
+        self.dim_x = x_af + self.x_center
+        self.dim_y = y_af + self.y_center
         
         # if self.dim_x * self.dim_y > self.CV_MAX_PIXEL:
         #     print "Max size reached for large mode!"
@@ -250,6 +248,44 @@ class FaceMovie(object):
         
         # # finishes by calculating average face size
         # self.calc_mean_face()
+
+    def find_crop_dims(self):
+        """
+        Calculates smallest output image that can be used to avoid adding black borders on image
+        It will later be used to create the final image. 
+        The idea is the same as for :func:find_out_dims , but while avoiding black brders.
+        """
+        ht = 1000000 # space left above eyes
+        hb = 1000000 # space left beneath eyes
+        wl = 1000000 # space left left of eyes
+        wr = 1000000 # space left right of eyes
+        for a_guy in self.guys:
+            (xc, yc) = a_guy.resized_center()
+            (inx, iny) = a_guy.resized_dims()            
+            
+            # finding width    
+            if xc < wl:
+                wl = xc
+            if (inx - xc) < wr:
+                wr = inx - xc
+            # finding height
+            if yc < ht:
+                ht = yc
+            if (iny - yc) < hb:
+                hb = iny - yc
+                                      
+        #self.width = [wl, wr]
+        #self.height = [ht, hb]
+        self.dim_x = wl + wr
+        self.dim_y = ht + hb
+        self.x_center =  wl
+        self.y_center = ht
+            
+        # if (sum(self.width) >= self.dim_x) or (sum(self.height) >= self.dim_y):
+        #     print "Cropping inactive : Maximum dimensions reached"
+        #     self.crop = False 
+        # else:
+        #     self.crop = True
 
     def save_out_movie(self, out_folder, fps=3):
         """
@@ -282,10 +318,16 @@ class FaceMovie(object):
         for a_guy in self.guys:
             ii += 1 
             print "Saving frame %d / %d" %(ii, self.number_guys()) 
-            out_im = a_guy.create_output(self.dim_x, 
-                                      self.dim_y, 
-                                      self.x_center, 
-                                      self.y_center) 
+            if self.mode == "default":
+                out_im = a_guy.create_output(self.dim_x, 
+                                          self.dim_y, 
+                                          self.x_center, 
+                                          self.y_center) 
+            elif self.mode == "crop":
+                out_im = a_guy.create_crop_output(self.dim_x, 
+                                          self.dim_y, 
+                                          self.x_center, 
+                                          self.y_center) 
 
             cv.WriteFrame(my_video, out_im)
 
@@ -338,7 +380,7 @@ class FaceMovie(object):
                 
         self.face_mean = [float(tot_x) / nb_face, float(tot_y) / nb_face]
     
-    def find_crop_dims(self):
+    def find_crop_dims0(self):
         """
         Calculates smallest output image that can be used to avoid adding black borders on image
         It will later be used to create the final image. 
