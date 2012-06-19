@@ -52,6 +52,24 @@ class Guy(object):
         self.normalize = False
         self.ratio = 1.0
 
+    def resized_dims(self):
+        """
+        Calculates the dimensions of the full image after having been resized using ratio.
+        :returns list of int - list of two integers, being (resized_x, resized_y)
+        """
+        inx = int(self.ratio * self.in_x)
+        iny = int(self.ratio * self.in_y)
+        return (inx, iny)
+
+    def resized_center(self):
+        """
+        Calculates the center position of the full image after having been resized using ratio.
+        :returns list of int - list of two integers, being (new_center_x, new_center_y)
+        """
+        inx = int(self.ratio * self.x_center)
+        iny = int(self.ratio * self.y_center)
+        return (inx, iny)
+
     def load_image(self):
         """
         This function is used to load the image when needed. To reduce memory load, only its location is saved in real time

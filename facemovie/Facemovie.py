@@ -226,11 +226,8 @@ class FaceMovie(object):
         """
         # FIXME: badly done !
         for a_guy in self.guys:
-            # TODO : change to a_guy.get_def_dims
-            xc = int(a_guy.ratio * a_guy.x_center)
-            yc = int(a_guy.ratio * a_guy.y_center)
-            inx = int(a_guy.ratio * a_guy.in_x)
-            iny = int(a_guy.ratio * a_guy.in_y)
+            (xc, yc) = a_guy.resized_center()
+            (inx, iny) = a_guy.resized_dims()
                     
             # update center
             if xc > self.x_center:
