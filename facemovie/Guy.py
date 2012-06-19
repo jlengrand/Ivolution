@@ -66,9 +66,9 @@ class Guy(object):
         Calculates the center position of the full image after having been resized using ratio.
         :returns list of int - list of two integers, being (new_center_x, new_center_y)
         """
-        inx = int(self.ratio * self.x_center)
-        iny = int(self.ratio * self.y_center)
-        return (inx, iny)
+        xc = int(self.ratio * self.x_center)
+        yc = int(self.ratio * self.y_center)
+        return (xc, yc)
 
     def load_image(self):
         """
@@ -290,28 +290,24 @@ class Guy(object):
         cv.Zero(out_im)   
 
         # We want to place the input image so that the center of the face matches
-        # x_center and y_center      
-        x_center = int(self.ratio * self.x_center)
-        y_center = int(self.ratio * self.y_center)
+        # x_center and y_center  
+        (w, h) = self.resized_dims()
+        (x_center, y_center) = self.resized_center()
 
-        in_x = int(self.ratio * self.in_x)
-        in_y = int(self.ratio * self.in_y)
-
-        xtl = x_point - x_center
-        ytl = y_point - y_center
-        w = in_x
-        h = in_y
+        xtl = x_point - x_center # position of top left corner in output image
+        ytl = y_point - y_center # position of top left corner in output image
             
-        rect = (xtl, ytl, w, h)
+        rect = (xtl, ytl, w, h) # creating the bounding rectangle on output image
         cv.SetImageROI(out_im, rect)
         
-        # Load input image
+        # Load input image and resizes it to fit with what we want
         in_image = self.load_image()
-        norm_im = cv.CreateImage((in_x, in_y),cv.IPL_DEPTH_8U, self.in_channels)
+        norm_im = cv.CreateImage((w, h),cv.IPL_DEPTH_8U, self.in_channels)
         cv.Resize(in_image, norm_im)
 
-        print cv.GetSize(in_image), cv.GetSize(out_im), cv.GetSize(norm_im)
+        #print cv.GetSize(in_image), cv.GetSize(out_im), cv.GetSize(norm_im)
 
+        # creating the final out image
         cv.Copy(norm_im, out_im)
         cv.ResetImageROI(out_im) 
 
