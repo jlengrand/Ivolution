@@ -318,203 +318,6 @@ class FaceMovie(object):
                                           self.y_center) 
 
             cv.WriteFrame(my_video, out_im)
-
-    ###   
-
-    def set_crop_dims(self, crop_x, crop_y):
-        """
-        Sets the cropping dimension in case they have been provided by the end user
-
-        :param crop_x: dimension of the desired cropping in x (in number of face size)
-        :type crop_x: int
-        :param crop_y: dimension of the desired cropping in y (in number of face size)
-        :type crop_x: int        
-        """
-        self.cropdims = [crop_x, crop_y]
-
-    def normalize_faces(self):
-        """
-        Creates new images, normalized by face size
-        A reference is given in input. The idea is to get all images to have the
-        same size in Guy.
-
-        :param reference: the reference size of the face that we want to have (0)
-        :type reference: int
-        """
-        self.normalize = True
-
-        reference = self.find_reference()
-
-        for a_guy in self.guys:
-            if a_guy.has_face():
-                a_guy.normalize_face(reference)
-    
-    def calc_mean_face(self):
-        """
-        Returns the mean size of all faces in input
-        Used to correctly crop images
-
-        .. note:: Designed for internal use only
-        """
-        tot_x = 0
-        tot_y = 0
-        nb_face = 0
-        for a_guy in self.guys:
-            if a_guy.has_face():
-                ((x, y, w, h), n) = a_guy.faces[0]
-                tot_x += w
-                tot_y += h
-                nb_face += 1
-                
-        self.face_mean = [float(tot_x) / nb_face, float(tot_y) / nb_face]
-    
-    def find_crop_dims0(self):
-        """
-        Calculates smallest output image that can be used to avoid adding black borders on image
-        It will later be used to create the final image. 
-        The idea is the same as for :func:find_out_dims , but while avoiding black brders.
-        """
-        ht = 1000000 # space left above eyes
-        hb = 1000000 # space left beneath eyes
-        wl = 1000000 # space left left of eyes
-        wr = 1000000 # space left right of eyes
-        
-        if self.cropdims != [0, 0]:
-            w = int( (self.cropdims[0] * self.face_mean[0])  / 2)
-            self.width = [w, w]
-            h = int((self.cropdims[1] * self.face_mean[1]) / 2)
-            self.height = [h, h]
-        else:
-            for a_guy in self.guys:
-                if a_guy.has_face():
-                    xc = a_guy.x_center
-                    yc = a_guy.y_center
-                    inx = a_guy.in_x
-                    iny = a_guy.in_y
-                    
-                    # finding width    
-                    if xc < wl:
-                        wl = xc
-                    if (inx - xc) < wr:
-                        wr = inx - xc
-                    # finding height
-                    if yc < ht:
-                        ht = yc
-                    if (iny - yc) < hb:
-                        hb = iny - yc
-                                          
-            self.width = [wl, wr]
-            self.height = [ht, hb]
-            
-        if (sum(self.width) >= self.dim_x) or (sum(self.height) >= self.dim_y):
-            print "Cropping inactive : Maximum dimensions reached"
-            self.crop = False 
-        else:
-            self.crop = True
-    
-    def find_out_dims(self):
-        """
-        Calculates best output image size and position depending on
-        faces found in guys.
-        The system is simple. The output image should be as big as possible, 
-        and faces are always placed in the same position. Depending on that, 
-        the image input image is placed in the output at the correct position.
-        Black borders are set everywhere else.
-        """
-        # FIXME: badly done !
-        for a_guy in self.guys:
-            if a_guy.has_face():
-                xc = a_guy.x_center
-                yc = a_guy.y_center
-                inx = a_guy.in_x
-                iny = a_guy.in_y
-                    
-                # update center
-                if xc > self.x_center:
-                    self.x_center = xc
-                if yc > self.y_center:
-                    self.y_center = yc
-                # update right part
-                if (inx - xc) > self.x_af:
-                    self.x_af = inx - xc
-                if (iny - yc) > self.y_af:
-                    self.y_af = iny - yc
-        
-        self.dim_x = self.x_af + self.x_center
-        self.dim_y = self.y_af + self.y_center
-        
-        if self.dim_x * self.dim_y > self.CV_MAX_PIXEL:
-            print "Max size reached for large mode!"
-            print "You may want to switch to crop mode or reduce image resolution !"
-            sys.exit(0)
-        
-        print "MAX DIMS : "
-        print self.dim_x, self.dim_y
-
-        # finishes by calculating average face size
-        self.calc_mean_face()
-    
-    def crop_im_new(self, a_guy):
-        """
-        If needed, crops the image to avoid having black borders. 
-        
-        :param image: the image to be cropped
-        :type image: IplImage
-        """        
-        if a_guy.normalize:
-            image = a_guy.load_normalized_image()
-        else :
-            image = a_guy.load_image()
-        
-        
-        width = self.width#[0, 0]
-        height = self.height#[0, 0]
-        out_im = cv.CreateImage((width[0] + width[1], height[0] + height[1]),cv.IPL_DEPTH_8U, image.nChannels)
-        cv.Zero(out_im)        
-        
-        ((x, y, w, h), n) = a_guy.faces[0]
-        # all should have the same w and h now ! What is different is the x and y !
-        w = int(w * a_guy.ratio)
-        h = int(h * a_guy.ratio)
-        xtl = a_guy.x_center  - width[0]
-        ytl = a_guy.y_center  - height[0]
-        w = width[0] + width[1]
-        h = height[0] + height[1]
-            
-        rect = (xtl, ytl, w, h)
-        
-        cv.SetImageROI(image, rect)
-        print "###"
-        print cv.GetSize(image), cv.GetSize(out_im)
-        cv.Copy(image, out_im)
-        cv.ResetImageROI(image)     
-    
-        return out_im
-        
-    def crop_im(self, image):
-        """
-        If needed, crops the image to avoid having black borders. 
-        
-        :param image: the image to be cropped
-        :type image: IplImage
-        """
-        width = self.width#[0, 0]
-        height = self.height#[0, 0]
-        out_im = cv.CreateImage((width[0] + width[1], height[0] + height[1]),cv.IPL_DEPTH_8U, image.nChannels)
-        cv.Zero(out_im)   
-    
-        xtl = self.x_center - width[0]
-        ytl = self.y_center - height[0]
-        w = width[0] + width[1]
-        h = height[0] + height[1]
-            
-        rect = (xtl, ytl, w, h)
-        
-        cv.SetImageROI(image, rect)
-        cv.Copy(image, out_im)
-        cv.ResetImageROI(image)     
-    
-        return out_im
     
     def show_faces(self, mytime=1000):
         """
@@ -524,14 +327,18 @@ class FaceMovie(object):
         :param mytime: time for which the image should be displayed (in ms) (1000)
         :type mytime: int
         """
-        for a_guy in self.guys:
-            if a_guy.has_face():     
-                out_im = a_guy.create_video_output(self.dim_x, 
+        for a_guy in self.guys:    
+            if self.mode == "default":
+                out_im = a_guy.create_output(self.dim_x, 
                                           self.dim_y, 
                                           self.x_center, 
-                                          self.y_center)
-                if self.crop:
-                    out_im = self.crop_im(out_im)
+                                          self.y_center) 
+            elif self.mode == "crop":
+                out_im = a_guy.create_crop_output(self.dim_x, 
+                                          self.dim_y, 
+                                          self.x_center, 
+                                          self.y_center) 
+
                 self.out_display(out_im, a_guy.name, time=mytime)      
 
     def save_faces(self, out_folder, im_format="png"):
@@ -545,148 +352,18 @@ class FaceMovie(object):
         :type im_format: string        
         """
         for a_guy in self.guys: 
-            if a_guy.has_face():
-                out_im = a_guy.create_video_output(self.dim_x, 
-                                          self.dim_y, 
-                                          self.x_center, 
-                                          self.y_center)
-                if self.crop:
-                    out_im = self.crop_im(out_im)
-                self.save_result(out_im, a_guy.name, out_folder, im_format)    
-
-    def save_movie(self, out_folder, fps=3):
-        """
-        Creates a movie with all faces found in the inputs.
-        Guy is skipped if no face is found.
-        
-        :param out_folder: the location where to save the output image.
-        :type out_folder: string
-        
-        :param fps: the number of frames per second to be displayed in final video (3)
-        :type fps: int       
-        """
-        MAX_OUT_DIM_X = 1900
-
-        filename = os.path.join(out_folder, "output.avi")
-        # FIXME : Find an unified version
-        if "win" in sys.platform:
-            fourcc = cv.CV_FOURCC('C', 'V', 'I', 'D')
-        else: # some kind of Linux/Unix platform
-        	fourcc = cv.CV_FOURCC('F', 'M', 'P', '4')
-
-        if self.crop:
-            width = self.width
-            height = self.height
-            frameSize = (width[0] + width[1], height[0] + height[1])
-        else:
-            frameSize = (self.dim_x, self.dim_y)   
-
-        ###
-        # FIXME : Find a proper solution for that
-        # Quick fix while thinking
-        # Some dimensions seem to cause output problems in the end. 
-        # We resize to a well known size
-        out_x = 1900
-        out_y = int((out_x * frameSize[1]) / float(frameSize[0]))
-        frameSize = (out_x, out_y)   
-        ###
-
-        print "Speed is set to %d fps" %(fps)  
-        my_video = cv.CreateVideoWriter(filename, 
-                                      fourcc, 
-                                      fps, 
-                                      frameSize,
-                                      1)
-        ii = 0 
-        for a_guy in self.guys:
-            ii += 1 
-            if a_guy.has_face():
-                print "Saving frame %d / %d" %(ii, self.number_guys()) 
-                out_im = a_guy.create_video_output(self.dim_x, 
+            if self.mode == "default":
+                out_im = a_guy.create_output(self.dim_x, 
                                           self.dim_y, 
                                           self.x_center, 
                                           self.y_center) 
-                if self.crop:
-                    #out_im = self.crop_im(out_im)   
-                    out_im = self.crop_im_new(a_guy)     
-
-                ###
-                # Quick fix while thinking
-                # Some dimensions seem to cause output problems in the end. 
-                # We resize to a well known size
-                imm = cv.CreateImage(frameSize, out_im.depth, out_im.nChannels)
-                cv.Resize(out_im, imm) 
-
-
-                cv.WriteFrame(my_video, imm)
-                ###
-                #cv.WriteFrame(my_video, out_im)
-
-    def save_movie_old(self, out_folder, fps=3):
-        """
-        Creates a movie with all faces found in the inputs.
-        Guy is skipped if no face is found.
-        
-        :param out_folder: the location where to save the output image.
-        :type out_folder: string
-        
-        :param fps: the number of frames per second to be displayed in final video (3)
-        :type fps: int       
-        """
-        MAX_OUT_DIM_X = 1900
-
-        filename = os.path.join(out_folder, "output.avi")
-        # FIXME : Find an unified version
-        if "win" in sys.platform:
-            fourcc = cv.CV_FOURCC('C', 'V', 'I', 'D')
-        else: # some kind of Linux/Unix platform
-            fourcc = cv.CV_FOURCC('F', 'M', 'P', '4')
-
-        if self.crop:
-            width = self.width
-            height = self.height
-            frameSize = (width[0] + width[1], height[0] + height[1])
-        else:
-            frameSize = (self.dim_x, self.dim_y)   
-
-        ###
-        # FIXME : Find a proper solution for that
-        # Quick fix while thinking
-        # Some dimensions seem to cause output problems in the end. 
-        # We resize to a well known size
-        out_x = 1900
-        out_y = int((out_x * frameSize[1]) / float(frameSize[0]))
-        frameSize = (out_x, out_y)   
-        ###
-
-        print "Speed is set to %d fps" %(fps)  
-        my_video = cv.CreateVideoWriter(filename, 
-                                      fourcc, 
-                                      fps, 
-                                      frameSize,
-                                      1)
-        ii = 0 
-        for a_guy in self.guys:
-            ii += 1 
-            if a_guy.has_face():
-                print "Saving frame %d / %d" %(ii, self.number_guys()) 
-                out_im = a_guy.create_video_output(self.dim_x, 
+            elif self.mode == "crop":
+                out_im = a_guy.create_crop_output(self.dim_x, 
                                           self.dim_y, 
                                           self.x_center, 
                                           self.y_center) 
-                if self.crop:
-                    #out_im = self.crop_im(out_im)   
-                    out_im = self.crop_im_new(a_guy)     
 
-                ###
-                # Quick fix while thinking
-                # Some dimensions seem to cause output problems in the end. 
-                # We resize to a well known size
-                imm = cv.CreateImage(frameSize, out_im.depth, out_im.nChannels)
-                cv.Resize(out_im, imm) 
-                cv.WriteFrame(my_video, imm)
-                ###
-                #cv.WriteFrame(my_video, out_im)
+            self.save_result(out_im, a_guy.name, out_folder, im_format)    
 
     def number_guys(self):
         """
@@ -696,7 +373,7 @@ class FaceMovie(object):
             Designed for interface use only
         """  
         return len(self.guys)
-    
+
     def out_display(self, im, name, time=1000, im_x=640, im_y=480):
         """
         Displays the output image, for time ms.
@@ -721,7 +398,7 @@ class FaceMovie(object):
         cv.ShowImage(win_name, im)
         cv.WaitKey(time)
         cv.DestroyWindow(win_name)
-        
+
     def save_result(self, im, name, out_folder, ext):
         """
         Saves output image to the given format (given in extension)

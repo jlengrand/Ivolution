@@ -31,7 +31,8 @@ print "###"
 print facemovie.dim_x, facemovie.dim_y
 print facemovie.x_center, facemovie.y_center
 print "###"
-facemovie.save_out_movie(out_fo, 3)     
+facemovie.save_out_movie(out_fo, 3)
+facemovie.save_faces(out_fo)
 
 # crop mode
 facemovie.mode = "crop"
@@ -40,6 +41,8 @@ print "###"
 print facemovie.dim_x, facemovie.dim_y
 print facemovie.x_center, facemovie.y_center
 print "###"
-facemovie.save_out_movie(out_fo, 2)      
+facemovie.save_out_movie(out_fo, 2)  
+#facemovie.show_faces()
+facemovie.save_faces(out_fo)
 
 print "Exiting..."
