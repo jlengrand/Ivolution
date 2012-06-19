@@ -47,22 +47,23 @@ class FaceMovie(object):
         self.mode = "default" # can be crop or default. 
 
         ###                
-        self.CV_MAX_PIXEL = 13000 * 13000 # experimental maximal size of an IplImage
+        #self.CV_MAX_PIXEL = 13000 * 13000 # experimental maximal size of an IplImage
+
 
         self.guys = [] # List of pictures in source folder
         
         # Position of the center in output images 
         self.x_center = 0
         self.y_center = 0
-
-        # minimum size needed on right of center
-        #self.x_af = 0
-        #self.y_af = 0
         
         # Needed minimum size of output image
         self.dim_x = 0
         self.dim_y = 0
-        
+
+        # minimum size needed on right of center
+        #self.x_af = 0
+        #self.y_af = 0
+
         #self.normalize = False
         # thumbmails
         #self.crop = False
@@ -242,14 +243,6 @@ class FaceMovie(object):
         
         self.dim_x = x_af + self.x_center
         self.dim_y = y_af + self.y_center
-        
-        # if self.dim_x * self.dim_y > self.CV_MAX_PIXEL:
-        #     print "Max size reached for large mode!"
-        #     print "You may want to switch to crop mode or reduce image resolution !"
-        #     sys.exit(0)
-        
-        # # finishes by calculating average face size
-        # self.calc_mean_face()
 
     def find_crop_dims(self):
         """
@@ -275,19 +268,11 @@ class FaceMovie(object):
                 ht = yc
             if (iny - yc) < hb:
                 hb = iny - yc
-                                      
-        #self.width = [wl, wr]
-        #self.height = [ht, hb]
+                                     
         self.dim_x = wl + wr
         self.dim_y = ht + hb
         self.x_center =  wl
         self.y_center = ht
-            
-        # if (sum(self.width) >= self.dim_x) or (sum(self.height) >= self.dim_y):
-        #     print "Cropping inactive : Maximum dimensions reached"
-        #     self.crop = False 
-        # else:
-        #     self.crop = True
 
     def save_out_movie(self, out_folder, speed=2):
         """
