@@ -53,16 +53,16 @@ class FaceMovie(object):
         self.guys = [] # List of pictures in source folder
         
         # Position of the center in output images 
-        #self.x_center = 0
-        #self.y_center = 0
+        self.x_center = 0
+        self.y_center = 0
 
         # minimum size needed on right of center
-        #self.x_af = 0
-        #self.y_af = 0
+        self.x_af = 0
+        self.y_af = 0
         
         # Needed minimum size of output image
-        #self.dim_x = 0
-        #self.dim_y = 0
+        self.dim_x = 0
+        self.dim_y = 0
         
         #self.normalize = False
         # thumbmails
@@ -74,8 +74,6 @@ class FaceMovie(object):
         self.face_mean = [0, 0]
 
         self.weight_steps = 5 # number of images to be inserted between each frame to reduce violent switch
-        
-        self.reference = 0 # final face size desired
 
     ### checked methods
 
@@ -173,7 +171,15 @@ class FaceMovie(object):
             sys.exit(0)
 
         # normalize faces to make them clean
-        self.reference = self.find_reference() # sets all faces to the same size
+        self.set_guys_ratio() # sets all faces to the same size, by calculating a ratio to a reference
+
+    def set_guys_ratio(self):
+        """
+        For each Guy, calculates the factor by which the image is going to be resized so that all faces finally have the same size.
+        """
+        ref = self.find_reference()
+        for a_guy in self.guys:
+            a_guy.set_ratio(ref)
 
     def find_reference(self):
         """
@@ -189,7 +195,6 @@ class FaceMovie(object):
 
         return min(references)
 
-
     def find_final_dimensions(self, mode, cropdims=(0, 0)):
         """
         Finds the final dimensions that will be needed to create the output.
@@ -200,13 +205,93 @@ class FaceMovie(object):
         """
         if mode == "default":
             # TODO : implement
+            self.find_default_dims()
             print "DEFAULT"
         elif mode == "crop":
             # TODO : implement
+            print "crop"
         elif mode == "custom crop":
             # TODO : implement
             print "uses cropdims"
         # XXX: to implement
+    
+    def find_default_dims(self):
+        """
+        Calculates best output image size and position depending on
+        faces found in guys.
+        The system is simple. The output image should be as big as possible, 
+        and faces are always placed in the same position. Depending on that, 
+        the image input image is placed in the output at the correct position.
+        Black borders are set everywhere else.
+        """
+        # FIXME: badly done !
+        for a_guy in self.guys:
+            # TODO : change to a_guy.get_def_dims
+            xc = int(a_guy.ratio * a_guy.x_center)
+            yc = int(a_guy.ratio * a_guy.y_center)
+            inx = int(a_guy.ratio * a_guy.in_x)
+            iny = int(a_guy.ratio * a_guy.in_y)
+                    
+            # update center
+            if xc > self.x_center:
+                self.x_center = xc
+            if yc > self.y_center:
+                self.y_center = yc
+            # update right part
+            if (inx - xc) > self.x_af:
+                self.x_af = inx - xc
+            if (iny - yc) > self.y_af:
+                self.y_af = iny - yc
+        
+        self.dim_x = self.x_af + self.x_center
+        self.dim_y = self.y_af + self.y_center
+        
+        # if self.dim_x * self.dim_y > self.CV_MAX_PIXEL:
+        #     print "Max size reached for large mode!"
+        #     print "You may want to switch to crop mode or reduce image resolution !"
+        #     sys.exit(0)
+        
+        # # finishes by calculating average face size
+        # self.calc_mean_face()
+
+    def save_out_movie(self, out_folder, fps=3):
+        """
+        Creates a movie with all faces found in the inputs.
+        Guy is skipped if no face is found.
+        
+        :param out_folder: the location where to save the output image.
+        :type out_folder: string
+        
+        :param fps: the number of frames per second to be displayed in final video (3)
+        :type fps: int       
+        """
+
+        filename = os.path.join(out_folder, "output.avi")
+        # FIXME : Find an unified version
+        if "win" in sys.platform:
+            fourcc = cv.CV_FOURCC('C', 'V', 'I', 'D')
+        else: # some kind of Linux/Unix platform
+            fourcc = cv.CV_FOURCC('F', 'M', 'P', '4')
+
+        frameSize = (self.dim_x, self.dim_y)   
+
+        print "Speed is set to %d fps" %(fps)  
+        my_video = cv.CreateVideoWriter(filename, 
+                                      fourcc, 
+                                      fps, 
+                                      frameSize,
+                                      1)
+        ii = 0 
+        for a_guy in self.guys:
+            ii += 1 
+            print "Saving frame %d / %d" %(ii, self.number_guys()) 
+            out_im = a_guy.create_output(self.dim_x, 
+                                      self.dim_y, 
+                                      self.x_center, 
+                                      self.y_center) 
+
+            cv.WriteFrame(my_video, out_im)
+
     ###   
 
     def set_crop_dims(self, crop_x, crop_y):

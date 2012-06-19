@@ -179,6 +179,11 @@ class Guy(object):
             self.x_center = x + w / 2
             self.y_center = y + h / 2
     
+    def set_ratio(self, reference):
+        """
+        """
+        self.ratio = reference / float(self.faces[0][0][3])
+
     def normalize_face(self, reference):
         """
         Searches for best size for intermediate image, whose face fits reference size.
