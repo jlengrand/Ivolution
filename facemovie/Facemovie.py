@@ -144,7 +144,6 @@ class FaceMovie(object):
         for a_guy in self.guys:
             a_guy.search_face(self.face_params)
             if a_guy.has_face(): # face(s) have been found
-                #print "%d faces found for %s" % (a_guy.num_faces(), a_guy.name)
                 print "Face found for %s" % (a_guy.name)
             else:
                 print "Warning! No face found for %s" %(a_guy.name)

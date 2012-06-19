@@ -13,8 +13,8 @@ import cv
 from facemovie import Facemovie
 from facemovie import FaceParams
 
-#in_fo = "data/inputs/samples"
-in_fo = "data/inputs/moi"
+in_fo = "data/inputs/samples"
+#in_fo = "data/inputs/moi"
 out_fo = "data"
 
 xml_fo = "haarcascades"

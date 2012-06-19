@@ -46,10 +46,9 @@ class Guy(object):
         
         # Two variables used to define the new center of interest of the image
         # they are defined as the middle of input image at first
-        self.x_center = self.in_x / 2
-        self.y_center = self.in_y / 2
+        self.x_center = 0
+        self.y_center = 0
 
-        self.normalize = False
         self.ratio = 1.0
 
     def resized_dims(self):
@@ -77,10 +76,7 @@ class Guy(object):
         
         :returns IplImage - the input image, not modified; loaded using self.source
         """
-        # FIXME : Time for me to find a better solution
         image = cv.LoadImage(self.source)
-        #out = cv.CreateImage((self.in_x, self.in_y), cv.IPL_DEPTH_8U, image.nChannels) 
-        #cv.Resize(image, out)
         
         return image
 
@@ -171,6 +167,18 @@ class Guy(object):
         self.sort_faces()
         self.update_center() # finds center of face in image
         
+    def update_center(self):
+        """
+        Using sorted faces, defines the new center of interest of the output image
+
+        Updates the center of the image, using the most probable face as reference. 
+        If no face was found, the center is not updated.
+        """
+        if self.has_face():
+            ((x, y, w, h), n) = self.faces[0]
+            self.x_center = x + w / 2
+            self.y_center = y + h / 2
+
     def sort_faces(self):
         """
         Sorts faces by number of neighbours found, most probable one first
@@ -184,49 +192,13 @@ class Guy(object):
             self.faces.sort(key= lambda prob : prob[1], reverse=True)
         else : 
             self.faces = []
-        
-    def update_center(self):
-        """
-        Using sorted faces, defines the new center of interest of the output image
-
-        Updates the center of the image, using the most probable face as reference. 
-        If no face was found, the center is not updated.
-        """
-        if self.has_face():
-            ((x, y, w, h), n) = self.faces[0]
-            self.x_center = x + w / 2
-            self.y_center = y + h / 2
     
     def set_ratio(self, reference):
         """
         """
         self.ratio = reference / float(self.faces[0][0][3])
 
-    def normalize_face(self, reference):
-        """
-        Searches for best size for intermediate image, whose face fits reference size.
-        This method allows faces to always keep the same size during all the video.
-        Changes the center of the image, so that the final image can be resized accordingly.
-
-        :param reference: The refence size of the face (in pixels). Defined as the first face size for now
-        :type reference: int
-        """
-        self.normalize = True
-        
-        ratio = reference / float(self.faces[0][0][3])
-        #defines the size of the image to have an equalized face
-        norm_x = int(ratio * self.in_x)
-        norm_y = int(ratio * self.in_y)
-      
-        # updates center
-        self.in_x = norm_x
-        self.in_y = norm_y
-        self.x_center = int(ratio * self.x_center)
-        self.y_center = int(ratio * self.y_center)
-        
-        self.ratio = ratio
-
-    def create_video_output(self, x_size, y_size, x_point, y_point):
+    def create_output(self, x_size, y_size, x_point, y_point):
         """
         Creates image output, centering the face center with the required position
         If eq_ratio is set to something different than one, input image is scaled
@@ -248,22 +220,23 @@ class Guy(object):
         cv.Zero(out_im)   
 
         # We want to place the input image so that the center of the face matches
-        # x_center and y_center        
-        xtl = x_point - self.x_center
-        ytl = y_point - self.y_center
-        w = self.in_x
-        h = self.in_y
+        # x_center and y_center  
+        (w, h) = self.resized_dims()
+        (x_center, y_center) = self.resized_center()
+
+        xtl = x_point - x_center # position of top left corner in output image
+        ytl = y_point - y_center # position of top left corner in output image
             
-        rect = (xtl, ytl, w, h)
+        rect = (xtl, ytl, w, h) # creating the bounding rectangle on output image
         cv.SetImageROI(out_im, rect)
         
-        # Load input image
-        if self.normalize :
-            in_image = self.load_normalized_image()
-        else:
-            in_image = self.load_image()
-            
-        cv.Copy(in_image, out_im)
+        # Load input image and resizes it to fit with what we want
+        in_image = self.load_image()
+        norm_im = cv.CreateImage((w, h),cv.IPL_DEPTH_8U, self.in_channels)
+        cv.Resize(in_image, norm_im)
+
+        # creating the final out image
+        cv.Copy(norm_im, out_im)
         cv.ResetImageROI(out_im) 
 
         return out_im
@@ -309,115 +282,6 @@ class Guy(object):
         cv.ResetImageROI(out_im) 
 
         return out_im
-
-    def create_output(self, x_size, y_size, x_point, y_point):
-        """
-        Creates image output, centering the face center with the required position
-        If eq_ratio is set to something different than one, input image is scaled
-        so that face/size = eq_ratio
-
-        :param x_size: The size of the ouput image in x (in pixels)
-        :type x_size: int
-        :param y_size: The size of the ouput image in y (in pixels)
-        :type y_size: int
-        :param x_point: The center of the output image, where the Guy image has to fit in (in pixels)
-        :type x_point: int
-        :param y_point: The center of the output image, where the Guy image has to fit in (in pixels)
-        :type y_point: int
-
-        :returns:  IplImage --  The ouput image, centered to fit with all other images
-
-        """
-        out_im = cv.CreateImage((x_size, y_size),cv.IPL_DEPTH_8U, self.in_channels)
-        cv.Zero(out_im)   
-
-        # We want to place the input image so that the center of the face matches
-        # x_center and y_center  
-        (w, h) = self.resized_dims()
-        (x_center, y_center) = self.resized_center()
-
-        xtl = x_point - x_center # position of top left corner in output image
-        ytl = y_point - y_center # position of top left corner in output image
-            
-        rect = (xtl, ytl, w, h) # creating the bounding rectangle on output image
-        cv.SetImageROI(out_im, rect)
-        
-        # Load input image and resizes it to fit with what we want
-        in_image = self.load_image()
-        norm_im = cv.CreateImage((w, h),cv.IPL_DEPTH_8U, self.in_channels)
-        cv.Resize(in_image, norm_im)
-
-        # creating the final out image
-        cv.Copy(norm_im, out_im)
-        cv.ResetImageROI(out_im) 
-
-        return out_im
-
-    def create_debug_output(self):
-        """
-        Creates output image
-        If debug is set to true, output image is the input image with a red
-        box around the most probable face.
-
-        .. note::
-            DEPRECATED
-        """
-        out_im = cv.CreateImage((self.in_x, self.in_y),cv.IPL_DEPTH_8U, self.in_channels)
-        cv.Zero(out_im) # put everything to 0
-        
-        # Load input image
-        if self.normalize :
-            in_image = self.load_normalized_image()
-        else:
-            in_image = self.load_image()
-        
-        cv.Copy(in_image, out_im)
-        if self.has_face():
-            # some nice drawings
-            ((x, y, w, h), n) = self.faces[0]
-            # the input to cv.HaarDetectObjects was resized, so scale the
-            # bounding box of each face and convert it to two CvPoints
-            pt1 = (x, y)
-            pt2 = ((x + w), (y + h))
-            cv.Rectangle(out_im, 
-                        pt1, 
-                        pt2, 
-                        cv.RGB(255, 0, 0), 
-                        3, 8, 0)# surrounds face   
-        
-            # Adds point in the center
-            pt3 = (self.x_center, self.y_center)
-            cv.Line(out_im, 
-                        pt3, 
-                        pt3, 
-                        cv.RGB(0, 255, 0), 
-                        3, 8, 0)
-
-        return out_im
-            
-    def in_display(self, time=1000, im_x=640, im_y=480):
-        """
-        Displays the input image, for time ms.
-        Setting time to 0 causes the image to remains open.
-
-        :param time: The time for which image stays diaplyed (in ms). 0 causes the frams to remain open
-        :type time: int
-        :param im_x: The output of the display frame in x (in pixels)
-        :type im_x: int
-        :param im_y: The output of the display frame in y (in pixels)
-        :type im_y: int
-        """
-        # Load input image
-        if self.normalize :
-            in_image = self.load_normalized_image()
-        else:
-            in_image = self.load_image()
-        
-        cv.NamedWindow(self.name, cv.CV_WINDOW_NORMAL)
-        cv.ResizeWindow(self.name, im_x, im_y) 
-        cv.ShowImage(self.name, in_image)
-        cv.WaitKey(time)    
-        cv.DestroyWindow(self.name)
 
     def num_faces(self):
         """
