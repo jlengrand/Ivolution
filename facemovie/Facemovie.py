@@ -52,13 +52,10 @@ class FaceMovie(object):
 
         self.guys = [] # List of pictures in source folder
         
-        # Position of the center in output images 
-        self.x_center = 0
-        self.y_center = 0
+        self.center = [0, 0] # Position of the center in output images (x, y)
         
-        # Needed minimum size of output image
-        self.dim_x = 0
-        self.dim_y = 0
+        # Size of the final output image (x, y). Depends on selected mode
+        self.dims = [0, 0]
 
         # minimum size needed on right of center
         #self.x_af = 0
@@ -230,18 +227,18 @@ class FaceMovie(object):
             (inx, iny) = a_guy.resized_dims()
                     
             # update center
-            if xc > self.x_center:
-                self.x_center = xc
-            if yc > self.y_center:
-                self.y_center = yc
+            if xc > self.center[0]:
+                self.center[0] = xc
+            if yc > self.center[1]:
+                self.center[1] = yc
             # update right part
             if (inx - xc) > x_af:
                 x_af = inx - xc
             if (iny - yc) > y_af:
                 y_af = iny - yc
         
-        self.dim_x = x_af + self.x_center
-        self.dim_y = y_af + self.y_center
+        self.dims[0] = x_af + self.center[0]
+        self.dims[1] = y_af + self.center[1]
 
     def find_crop_dims(self):
         """
@@ -268,10 +265,9 @@ class FaceMovie(object):
             if (iny - yc) < hb:
                 hb = iny - yc
                                      
-        self.dim_x = wl + wr
-        self.dim_y = ht + hb
-        self.x_center =  wl
-        self.y_center = ht
+        self.dims[0] = wl + wr
+        self.dims[1] = ht + hb
+        self.center = [wl, ht]
 
     def save_out_movie(self, out_folder, speed=2):
         """
@@ -292,7 +288,7 @@ class FaceMovie(object):
         else: # some kind of Linux/Unix platform
             fourcc = cv.CV_FOURCC('F', 'M', 'P', '4')
 
-        frameSize = (self.dim_x, self.dim_y)   
+        frameSize = (self.dims[0], self.dims[1])   
 
         pace = ["slow", "normal", "fast"]
         print "Speed is set to %s" %(pace[speed - 1])  
@@ -306,15 +302,15 @@ class FaceMovie(object):
             ii += 1 
             print "Saving frame %d / %d" %(ii, self.number_guys()) 
             if self.mode == "default":
-                out_im = a_guy.create_output(self.dim_x, 
-                                          self.dim_y, 
-                                          self.x_center, 
-                                          self.y_center) 
+                out_im = a_guy.create_default_output(self.dims[0],
+                                          self.dims[1],
+                                          self.center[0], 
+                                          self.center[1]) 
             elif self.mode == "crop":
-                out_im = a_guy.create_crop_output(self.dim_x, 
-                                          self.dim_y, 
-                                          self.x_center, 
-                                          self.y_center) 
+                out_im = a_guy.create_crop_output(self.dims[0],
+                                          self.dims[1],
+                                          self.center[0], 
+                                          self.center[1]) 
 
             cv.WriteFrame(my_video, out_im)
     
@@ -328,15 +324,15 @@ class FaceMovie(object):
         """
         for a_guy in self.guys:    
             if self.mode == "default":
-                out_im = a_guy.create_output(self.dim_x, 
-                                          self.dim_y, 
-                                          self.x_center, 
-                                          self.y_center) 
+                out_im = a_guy.create_default_output(self.dims[0],
+                                          self.dims[1],
+                                          self.center[0], 
+                                          self.center[1]) 
             elif self.mode == "crop":
-                out_im = a_guy.create_crop_output(self.dim_x, 
-                                          self.dim_y, 
-                                          self.x_center, 
-                                          self.y_center) 
+                out_im = a_guy.create_crop_output(self.dims[0],
+                                          self.dims[1],
+                                          self.center[0], 
+                                          self.center[1]) 
 
                 self.out_display(out_im, a_guy.name, time=mytime)      
 
@@ -352,15 +348,15 @@ class FaceMovie(object):
         """
         for a_guy in self.guys: 
             if self.mode == "default":
-                out_im = a_guy.create_output(self.dim_x, 
-                                          self.dim_y, 
-                                          self.x_center, 
-                                          self.y_center) 
+                out_im = a_guy.create_default_output(self.dims[0],
+                                          self.dims[1],
+                                          self.center[0], 
+                                          self.center[1]) 
             elif self.mode == "crop":
-                out_im = a_guy.create_crop_output(self.dim_x, 
-                                          self.dim_y, 
-                                          self.x_center, 
-                                          self.y_center) 
+                out_im = a_guy.create_crop_output(self.dims[0],
+                                          self.dims[1],
+                                          self.center[0], 
+                                          self.center[1])  
 
             self.save_result(out_im, a_guy.name, out_folder, im_format)    
 

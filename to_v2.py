@@ -29,8 +29,8 @@ facemovie.prepare_faces()
 # default mode
 facemovie.find_final_dimensions(cropdims=(0, 0))
 print "###"
-print facemovie.dim_x, facemovie.dim_y
-print facemovie.x_center, facemovie.y_center
+print facemovie.dims
+print facemovie.center
 print "###"
 facemovie.save_out_movie(out_fo, 3)
 facemovie.save_faces(out_fo)
@@ -39,8 +39,8 @@ facemovie.save_faces(out_fo)
 facemovie.mode = "crop"
 facemovie.find_final_dimensions(cropdims=(0, 0))
 print "###"
-print facemovie.dim_x, facemovie.dim_y
-print facemovie.x_center, facemovie.y_center
+print facemovie.dims
+print facemovie.center
 print "###"
 facemovie.save_out_movie(out_fo, 2)  
 #facemovie.show_faces()
