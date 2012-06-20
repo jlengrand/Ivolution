@@ -79,21 +79,6 @@ class Guy(object):
         image = cv.LoadImage(self.source)
         
         return image
-
-    def load_normalized_image(self):
-        """
-        This function is used to load the normalized image when needed. Normalized images are used so that the face keeps the same size over time 
-        To reduce memory load, only the source image location is saved in real time
-        Returns an iplImage.
-        
-        :returns IplImage - the input image, normalized; loaded using self.source and resized afterwards
-        """    
-        
-        in_image = self.load_image()
-        norm_im = cv.CreateImage((self.in_x, self.in_y),cv.IPL_DEPTH_8U, self.in_channels)
-        cv.Resize(in_image, norm_im)
-        return norm_im # overriding in_image
-        
         
     def find_date(self, date):
         """This function takes a date as a string, and returns a date object.
@@ -198,7 +183,7 @@ class Guy(object):
         """
         self.ratio = reference / float(self.faces[0][0][3])
 
-    def create_output(self, x_size, y_size, x_point, y_point):
+    def create_default_output(self, x_size, y_size, x_point, y_point):
         """
         Creates image output, centering the face center with the required position
         If eq_ratio is set to something different than one, input image is scaled
@@ -282,6 +267,11 @@ class Guy(object):
         cv.ResetImageROI(out_im) 
 
         return out_im
+    
+    def prepare_image(x_center, y_center, x_point, y_point, x_size, y_size, mode):
+        """
+        """
+
 
     def num_faces(self):
         """
