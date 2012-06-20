@@ -19,8 +19,7 @@ class FaceMovie(object):
     '''
     Main class of the whole application. 
     Contains the core image processing functions.
-    Takes a bunch of parameters and a list of images and tries to create a 
-    video out of it.
+    Takes a bunch of parameters and a list of images and creates the ouput, depending what the user asked for. 
     Contains general methods, aimed at being used trough an interface.
     '''    
     def __init__(self, in_folder, out_folder, face_params):
@@ -64,10 +63,10 @@ class FaceMovie(object):
         """
         Aims at populating the guys list, using the source folder as an input. 
         Guys list can be sorted either by name, or using metadata.
-        In case source folder is not found; Exits.
-        Non Image files are skipped. 
+        In case source folder is not found; Exits without processing.
+        Non Image files are autmatically skipped. 
         Source folder is searched recursively. All subfolders are also processed.
-        .. note::In case no valid date is found for metadata mode, it is set to ''.
+        .. note::In case no valid date is found for metadata mode, the images are taken in name order
         """
         try:
             os.path.exists(self.source)
@@ -86,6 +85,7 @@ class FaceMovie(object):
                     try:
                         guy_date = exif.parse(guy_source)['DateTime']
                     except Exception:
+                        print "===> Warning : No metadata found for %s" %(guy_name)
                         guy_date = ''
 
                     a_guy = Guy.Guy(guy_name, guy_date, guy_source)
@@ -97,20 +97,17 @@ class FaceMovie(object):
 
         self.sort_guys()
         print "INFO : %d guys found in source folder." %(self.number_guys())
-        print "==="        
 
     def sort_guys(self):
         """
         Guys list has just been populated, but elements are not ordered yet.
-        Sorts the elements of the list either by name or by date, depending on the chosen mode.
-
+        Sorts the elements of the list either by name or by date extracted from metadata,
+        depending on the chosen mode.
         """
         # Sorting either by exif date or name
         if self.sort_method == "exif":
-            print "Sorting files using EXIF metadata"
             self.guys.sort(key=lambda g: g.date)
         else: # default is sort by name
-            print "Sorting files using file name"
             self.guys.sort(key=lambda g: g.name)
     
     def search_faces(self):
@@ -127,7 +124,7 @@ class FaceMovie(object):
             if a_guy.has_face(): # face(s) have been found
                 print "Face found for %s" % (a_guy.name)
             else:
-                print "Warning! No face found for %s" %(a_guy.name)
+                print "Warning! No face found for %s. Skipped . . ." %(a_guy.name)
         
     def clean_guys(self):
         """
@@ -227,7 +224,6 @@ class FaceMovie(object):
         """
         Calculates smallest output image that can be used to avoid adding black borders on image
         It will later be used to create the final image. 
-        The idea is the same as for :func:find_out_dims , but while avoiding black brders.
         """
         ht = 1000000 # space left above eyes
         hb = 1000000 # space left beneath eyes
@@ -317,7 +313,7 @@ class FaceMovie(object):
         """
         for a_guy in self.guys: 
             out_im = self.prepare_image(a_guy)
-            self.save_result(out_im, a_guy.name, out_folder, im_format)    
+            self.save_guy(out_im, a_guy.name, out_folder, im_format)    
 
     def number_guys(self):
         """
@@ -353,7 +349,7 @@ class FaceMovie(object):
         cv.WaitKey(time)
         cv.DestroyWindow(win_name)
 
-    def save_result(self, im, name, out_folder, ext):
+    def save_guy(self, im, name, out_folder, ext):
         """
         Saves output image to the given format (given in extension)
         

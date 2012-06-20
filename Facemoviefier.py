@@ -93,7 +93,7 @@ class Facemoviefier():
 
         # Number of frames per second in saved image
         parser.add_argument('--speed', 
-                            choices=range(1, 3),
+                            choices=range(1, 4),
                             type=int,
                             help='Choose the pace of face switching in the final video. Possible options are (slow=1, normal=2, fast = 3). Default is normal',
                             default=2)       
@@ -123,6 +123,7 @@ class Facemoviefier():
         #selects sorting method
         if self.args['sort'] == 'exif':
             self.facemovie.sort_method = 'exif';
+        print "==="            
         self.facemovie.list_guys()
         print "==="
         if self.args['crop']:
