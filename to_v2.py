@@ -32,7 +32,7 @@ print "###"
 print facemovie.dims
 print facemovie.center
 print "###"
-facemovie.save_out_movie(out_fo, 3)
+facemovie.save_movie(out_fo, 3)
 facemovie.save_faces(out_fo)
 
 # crop mode
@@ -42,7 +42,7 @@ print "###"
 print facemovie.dims
 print facemovie.center
 print "###"
-facemovie.save_out_movie(out_fo, 2)  
+facemovie.save_movie(out_fo, 2)  
 #facemovie.show_faces()
 facemovie.save_faces(out_fo)
 

@@ -71,11 +71,11 @@ class Facemoviefier():
                             action='store_true', 
                             default=False)
 
-        # Crop to custom dims if desired
-        parser.add_argument('-d', 
-                            '--cropdims', 
-                            help='Ignored if crop is not activated. Crops image to size x y' ,
-                            nargs = 2)
+        # # Crop to custom dims if desired
+        # parser.add_argument('-d', 
+        #                     '--cropdims', 
+        #                     help='Ignored if crop is not activated. Crops image to size x y' ,
+        #                     nargs = 2)
         
         # type of output wanted (image, video, show)
         parser.add_argument('-t', 
@@ -87,16 +87,16 @@ class Facemoviefier():
         # how to sort images. Default is file name
         parser.add_argument('-s', 
                             '--sort', 
-                            choices='ne',
-                            help='Choose which way images are sorted. Can be either using file name (n) or exif metadata (e). Default is n' , 
-                            default='n')       
+                            choices=['name','exif'],
+                            help='Choose which way images are sorted. Can be either using file name or exif metadata (e). Default is n' , 
+                            default='name')       
 
         # Number of frames per second in saved image
-        parser.add_argument('--fps', 
-                            choices=range(2, 20),
+        parser.add_argument('--speed', 
+                            choices=range(1, 3),
                             type=int,
-                            help='Choose the number of frames per second in the output video (between 2 and 20). Default is 3' , 
-                            default=3)       
+                            help='Choose the pace of face switching in the final video. Possible options are (slow=1, normal=2, fast = 3). Default is normal',
+                            default=2)       
         
         args = vars(parser.parse_args())
         return args
@@ -121,23 +121,19 @@ class Facemoviefier():
             self.init_facemovie()
         
         #selects sorting method
-        if self.args['sort'] == 'e':
-            self.facemovie.sort_method = 'e';
+        if self.args['sort'] == 'exif':
+            self.facemovie.sort_method = 'exif';
         self.facemovie.list_guys()
         print "==="
-        self.facemovie.search_faces()
-        # I want to change images so that all faces have the same size
-        self.facemovie.normalize_faces() # sets all faces to the same size
-        # I want to know the size of the output frame, knowing initial conditions    
-        self.facemovie.find_out_dims() # finds output minimal size to get all eyes in the same place
         if self.args['crop']:
             print "==="
-            print "Cropping output images"
+            print "Crop mode activated"
             if self.args['cropdims']:
-                print "Custom cropping size chosen"
-                self.facemovie.set_crop_dims(float(self.args['cropdims'][0]), float(self.args['cropdims'][1])) 
-            self.facemovie.find_crop_dims() # finds output minimal size to get all eyes in the same place
+                print "Custom cropping is not implemented yet. Ignored . . ."
+            self.facemovie.mode = 'crop';
 
+        self.facemovie.prepare_faces() # I want to search for the faces, and characteristics of the images   
+        self.facemovie.find_final_dimensions() # finds output size for desired mode.
         print "==="
         #choose your final step
         if self.args['type'] == 's':
@@ -148,7 +144,7 @@ class Facemoviefier():
             self.facemovie.save_faces(self.args['output'])
         elif self.args['type'] == 'v':
             print "Saving output video:"
-            self.facemovie.save_movie(self.args['output'], self.args['fps'])        
+            self.facemovie.save_movie(self.args['output'], self.args['speed'])        
 
 if __name__ == '__main__':
     my_job = Facemoviefier()

@@ -42,7 +42,7 @@ class FaceMovie(object):
         # Retrieving parameters for Face Detection
         self.face_params = face_params
 
-        self.sort_method = "n" # sorting by name or using metadata (n or e)
+        self.sort_method = "name" # sorting by name or using metadata (n or e)
         self.mode = "default" # can be crop or default. 
 
         ###                
@@ -106,7 +106,7 @@ class FaceMovie(object):
 
         """
         # Sorting either by exif date or name
-        if self.sort_method == "e":
+        if self.sort_method == "exif":
             print "Sorting files using EXIF metadata"
             self.guys.sort(key=lambda g: g.date)
         else: # default is sort by name
@@ -251,7 +251,7 @@ class FaceMovie(object):
         self.dims = [wl + wr, ht + hb]                 
         self.center = [wl, ht]
 
-    def save_out_movie(self, out_folder, speed=2):
+    def save_movie(self, out_folder, speed=2):
         """
         Creates a movie with all faces found in the inputs.
         Guy is skipped if no face is found.
@@ -294,9 +294,16 @@ class FaceMovie(object):
         :param mytime: time for which the image should be displayed (in ms) (1000)
         :type mytime: int
         """
+        win_name = " Face Results"
+        cv.NamedWindow(win_name, cv.CV_WINDOW_NORMAL)
+        cv.ResizeWindow(win_name, 640, 480) 
+
         for a_guy in self.guys:    
             out_im = self.prepare_image(a_guy)
-            self.out_display(out_im, a_guy.name, time=mytime)      
+            cv.ShowImage(win_name, out_im)
+            cv.WaitKey(mytime)
+
+        cv.DestroyWindow(win_name)
 
     def save_faces(self, out_folder, im_format="png"):
         """
