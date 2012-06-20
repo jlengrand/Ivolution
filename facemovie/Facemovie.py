@@ -42,33 +42,17 @@ class FaceMovie(object):
         # Retrieving parameters for Face Detection
         self.face_params = face_params
 
-
         self.sort_method = "n" # sorting by name or using metadata (n or e)
         self.mode = "default" # can be crop or default. 
 
         ###                
         #self.CV_MAX_PIXEL = 13000 * 13000 # experimental maximal size of an IplImage
-
-
         self.guys = [] # List of pictures in source folder
         
         self.center = [0, 0] # Position of the center in output images (x, y)
         
         # Size of the final output image (x, y). Depends on selected mode
         self.dims = [0, 0]
-
-        # minimum size needed on right of center
-        #self.x_af = 0
-        #self.y_af = 0
-
-        #self.normalize = False
-        # thumbmails
-        #self.crop = False
-        #self.cropdims = [0, 0] # user defined desired dimensions for cropping
-        #self.width = [0, 0]
-        #self.height = [0, 0]
-        
-        self.face_mean = [0, 0]
 
         self.weight_steps = 5 # number of images to be inserted between each frame to reduce violent switch
 
@@ -237,8 +221,7 @@ class FaceMovie(object):
             if (iny - yc) > y_af:
                 y_af = iny - yc
         
-        self.dims[0] = x_af + self.center[0]
-        self.dims[1] = y_af + self.center[1]
+        self.dims = [x_af + self.center[0], y_af + self.center[1]]
 
     def find_crop_dims(self):
         """
@@ -265,8 +248,7 @@ class FaceMovie(object):
             if (iny - yc) < hb:
                 hb = iny - yc
                                      
-        self.dims[0] = wl + wr
-        self.dims[1] = ht + hb
+        self.dims = [wl + wr, ht + hb]                 
         self.center = [wl, ht]
 
     def save_out_movie(self, out_folder, speed=2):
@@ -302,15 +284,11 @@ class FaceMovie(object):
             ii += 1 
             print "Saving frame %d / %d" %(ii, self.number_guys()) 
             if self.mode == "default":
-                out_im = a_guy.create_default_output(self.dims[0],
-                                          self.dims[1],
-                                          self.center[0], 
-                                          self.center[1]) 
+                out_im = a_guy.create_default_output(self.dims,
+                                                    self.center)
             elif self.mode == "crop":
-                out_im = a_guy.create_crop_output(self.dims[0],
-                                          self.dims[1],
-                                          self.center[0], 
-                                          self.center[1]) 
+                out_im = a_guy.create_crop_output(self.dims,
+                                                self.center) 
 
             cv.WriteFrame(my_video, out_im)
     
@@ -324,15 +302,11 @@ class FaceMovie(object):
         """
         for a_guy in self.guys:    
             if self.mode == "default":
-                out_im = a_guy.create_default_output(self.dims[0],
-                                          self.dims[1],
-                                          self.center[0], 
-                                          self.center[1]) 
+                out_im = a_guy.create_default_output(self.dims,
+                                                    self.center)
             elif self.mode == "crop":
-                out_im = a_guy.create_crop_output(self.dims[0],
-                                          self.dims[1],
-                                          self.center[0], 
-                                          self.center[1]) 
+                out_im = a_guy.create_crop_output(self.dims,
+                                                self.center)  
 
                 self.out_display(out_im, a_guy.name, time=mytime)      
 
@@ -348,15 +322,11 @@ class FaceMovie(object):
         """
         for a_guy in self.guys: 
             if self.mode == "default":
-                out_im = a_guy.create_default_output(self.dims[0],
-                                          self.dims[1],
-                                          self.center[0], 
-                                          self.center[1]) 
+                out_im = a_guy.create_default_output(self.dims,
+                                                    self.center) 
             elif self.mode == "crop":
-                out_im = a_guy.create_crop_output(self.dims[0],
-                                          self.dims[1],
-                                          self.center[0], 
-                                          self.center[1])  
+                out_im = a_guy.create_crop_output(self.dims,
+                                                self.center)
 
             self.save_result(out_im, a_guy.name, out_folder, im_format)    
 
