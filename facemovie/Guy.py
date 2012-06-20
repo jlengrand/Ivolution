@@ -189,14 +189,10 @@ class Guy(object):
         If eq_ratio is set to something different than one, input image is scaled
         so that face/size = eq_ratio
 
-        :param x_size: The size of the ouput image in x (in pixels)
-        :type x_size: int
-        :param y_size: The size of the ouput image in y (in pixels)
-        :type y_size: int
-        :param x_point: The center of the output image, where the Guy image has to fit in (in pixels)
-        :type x_point: int
-        :param y_point: The center of the output image, where the Guy image has to fit in (in pixels)
-        :type y_point: int
+        :param size: The size of the ouput image in [x, y] (in pixels)
+        :type size: list of 2 ints
+        :param point: The location of the Guy image center, after image has been cropped(in pixels)
+        :type point: list of 2 ints
 
         :returns:  IplImage --  The ouput image, centered to fit with all other images
 
@@ -264,11 +260,6 @@ class Guy(object):
         cv.ResetImageROI(out_im) 
 
         return out_im
-    
-    def prepare_image(center, point, size, mode):
-        """
-        """
-
 
     def num_faces(self):
         """

@@ -283,13 +283,7 @@ class FaceMovie(object):
         for a_guy in self.guys:
             ii += 1 
             print "Saving frame %d / %d" %(ii, self.number_guys()) 
-            if self.mode == "default":
-                out_im = a_guy.create_default_output(self.dims,
-                                                    self.center)
-            elif self.mode == "crop":
-                out_im = a_guy.create_crop_output(self.dims,
-                                                self.center) 
-
+            out_im = self.prepare_image(a_guy)
             cv.WriteFrame(my_video, out_im)
     
     def show_faces(self, mytime=1000):
@@ -301,14 +295,8 @@ class FaceMovie(object):
         :type mytime: int
         """
         for a_guy in self.guys:    
-            if self.mode == "default":
-                out_im = a_guy.create_default_output(self.dims,
-                                                    self.center)
-            elif self.mode == "crop":
-                out_im = a_guy.create_crop_output(self.dims,
-                                                self.center)  
-
-                self.out_display(out_im, a_guy.name, time=mytime)      
+            out_im = self.prepare_image(a_guy)
+            self.out_display(out_im, a_guy.name, time=mytime)      
 
     def save_faces(self, out_folder, im_format="png"):
         """
@@ -321,13 +309,7 @@ class FaceMovie(object):
         :type im_format: string        
         """
         for a_guy in self.guys: 
-            if self.mode == "default":
-                out_im = a_guy.create_default_output(self.dims,
-                                                    self.center) 
-            elif self.mode == "crop":
-                out_im = a_guy.create_crop_output(self.dims,
-                                                self.center)
-
+            out_im = self.prepare_image(a_guy)
             self.save_result(out_im, a_guy.name, out_folder, im_format)    
 
     def number_guys(self):
@@ -382,3 +364,20 @@ class FaceMovie(object):
         print "Saving %s" %(out_name)
         
         cv.SaveImage(out_name, im)
+
+    def prepare_image(self, a_guy):
+        """
+        Takes a Guy and processes its input image. Prepares the final output image for this
+        Guy, so that it is ready to be saved in the desired output.
+
+        :param a_guy: The Guy currently being processed. 
+        :type a_guy: Guy 
+        :returns:  IplImage --  The ouput image, created depending on the chosen mode, ready to be saved
+        """        
+        if self.mode == "default":
+            out_im = a_guy.create_default_output(self.dims,
+                                                self.center) 
+        elif self.mode == "crop":
+            out_im = a_guy.create_crop_output(self.dims,
+                                            self.center)        
+        return out_im
