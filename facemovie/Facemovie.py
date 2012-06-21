@@ -41,6 +41,8 @@ class FaceMovie(object):
         # Retrieving parameters for Face Detection
         self.face_params = face_params
 
+        self.out_name = "output.avi" 
+
         self.sort_method = "name" # sorting by name or using metadata (n or e)
         self.mode = "default" # can be crop or default. 
 
@@ -259,7 +261,7 @@ class FaceMovie(object):
         :type fps: int       
         """
 
-        filename = os.path.join(out_folder, "output.avi")
+        filename = os.path.join(out_folder, self.out_name)
         # FIXME : Find an unified version
         if "win" in sys.platform:
             fourcc = cv.CV_FOURCC('C', 'V', 'I', 'D')
