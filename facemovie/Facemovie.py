@@ -41,7 +41,9 @@ class FaceMovie(object):
         # Retrieving parameters for Face Detection
         self.face_params = face_params
 
-        self.out_name = "output.avi" 
+        self.out_path = "./data"
+        self.out_name = "output" 
+        self.out_format = "avi"
 
         self.sort_method = "name" # sorting by name or using metadata (n or e)
         self.mode = "default" # can be crop or default. 
@@ -261,7 +263,7 @@ class FaceMovie(object):
         :type fps: int       
         """
 
-        filename = os.path.join(out_folder, self.out_name)
+        filename = os.path.join(out_folder, self.out_name + "." + self.out_format) # to be refactored
         # FIXME : Find an unified version
         if "win" in sys.platform:
             fourcc = cv.CV_FOURCC('C', 'V', 'I', 'D')
@@ -351,6 +353,28 @@ class FaceMovie(object):
         cv.WaitKey(time)
         cv.DestroyWindow(win_name)
 
+    def check_out_name(self, out_folder):
+        """
+        Checks the desired output selected by the user. 
+        It can be either a folder or a file itself.
+        Checks whether the designated path ends with a extension name. 
+
+        In case it is, the extension is checked and changed if needed
+
+        :param out_folder: the path slected by the user as output location
+        :type out_folder: String
+        """
+
+        if len(os.path.splitext(out_folder)[1]) > 0:# if ends up with an extension
+            self.out_path, complete_name = os.path.split(out_folder)
+            self.out_name, format = os.path.splitext(complete_name)
+            if format != self.out_format:
+                # the format is not compliant with what we can do. We refuse it
+                print "Changing format to avi"             
+        else:
+            # no filename is given. We keep the default
+            self.out_path = os.path.split(out_folder)[0]
+
     def save_guy(self, im, name, out_folder, ext):
         """
         Saves output image to the given format (given in extension)
@@ -386,3 +410,4 @@ class FaceMovie(object):
             out_im = a_guy.create_crop_output(self.dims,
                                             self.center)        
         return out_im
+
