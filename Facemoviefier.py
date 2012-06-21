@@ -142,10 +142,10 @@ class Facemoviefier():
             self.facemovie.show_faces(1000)
         elif self.args['type'] == 'i':
             print "Saving output images :"
-            self.facemovie.save_faces(self.args['output'])
+            self.facemovie.save_faces()
         elif self.args['type'] == 'v':
             print "Saving output video:"
-            self.facemovie.save_movie(self.args['output'], self.args['speed'])        
+            self.facemovie.save_movie(self.args['speed'])        
 
 if __name__ == '__main__':
     my_job = Facemoviefier()

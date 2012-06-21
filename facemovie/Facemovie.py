@@ -37,13 +37,14 @@ class FaceMovie(object):
 
         ###checked params
         self.source= in_folder # Source folder for pictures
-        self.out = out_folder # Folder to save outputs
         # Retrieving parameters for Face Detection
         self.face_params = face_params
 
         self.out_path = "./data"
         self.out_name = "output" 
         self.out_format = "avi"
+        # updating the out_folder if needed
+        self.check_out_name(out_folder)
 
         self.sort_method = "name" # sorting by name or using metadata (n or e)
         self.mode = "default" # can be crop or default. 
@@ -251,7 +252,14 @@ class FaceMovie(object):
         self.dims = [wl + wr, ht + hb]                 
         self.center = [wl, ht]
 
-    def save_movie(self, out_folder, speed=2):
+    def get_out_file(self):
+        """
+        Reconstructs the final output file for the movie creation
+        :returns:  String --  The ouput file path to be saved
+        """
+        return os.path.join(self.out_path, (self.out_name + "." + self.out_format))
+
+    def save_movie(self, speed=2):
         """
         Creates a movie with all faces found in the inputs.
         Guy is skipped if no face is found.
@@ -263,8 +271,6 @@ class FaceMovie(object):
         :type fps: int       
         """
 
-        filename = os.path.join(out_folder, self.out_name + "." + self.out_format) # to be refactored
-        # FIXME : Find an unified version
         if "win" in sys.platform:
             fourcc = cv.CV_FOURCC('C', 'V', 'I', 'D')
         else: # some kind of Linux/Unix platform
@@ -274,7 +280,7 @@ class FaceMovie(object):
 
         pace = ["slow", "normal", "fast"]
         print "Speed is set to %s" %(pace[speed - 1])  
-        my_video = cv.CreateVideoWriter(filename, 
+        my_video = cv.CreateVideoWriter(self.get_out_file(), 
                                       fourcc, 
                                       self.speed[speed - 1], 
                                       frameSize,
@@ -305,7 +311,7 @@ class FaceMovie(object):
 
         cv.DestroyWindow(win_name)
 
-    def save_faces(self, out_folder, im_format="png"):
+    def save_faces(self, im_format="png"):
         """
         Save all faces into out_folder, in the given image format
 
@@ -317,7 +323,7 @@ class FaceMovie(object):
         """
         for a_guy in self.guys: 
             out_im = self.prepare_image(a_guy)
-            self.save_guy(out_im, a_guy.name, out_folder, im_format)    
+            self.save_guy(out_im, a_guy.name, im_format)    
 
     def number_guys(self):
         """
@@ -375,7 +381,7 @@ class FaceMovie(object):
             # no filename is given. We keep the default
             self.out_path = os.path.split(out_folder)[0]
 
-    def save_guy(self, im, name, out_folder, ext):
+    def save_guy(self, im, name, ext):
         """
         Saves output image to the given format (given in extension)
         
@@ -389,7 +395,7 @@ class FaceMovie(object):
         :type ext: string        
         """
         file_name = name + "." + ext
-        out_name = os.path.join(out_folder, file_name)
+        out_name = os.path.join(self.out_path, file_name)
         print "Saving %s" %(out_name)
         
         cv.SaveImage(out_name, im)
