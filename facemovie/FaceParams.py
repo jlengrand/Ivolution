@@ -15,7 +15,7 @@ class FaceParams(object):
     '''
     Simple class used to store parameters used for Face detection
     '''
-    def __init__(self, xml_folder, training_type, input_folder, output_folder, sort="name", mode="conservative",speed=2):
+    def __init__(self, xml_folder, input_folder, output_folder, training_type="frontal_face", sort="name", mode="conservative",speed=1):
         """
         Creates dictionary for all types of training files
         some of them shall never be used. Perhaps would it be good to lower the dict size, or hide some of them
@@ -38,8 +38,8 @@ class FaceParams(object):
         :type sort: string                       
         """
 
-        self.input_folder = "."
-        self.output_folder = "."
+        self.input_folder = input_folder
+        self.output_folder = output_folder
         self.speed = 1 # between 0 and 2
         self.mode = "conservative" # conservative or crop
         self.sort = "name" # name or exif
@@ -63,14 +63,14 @@ class FaceParams(object):
         print "Selected parameters for your Facemovie:"
         print "Input Folder: %s" % (self.input_folder)
         print "Output Folder: %s" % (self.output_folder)
-        print "Speed for movie:  %s" % (["slow", "medium", "fast"][self.speed + 1])
-        print "Video Mode: %" % (self.mode)
-        print "Files sorting method: %" % (self.sort)
+        print "Speed for movie:  %s" % (["slow", "medium", "fast"][self.speed])
+        print "Video Mode: %s" % (self.mode)
+        print "Files sorting method: %s" % (self.sort)
         print "-----"
         print "Selected parameters for Face Detection:"
         print "Selected cascade for Face detection : %s" % ("haarcascade_frontalface_alt")
-        print "Minimum Size (x, y): %d" % (self.min_size[0], self.min_size[1])
-        print "Image scaling: %d, %d)" % (self.image_scale)
+        print "Minimum Size (x, y): %d, %d" % (self.min_size[0], self.min_size[1])
+        print "Image scaling: %d)" % (self.image_scale)
         print "Haar scaling: %f" % (self.haar_scale)
         print "Number of Haar flags: %d" % (self.haar_flags)
         print "Minimum number of neighbors: %d" % (self.min_neighbors)

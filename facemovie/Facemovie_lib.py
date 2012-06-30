@@ -40,6 +40,14 @@ class FaceMovie(object):
         # Retrieving parameters for Face Detection
         self.face_params = face_params
 
+
+        out_folder = self.face_params.output_folder
+        self.out_path = "./data"
+        self.out_name = "output" 
+        self.out_format = "avi"
+        # updating the out_folder if needed
+        self.check_out_name(out_folder)
+
         self.face_params.output_folder
         self.out_path = "./data"
         self.out_name = "output" 
@@ -260,7 +268,7 @@ class FaceMovie(object):
         """
         return os.path.join(self.out_path, (self.out_name + "." + self.out_format))
 
-    def save_movie(self, speed=2):
+    def save_movie(self):
         """
         Creates a movie with all faces found in the inputs.
         Guy is skipped if no face is found.
@@ -271,7 +279,7 @@ class FaceMovie(object):
         :param fps: the number of frames per second to be displayed in final video (3)
         :type fps: int       
         """
-
+        speedrate = self.face_params.speed
         if "win" in sys.platform:
             fourcc = cv.CV_FOURCC('C', 'V', 'I', 'D')
         else: # some kind of Linux/Unix platform
@@ -280,10 +288,10 @@ class FaceMovie(object):
         frameSize = (self.dims[0], self.dims[1])   
 
         pace = ["slow", "normal", "fast"]
-        print "Speed is set to %s" %(pace[speed - 1])  
+        print "Speed is set to %s" %(pace[speedrate])  
         my_video = cv.CreateVideoWriter(self.get_out_file(), 
                                       fourcc, 
-                                      self.speed[speed - 1], 
+                                      self.speed[speedrate], 
                                       frameSize,
                                       1)
         ii = 0 

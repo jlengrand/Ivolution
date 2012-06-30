@@ -7,3 +7,4 @@ packaging
 doc/build
 *~
 README.rst
+test.py
