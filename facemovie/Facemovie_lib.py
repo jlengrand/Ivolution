@@ -22,7 +22,7 @@ class FaceMovie(object):
     Takes a bunch of parameters and a list of images and creates the ouput, depending what the user asked for. 
     Contains general methods, aimed at being used trough an interface.
     '''    
-    def __init__(self, in_folder, out_folder, face_params):
+    def __init__(self, face_params):
         """
         Initializes all parameters of the application. Input and output folders
          are defined, together with the classifier profile.
@@ -36,18 +36,19 @@ class FaceMovie(object):
         """
 
         ###checked params
-        self.source= in_folder # Source folder for pictures
+        self.source= face_params.input_folder # Source folder for pictures
         # Retrieving parameters for Face Detection
         self.face_params = face_params
 
+        self.face_params.output_folder
         self.out_path = "./data"
         self.out_name = "output" 
         self.out_format = "avi"
         # updating the out_folder if needed
         self.check_out_name(out_folder)
 
-        self.sort_method = "name" # sorting by name or using metadata (n or e)
-        self.mode = "default" # can be crop or default. 
+        self.sort_method = face_params.sort # sorting by name or using metadata (n or e)
+        self.mode = face_params.mode # can be crop or conservative. 
 
         ###                
         #self.CV_MAX_PIXEL = 13000 * 13000 # experimental maximal size of an IplImage
@@ -187,7 +188,7 @@ class FaceMovie(object):
          - (crop) the maximal size of the image by overlapping all the images, without adding any black borders
         - (custom crop) A chosen user size, defined as x * y times the head size.
         """
-        if self.mode == "default":
+        if self.mode == "conservative":
             self.find_default_dims()
         elif self.mode == "crop":
             self.find_crop_dims()
@@ -409,7 +410,7 @@ class FaceMovie(object):
         :type a_guy: Guy 
         :returns:  IplImage --  The ouput image, created depending on the chosen mode, ready to be saved
         """        
-        if self.mode == "default":
+        if self.mode == "conservative":
             out_im = a_guy.create_default_output(self.dims,
                                                 self.center) 
         elif self.mode == "crop":

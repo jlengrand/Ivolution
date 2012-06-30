@@ -40,7 +40,7 @@ class FaceParams(object):
 
         self.input_folder = "."
         self.output_folder = "."
-        self.speed = 2 # between 1 and 3
+        self.speed = 1 # between 0 and 2
         self.mode = "conservative" # conservative or crop
         self.sort = "name" # name or exif
 
