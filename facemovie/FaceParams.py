@@ -15,7 +15,7 @@ class FaceParams(object):
     '''
     Simple class used to store parameters used for Face detection
     '''
-    def __init__(self, xml_folder, training_type, i_scale=2, h_scale=1.2, h_flags=0, mn=2):
+    def __init__(self, xml_folder, training_type, input_folder, output_folder, sort="name", mode="conservative",speed=2):
         """
         Creates dictionary for all types of training files
         some of them shall never be used. Perhaps would it be good to lower the dict size, or hide some of them
@@ -25,16 +25,24 @@ class FaceParams(object):
         :type xml_folder: string
         :param training_type: the type of profile we are going to use
         :type training_type: string
-
-        :param i_scale: Image scaling chosen for classification (2) 
-        :type i_scale: float
-        :param h_scale: Haar scaling chosen for classification (1.2) 
-        :type h_scale: float
-        :param h_flags: the chosen number of haar flags (0)
-        :type h_flags: int                                                
-        :param mn: the Minimum number of neighbors to be defined (2) 
-        :type mn: int                                        
+                                
+        :param input_folder: the location where images are located
+        :type input_folder: string
+        :param output_folder: the location where the video will be saved
+        :type output_folder: string
+        :param speed: the time delay between frames in the video
+        :type speed: int                                             
+        :param mode: the creation mode of the video. Defines whether images are cropped, or black borders are added.
+        :type mode: string
+        :param sort: the method used to sort images chronologically
+        :type sort: string                       
         """
+
+        self.input_folder = "."
+        self.output_folder = "."
+        self.speed = 2 # between 1 and 3
+        self.mode = "conservative" # conservative or crop
+        self.sort = "name" # name or exif
 
         cascade_name = training_types.simple_set[training_type] + ".xml"
         # Setting up some default parameters for Face Detection
@@ -42,16 +50,23 @@ class FaceParams(object):
 
         # To be defined more precisely
         self.min_size = (20,20)
-        self.image_scale = i_scale
-        self.haar_scale = h_scale
-        self.min_neighbors = mn
-        self.haar_flags = h_flags
-        
+        self.image_scale = 2 # Image scaling chosen for classification (2) 
+        self.haar_scale = 1.2 # Haar scaling chosen for classification (1.2) 
+        self.min_neighbors = 2 # the Minimum number of neighbors to be defined (2) 
+        self.haar_flags = 0 # the chosen number of haar flags (0)
+
     def __str__(self):
         """
         More convenient print method
         """
         print "---------"
+        print "Selected parameters for your Facemovie:"
+        print "Input Folder: %s" % (self.input_folder)
+        print "Output Folder: %s" % (self.output_folder)
+        print "Speed for movie:  %s" % (["slow", "medium", "fast"][self.speed + 1])
+        print "Video Mode: %" % (self.mode)
+        print "Files sorting method: %" % (self.sort)
+        print "-----"
         print "Selected parameters for Face Detection:"
         print "Selected cascade for Face detection : %s" % ("haarcascade_frontalface_alt")
         print "Minimum Size (x, y): %d" % (self.min_size[0], self.min_size[1])
