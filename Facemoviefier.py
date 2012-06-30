@@ -129,8 +129,8 @@ class Facemoviefier():
         if self.args['crop']:
             print "==="
             print "Crop mode activated"
-            if self.args['cropdims']:
-                print "Custom cropping is not implemented yet. Ignored . . ."
+            #if self.args['cropdims']:
+            #    print "Custom cropping is not implemented yet. Ignored . . ."
             self.facemovie.mode = 'crop';
 
         self.facemovie.prepare_faces() # I want to search for the faces, and characteristics of the images   
