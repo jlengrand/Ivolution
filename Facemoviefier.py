@@ -12,7 +12,7 @@ import os
 import sys
 import argparse
 
-from facemovie import Facemovie
+from facemovie import FacemovieThread
 from facemovie import FaceParams
 from facemovie import training_types
 
@@ -34,9 +34,20 @@ class Facemoviefier():
         ..note ::
             FIXME : par folder should be known (contained somewhere in the installation)
         """        
+        if self.args['crop']:
+            mode = "crop"
+        else:
+            mode = "conservative"
+
         par_fo = os.path.join(self.args['root'], "haarcascades")
-        self.face_params = FaceParams.FaceParams(par_fo, self.args['param'])    
-        self.facemovie = Facemovie.FaceMovie(self.args['input'], self.args['output'], self.face_params)
+        self.face_params = FaceParams.FaceParams(par_fo, # folder containing haar training
+                                                self.args['input'], # folder containing images 
+                                                self.args['output'], #folder containing video in the end 
+                                                self.args['param'],
+                                                self.args['sort'],
+                                                mode, 
+                                                self.args['speed']) # chosen type of face profile
+        self.facemovie = FacemovieThread.FacemovieThread(self.face_params)
 
     def initCLParser(self):
         """
@@ -78,11 +89,11 @@ class Facemoviefier():
         #                     nargs = 2)
         
         # type of output wanted (image, video, show)
-        parser.add_argument('-t', 
-                            '--type', 
-                            choices='vis',
-                            help='Selects the kind of output desired. Valid choices are v (video), i (images), s (show). Default is video', 
-                            default='v')        
+        # parser.add_argument('-t', 
+        #                     '--type', 
+        #                     choices='vis',
+        #                     help='Selects the kind of output desired. Valid choices are v (video), i (images), s (show). Default is video', 
+        #                     default='v')        
         
         # how to sort images. Default is file name
         parser.add_argument('-s', 
@@ -120,32 +131,15 @@ class Facemoviefier():
             print "Selected profile is : %s" %(self.args['param'])
             self.init_facemovie()
         
-        #selects sorting method
-        if self.args['sort'] == 'exif':
-            self.facemovie.sort_method = 'exif';
-        print "==="            
-        self.facemovie.list_guys()
-        print "==="
+
         if self.args['crop']:
             print "==="
             print "Crop mode activated"
-            #if self.args['cropdims']:
-            #    print "Custom cropping is not implemented yet. Ignored . . ."
-            self.facemovie.mode = 'crop';
 
-        self.facemovie.prepare_faces() # I want to search for the faces, and characteristics of the images   
-        self.facemovie.find_final_dimensions() # finds output size for desired mode.
-        print "==="
-        #choose your final step
-        if self.args['type'] == 's':
-            print "Showing output faces :"
-            self.facemovie.show_faces(1000)
-        elif self.args['type'] == 'i':
-            print "Saving output images :"
-            self.facemovie.save_faces()
-        elif self.args['type'] == 'v':
-            print "Saving output video:"
-            self.facemovie.save_movie(self.args['speed'])        
+        print "Starting Application !"
+        self.facemovie.start()
+
+        self.facemovie.join() # waiting for Thread to terminate
 
 if __name__ == '__main__':
     my_job = Facemoviefier()
