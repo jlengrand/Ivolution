@@ -96,6 +96,8 @@ class FaceMovie(object):
                 try:
                     image = cv.LoadImage(guy_source)
                     guy_name = os.path.splitext(a_file)[0]
+
+                    # Tries to extract date from metadata
                     try:
                         guy_date = exif.parse(guy_source)['DateTime']
                     except Exception:
