@@ -197,8 +197,10 @@ class FaceMovie(object):
         - (custom crop) A chosen user size, defined as x * y times the head size.
         """
         if self.mode == "conservative":
+            print "conservative"
             self.find_default_dims()
         elif self.mode == "crop":
+            print "crop"
             self.find_crop_dims()
         elif self.mode == "custom crop":
             # TODO : implement

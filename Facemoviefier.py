@@ -136,6 +136,7 @@ class Facemoviefier():
             print "==="
             print "Crop mode activated"
 
+
         print "Starting Application !"
         self.facemovie.start()
 
