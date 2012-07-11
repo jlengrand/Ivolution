@@ -292,7 +292,7 @@ class FaceMovie(object):
 
         frameSize = (self.dims[0], self.dims[1])   
         #frameSize = (652, 498)
-
+        print frameSize
         pace = ["slow", "normal", "fast"]
         print "Speed is set to %s" %(pace[speedrate])  
         my_video = cv.CreateVideoWriter(self.get_out_file(), 
