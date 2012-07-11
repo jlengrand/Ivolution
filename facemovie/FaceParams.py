@@ -41,8 +41,8 @@ class FaceParams(object):
         self.input_folder = input_folder
         self.output_folder = output_folder
         self.speed = 1 # between 0 and 2
-        self.mode = "conservative" # conservative or crop
-        self.sort = "name" # name or exif
+        self.mode = mode # conservative or crop
+        self.sort = sort # name or exif
 
         cascade_name = training_types.simple_set[training_type] + ".xml"
         # Setting up some default parameters for Face Detection

@@ -283,9 +283,15 @@ class FaceMovie(object):
         if "win" in sys.platform:
             fourcc = cv.CV_FOURCC('C', 'V', 'I', 'D')
         else: # some kind of Linux/Unix platform
+            #print "CVID"
+            #fourcc = cv.CV_FOURCC('I', 'Y', 'U', 'V')
+            #fourcc = cv.CV_FOURCC('I', '4', '2', '0')
+            #fourcc = cv.CV_FOURCC('C', 'V', 'I', 'D')
             fourcc = cv.CV_FOURCC('F', 'M', 'P', '4')
+            #fourcc = cv.CV_FOURCC('D', 'I', 'B', ' ')
 
         frameSize = (self.dims[0], self.dims[1])   
+        #frameSize = (652, 498)
 
         pace = ["slow", "normal", "fast"]
         print "Speed is set to %s" %(pace[speedrate])  
@@ -300,6 +306,7 @@ class FaceMovie(object):
             print "Saving frame %d / %d" %(ii, self.number_guys()) 
             out_im = self.prepare_image(a_guy)
             cv.WriteFrame(my_video, out_im)
+
     
     def show_faces(self, mytime=1000):
         """
