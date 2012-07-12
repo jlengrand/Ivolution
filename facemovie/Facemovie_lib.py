@@ -283,16 +283,17 @@ class FaceMovie(object):
         if "win" in sys.platform:
             fourcc = cv.CV_FOURCC('C', 'V', 'I', 'D')
         else: # some kind of Linux/Unix platform
-            #print "CVID"
-            #fourcc = cv.CV_FOURCC('I', 'Y', 'U', 'V')
-            #fourcc = cv.CV_FOURCC('I', '4', '2', '0')
-            #fourcc = cv.CV_FOURCC('C', 'V', 'I', 'D')
             fourcc = cv.CV_FOURCC('F', 'M', 'P', '4')
-            #fourcc = cv.CV_FOURCC('D', 'I', 'B', ' ')
 
         frameSize = (self.dims[0], self.dims[1])   
+
+        ref_im = self.prepare_image(self.guys[0]) # Image used for reference 
+        # Corrects frameSize to get a nice video output
+        frameSize = self.resizes_for_video_codec(frameSize, ref_im.nChannels) # Fixme : Put in global parameter
+        # We have to resize the out_image to make them fit with the desired size
+        corr_im = cv.CreateImage(frameSize, ref_im.depth, ref_im.nChannels)
+
         #frameSize = (652, 498)
-        print frameSize
         pace = ["slow", "normal", "fast"]
         print "Speed is set to %s" %(pace[speedrate])  
         my_video = cv.CreateVideoWriter(self.get_out_file(), 
@@ -305,9 +306,12 @@ class FaceMovie(object):
             ii += 1 
             print "Saving frame %d / %d" %(ii, self.number_guys()) 
             out_im = self.prepare_image(a_guy)
-            cv.WriteFrame(my_video, out_im)
 
-    
+
+            cv.Resize(out_im, corr_im, cv.CV_INTER_LINEAR)
+
+            cv.WriteFrame(my_video, corr_im)
+
     def show_faces(self, mytime=1000):
         """
         Show all faces that have been found for the guys.
@@ -433,3 +437,25 @@ class FaceMovie(object):
                                             self.center)        
         return out_im
 
+    def resizes_for_video_codec(self, frameSize, nChannels):
+      """
+      Searches for the closest couple of frameSize so that width*height is a multiple of 4 to avoid weird image encoding.
+
+        :param frameSize: The desired video output size before correction. (in Pixels)
+        :type frameSize: (int, int) 
+        :returns:  corrected frameSize --  The desired output size after correction. In (x, y) form. 
+      """
+      try:
+        x,y = frameSize
+      except ValueError:
+        print "ERROR: unknown format for frameSize "
+        return (0, 0)
+      
+      if not(isinstance(x, int)) or not(isinstance(x, int)):
+        print "ERROR: method expects two integers"
+        return (0, 0)    
+
+      while ((x * nChannels) % 4) != 0:
+        x += 1  
+
+      return (x, y)

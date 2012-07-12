@@ -31,7 +31,7 @@ out = "output.avi"
 
 
 # loading images, create Guys and store it into guys
-frameSize = (1257, 499)
+frameSize = (453, 325)
 
 
 frameSize = resizes_for_video_codec(frameSize)
