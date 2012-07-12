@@ -43,6 +43,7 @@ class Guy(object):
         (self.in_x, self.in_y) = cv.GetSize(image) # image size in x, y
         # FIXME : Time for me to find a better solution
         self.in_channels = image.nChannels
+        self.depth = image.depth
         
         # Two variables used to define the new center of interest of the image
         # they are defined as the middle of input image at first

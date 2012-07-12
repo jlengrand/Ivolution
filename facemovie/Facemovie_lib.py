@@ -67,6 +67,11 @@ class FaceMovie(object):
         # Size of the final output image (x, y). Depends on selected mode
         self.dims = [0, 0]
 
+        # number of channels of the set of images
+        self.nChannels = 0
+        # depth of the set of images
+        self.depth = 0
+
         self.weight_steps = 5 # number of images to be inserted between each frame to reduce violent switch
 
         self.speed = [2, 5, 9]# this one should be internal. Number of fps for the video
@@ -161,12 +166,48 @@ class FaceMovie(object):
         # removes guys that have no faces
         self.guys = self.clean_guys()
 
+        # check that everybody has the same number of channels
+        self.check_channels()
+        self.check_depth()
+
         if self.number_guys() == 0:
             print "No face has been found in the whole repository! Exiting. . . "
             sys.exit(0)
 
         # normalize faces to make them clean
         self.set_guys_ratio() # sets all faces to the same size, by calculating a ratio to a reference
+
+    def check_depth(self):
+        """
+        Checks that the depth of all the images in guys is the same
+        Sets the depth for the video
+        """
+        my_depth = []
+        for a_guy in self.guys:
+            my_depth.append(a_guy.depth)
+
+        my_depth = list(set(my_depth))# remove duplicates
+        if len(my_depth) != 1 :
+            # We do not have a unique number of channels for all images
+            print "ERROR : All images must have the same depth"
+        else:
+            self.depth = my_depth[0]
+
+    def check_channels(self):
+        """
+        Checks that the number of channels of all the images in guys is the same
+        Sets the number of channels for the video
+        """
+        my_chans = []
+        for a_guy in self.guys:
+            my_chans.append(a_guy.in_channels)
+
+        my_chans = list(set(my_chans))# remove duplicates
+        if len(my_chans) != 1 :
+            # We do not have a unique number of channels for all images
+            print "ERROR : All images must have the same number of channels"
+        else:
+            self.nChannels = my_chans[0]
 
     def set_guys_ratio(self):
         """
@@ -289,18 +330,15 @@ class FaceMovie(object):
         else: # some kind of Linux/Unix platform
             fourcc = cv.CV_FOURCC('F', 'M', 'P', '4')
 
-        frameSize = (self.dims[0], self.dims[1])   
-
-        ref_im = self.prepare_image(self.guys[0]) # Image used for reference 
         # Corrects frameSize to get a nice video output
-        frameSize = self.resizes_for_video_codec(frameSize, ref_im.nChannels) # Fixme : Put in global parameter
+        frameSize = self.resizes_for_video_codec() # Fixme : Put in global parameter
         # We have to resize the out_image to make them fit with the desired size
-        corr_im = cv.CreateImage(frameSize, ref_im.depth, ref_im.nChannels)
+        corr_im = cv.CreateImage(frameSize, self.depth, self.nChannels)
 
         #frameSize = (652, 498)
         pace = ["slow", "normal", "fast"]
         print "Speed is set to %s" %(pace[speedrate])  
-        my_video = cv.CreateVideoWriter(self.get_out_file(), 
+        my_video = cv.CreateVideoWriter(self.get_out_file(),
                                       fourcc, 
                                       self.speed[speedrate], 
                                       frameSize,
@@ -441,7 +479,7 @@ class FaceMovie(object):
                                             self.center)        
         return out_im
 
-    def resizes_for_video_codec(self, frameSize, nChannels):
+    def resizes_for_video_codec(self):
       """
       Searches for the closest couple of frameSize so that width*height is a multiple of 4 to avoid weird image encoding.
 
@@ -449,6 +487,8 @@ class FaceMovie(object):
         :type frameSize: (int, int) 
         :returns:  corrected frameSize --  The desired output size after correction. In (x, y) form. 
       """
+      frameSize = (self.dims[0], self.dims[1])   
+
       try:
         x,y = frameSize
       except ValueError:
@@ -459,7 +499,7 @@ class FaceMovie(object):
         print "ERROR: method expects two integers"
         return (0, 0)    
 
-      while ((x * nChannels) % 4) != 0:
+      while ((x * self.nChannels) % 4) != 0:
         x += 1  
 
       return (x, y)
