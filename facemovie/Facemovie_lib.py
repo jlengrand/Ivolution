@@ -10,6 +10,8 @@ import os
 import sys
 import sys
 
+import logging
+
 import cv
 
 from lib import exif
@@ -35,7 +37,11 @@ class FaceMovie(object):
         :type face_param: string        
         """
 
-        ###checked params
+        self.console_logger = None # Used to send messages to the console
+        self.my_logger = None # Used to save events into a file
+
+        self.setup_logger()
+
         self.source= face_params.input_folder # Source folder for pictures
         # Retrieving parameters for Face Detection
         self.face_params = face_params
@@ -78,6 +84,32 @@ class FaceMovie(object):
 
     ### checked methods
 
+    def setup_logger(self):
+        """
+        Configures our logger to save error messages
+        """
+        # create logger for  'facemovie'
+        self.my_logger = logging.getLogger('FileLog')
+        # create file handler which logs even debug messages
+        fh = logging.FileHandler('log/fm.log')
+        fh.setLevel(logging.DEBUG)
+        # create console handler with a higher log level
+        self.console_logger = logging.getLogger('ConsoleLog')
+        ch = logging.StreamHandler()
+        ch.setLevel(logging.DEBUG)
+
+        # create formatter and add it to the handlers
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        fh.setFormatter(formatter)
+        #ch.setFormatter(formatter)
+
+        ##Start logging in file
+        self.my_logger.info("######")
+
+        # add the handlers to the logger
+        self.my_logger.addHandler(fh)
+        self.console_logger.addHandler(ch)
+
     def list_guys(self):
         """
         Aims at populating the guys list, using the source folder as an input. 
@@ -91,7 +123,8 @@ class FaceMovie(object):
             os.path.exists(self.source)
             os.path.isdir(self.source) # checking if folder exists
         except : # find precise exception
-            print "ERROR : Source folder not found ! Exiting. . ." 
+            self.console_logger.critical("Source folder not found ! Exiting. . .")
+            self.my_logger.critical("Source folder not found ! Exiting. . .")
             sys.exit(0)
                 
         # loading images, create Guys and store it into guys
@@ -106,7 +139,10 @@ class FaceMovie(object):
                     try:
                         guy_date = exif.parse(guy_source)['DateTime']
                     except Exception:
-                        print "===> Warning : No metadata found for %s" %(guy_name)
+                        self.my_logger.warning("No metadata found for %s" %(guy_name))                        
+                        if self.sort_method == "exif":
+                            self.console_logger.warning(" No metadata found for %s" %(guy_name))
+
                         guy_date = ''
 
                     a_guy = Guy.Guy(guy_name, guy_date, guy_source)
@@ -114,10 +150,12 @@ class FaceMovie(object):
                     # populating guys
                     self.guys.append(a_guy)
                 except:
-                    print "=> Skipping %s. Not an image file" %(guy_source)
+                    self.console_logger.info("Skipping %s. Not an image file" %(guy_source))
+                    self.my_logger.info("Skipping %s. Not an image file" %(guy_source))
 
         self.sort_guys()
-        print "INFO : %d guys found in source folder." %(self.number_guys())
+        self.console_logger.info("%d guys found in source folder." %(self.number_guys())
+        self.my_logger.info("%d guys found in source folder." %(self.number_guys())
 
     def sort_guys(self):
         """
@@ -143,9 +181,11 @@ class FaceMovie(object):
         for a_guy in self.guys:
             a_guy.search_face(self.face_params)
             if a_guy.has_face(): # face(s) have been found
-                print "Face found for %s" % (a_guy.name)
+                self.console_logger.info("Face found for %s" % (a_guy.name))
+                self.my_logger.info("Face found for %s" % (a_guy.name))                
             else:
-                print "Warning! No face found for %s. Skipped . . ." %(a_guy.name)
+                self.console_logger.warning("No face found for %s. Skipped . . ." %(a_guy.name))
+                self.my_logger.warning("No face found for %s. Skipped . . ." %(a_guy.name))
         
     def clean_guys(self):
         """
@@ -171,8 +211,10 @@ class FaceMovie(object):
         self.check_depth()
 
         if self.number_guys() == 0:
-            print "No face has been found in the whole repository! Exiting. . . "
-            sys.exit(0)
+            print 
+            self.console_logger.error("No face has been found in the whole repository! Exiting. . . ")
+            self.my_logger.error("No face has been found in the whole repository! Exiting. . . ")            
+            sys.exit(0) # FIXME : Find better way to do that
 
         # normalize faces to make them clean
         self.set_guys_ratio() # sets all faces to the same size, by calculating a ratio to a reference
@@ -189,7 +231,8 @@ class FaceMovie(object):
         my_depth = list(set(my_depth))# remove duplicates
         if len(my_depth) != 1 :
             # We do not have a unique number of channels for all images
-            print "ERROR : All images must have the same depth"
+            self.console_logger.error("All images must have the same depth")
+            self.my_logger.error("All images must have the same depth")                        
         else:
             self.depth = my_depth[0]
 
@@ -205,7 +248,8 @@ class FaceMovie(object):
         my_chans = list(set(my_chans))# remove duplicates
         if len(my_chans) != 1 :
             # We do not have a unique number of channels for all images
-            print "ERROR : All images must have the same number of channels"
+            self.console_logger.error("All images must have the same number of channels")
+            self.my_logger.error("All images must have the same number of channels")
         else:
             self.nChannels = my_chans[0]
 
@@ -240,14 +284,13 @@ class FaceMovie(object):
         - (custom crop) A chosen user size, defined as x * y times the head size.
         """
         if self.mode == "conservative":
-            print "conservative"
             self.find_default_dims()
         elif self.mode == "crop":
-            print "crop"
             self.find_crop_dims()
         elif self.mode == "custom crop":
             # TODO : implement
-            print "custom crop is not yet implemented"
+            self.console_logger.critical("custom crop is not yet implemented")
+            self.my_logger.critical("custom crop is not yet implemented")
             raise Exception
     
     def find_default_dims(self):
@@ -284,6 +327,7 @@ class FaceMovie(object):
         Calculates smallest output image that can be used to avoid adding black borders on image
         It will later be used to create the final image. 
         """
+        # FIXME: badly done !
         ht = 1000000 # space left above eyes
         hb = 1000000 # space left beneath eyes
         wl = 1000000 # space left left of eyes
@@ -337,7 +381,8 @@ class FaceMovie(object):
 
         #frameSize = (652, 498)
         pace = ["slow", "normal", "fast"]
-        print "Speed is set to %s" %(pace[speedrate])  
+        self.console_logger.info("Speed is set to %s" %(pace[speedrate])
+        self.my_logger.info("Speed is set to %s" %(pace[speedrate]))        
         my_video = cv.CreateVideoWriter(self.get_out_file(),
                                       fourcc, 
                                       self.speed[speedrate], 
@@ -346,9 +391,9 @@ class FaceMovie(object):
         ii = 0 
         for a_guy in self.guys:
             ii += 1 
-            print "Saving frame %d / %d" %(ii, self.number_guys()) 
+            self.console_logger.info("Saving frame %d / %d" %(ii, self.number_guys()) )
+            self.my_logger.info("Saving frame %d / %d" %(ii, self.number_guys()) )             
             out_im = self.prepare_image(a_guy)
-
 
             cv.Resize(out_im, corr_im, cv.CV_INTER_LINEAR)
 
@@ -438,7 +483,7 @@ class FaceMovie(object):
             self.out_name, format = os.path.splitext(complete_name)
             if format != self.out_format:
                 # the format is not compliant with what we can do. We refuse it
-                print "Changing format to avi"             
+                self.my_logger.info("Changing format to avi")                         
         else:
             # no filename is given. We keep the default
             self.out_path = os.path.split(out_folder)[0]
@@ -458,7 +503,8 @@ class FaceMovie(object):
         """
         file_name = name + "." + ext
         out_name = os.path.join(self.out_path, file_name)
-        print "Saving %s" %(out_name)
+        self.my_logger.info("Saving %s" %(out_name))
+        self.console_logger.info("Saving %s" %(out_name))
         
         cv.SaveImage(out_name, im)
 
@@ -490,13 +536,13 @@ class FaceMovie(object):
       frameSize = (self.dims[0], self.dims[1])   
 
       try:
-        x,y = frameSize
+        x, y = frameSize
       except ValueError:
-        print "ERROR: unknown format for frameSize "
+        self.my_logger.error("unknown format for frameSize ")      
         return (0, 0)
       
       if not(isinstance(x, int)) or not(isinstance(x, int)):
-        print "ERROR: method expects two integers"
+        self.my_logger.error("method expects two integers")            
         return (0, 0)    
 
       while ((x * self.nChannels) % 4) != 0:

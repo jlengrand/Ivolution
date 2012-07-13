@@ -9,6 +9,8 @@
 import cv
 import os
 
+import logging
+
 import training_types
 
 class FaceParams(object):
@@ -55,6 +57,8 @@ class FaceParams(object):
         self.min_neighbors = 2 # the Minimum number of neighbors to be defined (2) 
         self.haar_flags = 0 # the chosen number of haar flags (0)
 
+        self.log()
+
     def __str__(self):
         """
         More convenient print method
@@ -75,3 +79,27 @@ class FaceParams(object):
         print "Number of Haar flags: %d" % (self.haar_flags)
         print "Minimum number of neighbors: %d" % (self.min_neighbors)
         print "---------"
+
+    def log(self):
+        """
+        Log configuration 
+        """
+        my_logger = logging.getLogger('FileLog')
+        params_str =  "---------"
+        params_str += "Selected parameters for your Facemovie:"
+        params_str += "Input Folder: %s" % (self.input_folder)
+        params_str += "Output Folder: %s" % (self.output_folder)
+        params_str += "Speed for movie:  %s" % (["slow", "medium", "fast"][self.speed])
+        params_str += "Video Mode: %s" % (self.mode)
+        params_str += "Files sorting method: %s" % (self.sort)
+        params_str += "-----"
+        params_str += "Selected parameters for Face Detection:"
+        params_str += "Selected cascade for Face detection : %s" % ("haarcascade_frontalface_alt")
+        params_str += "Minimum Size (x, y): %d, %d" % (self.min_size[0], self.min_size[1])
+        params_str += "Image scaling: %d)" % (self.image_scale)
+        params_str += "Haar scaling: %f" % (self.haar_scale)
+        params_str += "Number of Haar flags: %d" % (self.haar_flags)
+        params_str += "Minimum number of neighbors: %d" % (self.min_neighbors)
+        params_str += "---------"  
+        my_logger.debug(params_str)
+      
