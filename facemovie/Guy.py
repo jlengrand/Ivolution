@@ -6,9 +6,10 @@
 .. moduleauthor:: Julien Lengrand-Lambert <jlengrand@gmail.com>
 
 """
-import cv
-
 import time
+import logging
+
+import cv
 
 class Guy(object):
     """
@@ -94,6 +95,8 @@ class Guy(object):
         try: 
             my_date = time.strptime(date, "%Y:%m:%d %H:%M:%S")
         except Exception:
+            my_logger = logging.getLogger('FileLog')
+            my_logger.error("Impossible to parse date for %s" %(self.name))
             my_date = time.time()
         return my_date
 

@@ -65,7 +65,6 @@ class FaceMovie(object):
         self.mode = face_params.mode # can be crop or conservative. 
 
         ###                
-        #self.CV_MAX_PIXEL = 13000 * 13000 # experimental maximal size of an IplImage
         self.guys = [] # List of pictures in source folder
         
         self.center = [0, 0] # Position of the center in output images (x, y)
@@ -92,11 +91,11 @@ class FaceMovie(object):
         self.my_logger = logging.getLogger('FileLog')
         # create file handler which logs even debug messages
         fh = logging.FileHandler('log/fm.log')
-        fh.setLevel(logging.DEBUG)
+        fh.setLevel(logging.INFO)
         # create console handler with a higher log level
         self.console_logger = logging.getLogger('ConsoleLog')
         ch = logging.StreamHandler()
-        ch.setLevel(logging.DEBUG)
+        ch.setLevel(logging.INFO)
 
         # create formatter and add it to the handlers
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -109,6 +108,18 @@ class FaceMovie(object):
         # add the handlers to the logger
         self.my_logger.addHandler(fh)
         self.console_logger.addHandler(ch)
+
+        # DEBUG
+        self.console_logger.info("MFCKR")
+        self.console_logger.debug("MFCKR")
+        self.console_logger.warning("MFCKR")
+        self.console_logger.error("MFCKR")
+        self.console_logger.critical("MFCKR")
+        self.my_logger.info("MFCKR")
+        self.my_logger.debug("MFCKR")
+        self.my_logger.warning("MFCKR")
+        self.my_logger.error("MFCKR")
+        self.my_logger.critical("MFCKR")
 
     def list_guys(self):
         """
@@ -154,8 +165,8 @@ class FaceMovie(object):
                     self.my_logger.info("Skipping %s. Not an image file" %(guy_source))
 
         self.sort_guys()
-        self.console_logger.info("%d guys found in source folder." %(self.number_guys())
-        self.my_logger.info("%d guys found in source folder." %(self.number_guys())
+        self.console_logger.info("%d guys found in source folder." %(self.number_guys()))
+        self.my_logger.info("%d guys found in source folder." %(self.number_guys()))
 
     def sort_guys(self):
         """
@@ -381,7 +392,7 @@ class FaceMovie(object):
 
         #frameSize = (652, 498)
         pace = ["slow", "normal", "fast"]
-        self.console_logger.info("Speed is set to %s" %(pace[speedrate])
+        self.console_logger.info("Speed is set to %s" %(pace[speedrate]))
         self.my_logger.info("Speed is set to %s" %(pace[speedrate]))        
         my_video = cv.CreateVideoWriter(self.get_out_file(),
                                       fourcc, 

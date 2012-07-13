@@ -10,6 +10,8 @@ import os
 import sys
 import threading
 
+import logging
+
 from facemovie import Facemovie_lib
 
 class FacemovieThread(threading.Thread):
@@ -31,11 +33,16 @@ class FacemovieThread(threading.Thread):
         self.facemovie = Facemovie_lib.FaceMovie(self.face_params)
 
     def run(self):
-        print "In thread !"
+        my_logger = logging.getLogger('FileLog')
+        my_logger.debug("Thread started")
 
         self.facemovie.list_guys()
+        my_logger.debug("Guys listed")
         self.facemovie.prepare_faces() # I want to search for the faces, and characteristics of the images   
+        my_logger.debug("Faces prepared")
         self.facemovie.find_final_dimensions() # finds output size for desired mode.
+        my_logger.debug("Final dimensions found")
         self.facemovie.save_movie()       
+        my_logger.debug("Movie saved")
 
-        print "Finished!"
+        my_logger.debug("Thread terminated")
