@@ -96,10 +96,10 @@ class FaceMovie(object):
         fh.setLevel(logging.DEBUG)
         # create console handler with a higher log level
         self.console_logger = logging.getLogger('ConsoleLog')
-        self.console_logger.setLevel(logging.DEBUG)
+        # self.console_logger.setLevel(logging.DEBUG) # not needed
 
         ch = logging.StreamHandler()
-        ch.setLevel(logging.DEBUG)
+        #ch.setLevel(logging.DEBUG) # not needed
 
         # add the handlers to the logger
         self.my_logger.addHandler(fh)
