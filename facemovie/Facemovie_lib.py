@@ -86,40 +86,33 @@ class FaceMovie(object):
     def setup_logger(self):
         """
         Configures our logger to save error messages
+        Start logging in file here
         """
         # create logger for  'facemovie'
         self.my_logger = logging.getLogger('FileLog')
+        self.my_logger.setLevel(logging.DEBUG)
         # create file handler which logs even debug messages
         fh = logging.FileHandler('log/fm.log')
-        fh.setLevel(logging.INFO)
+        fh.setLevel(logging.DEBUG)
         # create console handler with a higher log level
         self.console_logger = logging.getLogger('ConsoleLog')
+        self.console_logger.setLevel(logging.DEBUG)
+
         ch = logging.StreamHandler()
-        ch.setLevel(logging.INFO)
-
-        # create formatter and add it to the handlers
-        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        fh.setFormatter(formatter)
-        #ch.setFormatter(formatter)
-
-        ##Start logging in file
-        self.my_logger.info("######")
+        ch.setLevel(logging.DEBUG)
 
         # add the handlers to the logger
         self.my_logger.addHandler(fh)
+        
+        self.my_logger.info("######") # Separating different sessions
+
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        # create formatter and add it to the handlers
+        fh.setFormatter(formatter)
+        #ch.setFormatter(formatter)
+
         self.console_logger.addHandler(ch)
 
-        # DEBUG
-        self.console_logger.info("MFCKR")
-        self.console_logger.debug("MFCKR")
-        self.console_logger.warning("MFCKR")
-        self.console_logger.error("MFCKR")
-        self.console_logger.critical("MFCKR")
-        self.my_logger.info("MFCKR")
-        self.my_logger.debug("MFCKR")
-        self.my_logger.warning("MFCKR")
-        self.my_logger.error("MFCKR")
-        self.my_logger.critical("MFCKR")
 
     def list_guys(self):
         """
