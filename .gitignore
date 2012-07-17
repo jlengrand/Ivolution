@@ -1,5 +1,6 @@
 *.pyc
-data
+data/inputs/*
+data/*.avi
 build
 dist
 MANIFEST
