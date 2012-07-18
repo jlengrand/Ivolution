@@ -2,6 +2,8 @@
 
 import os
 
+import webbrowser
+
 from gi.repository import Gtk
 
 from AboutDialog import AboutDialog
@@ -98,14 +100,18 @@ class Ivolution():
     def on_menu_about_activate(self, widget, data=None):
         """
         Displays the about box for Ivolution
-        # FIXME : Can start several contents Windows at the same time
+        # FIXME : Can start several about Dialogs at the same time
         """
         if self.AboutDialog is not None:
             about = self.AboutDialog()
-            #response = about.run()
-            #about.destroy()
 
-
+    def on_menu_help_activate(self, widget, data=None):
+        """
+        Opens a browser and points to online help.
+        """
+        url = "http://jlengrand.github.com/FaceMovie/"
+        webbrowser.open(url,new=2) # in new tab if possible
+        #print "Should open help"
 
     #Methods processing data
     def set_parameters(self):

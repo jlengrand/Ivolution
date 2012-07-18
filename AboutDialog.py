@@ -11,7 +11,7 @@ class AboutDialog():
         """
         self.builder = Gtk.Builder()
         self.builder.add_from_file("data/ui/AboutIvolutionDialog.glade")
-        self.window = self.builder.get_object("about_ivolution_dialog")
-        #self.ui = self.builder.get_ui(self)        
-        self.window.show()
-        self.builder.connect_signals(self)       
+        self.window = self.builder.get_object("about_ivolution_dialog")           
+
+        self.window.run()
+        self.window.destroy()
