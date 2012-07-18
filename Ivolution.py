@@ -1,8 +1,13 @@
 #!/usr/bin/env python
 
+import os
+
 from gi.repository import Gtk
 
 from AboutDialog import AboutDialog
+
+from facemovie import Facemovie_lib
+from facemovie import FaceParams
 
 class Ivolution():       
     def __init__(self):
@@ -15,6 +20,7 @@ class Ivolution():
         self.builder.connect_signals(self)       
 
         ## Defines parameters needed to run the FaceMovie
+        self.root_fo = ""
         self.in_fo = "" # Input folder, where images are located
         self.out_fo = "" # Input folder, where the video will be saved
         self.mode = "crop" # type of video to be created
@@ -92,12 +98,12 @@ class Ivolution():
     def on_menu_about_activate(self, widget, data=None):
         """
         Displays the about box for Ivolution
-        # FIXME : Not working !
+        # FIXME : Can start several contents Windows at the same time
         """
         if self.AboutDialog is not None:
             about = self.AboutDialog()
-            response = about.run()
-            about.destroy()
+            #response = about.run()
+            #about.destroy()
 
 
 
