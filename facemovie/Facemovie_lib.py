@@ -37,10 +37,8 @@ class FaceMovie(object):
         :type face_param: string        
         """
 
-        self.console_logger = None # Used to send messages to the console
-        self.my_logger = None # Used to save events into a file
-
-        self.setup_logger()
+        self.console_logger = logging.getLogger('ConsoleLog') # Used to send messages to the console
+        self.my_logger = logging.getLogger('FileLog') # Used to save events into a file
 
         self.source= face_params.input_folder # Source folder for pictures
         # Retrieving parameters for Face Detection
@@ -80,38 +78,6 @@ class FaceMovie(object):
         self.weight_steps = 5 # number of images to be inserted between each frame to reduce violent switch
 
         self.speed = [2, 5, 9]# this one should be internal. Number of fps for the video
-
-    ### checked methods
-
-    def setup_logger(self):
-        """
-        Configures our logger to save error messages
-        Start logging in file here
-        """
-        # create logger for  'facemovie'
-        self.my_logger = logging.getLogger('FileLog')
-        self.my_logger.setLevel(logging.DEBUG)
-        # create file handler which logs even debug messages
-        fh = logging.FileHandler('log/fm.log')
-        fh.setLevel(logging.DEBUG)
-        # create console handler with a higher log level
-        self.console_logger = logging.getLogger('ConsoleLog')
-        # self.console_logger.setLevel(logging.DEBUG) # not needed
-
-        ch = logging.StreamHandler()
-        #ch.setLevel(logging.DEBUG) # not needed
-
-        # add the handlers to the logger
-        self.my_logger.addHandler(fh)
-        
-        self.my_logger.info("######") # Separating different sessions
-
-        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        # create formatter and add it to the handlers
-        fh.setFormatter(formatter)
-        #ch.setFormatter(formatter)
-
-        self.console_logger.addHandler(ch)
 
 
     def list_guys(self):

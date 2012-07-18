@@ -4,6 +4,8 @@ import os
 
 import webbrowser
 
+import logging
+
 from gi.repository import Gtk
 
 from AboutDialog import AboutDialog
@@ -13,9 +15,13 @@ parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.sys.path.insert(0,parentdir) 
 from facemovie import Facemovie_lib
 from facemovie import FaceParams
+from facemovie import FacemovieThread
 
 class IvolutionWindow():       
     def __init__(self):
+
+        self.my_logger = None
+        self.console_logger = None
 
         self.builder = Gtk.Builder()
         self.builder.add_from_file("data/ui/IvolutionWindow.glade")
@@ -40,6 +46,7 @@ class IvolutionWindow():
         self.AboutDialog = None # class
 
         self.setup()
+        self.setup_logger()
 
     def setup(self):
         """
@@ -87,6 +94,9 @@ class IvolutionWindow():
         """
         self.set_parameters()
         self.print_parameters()
+        # Instantiating the facemovie
+        self.facemovie = FacemovieThread.FacemovieThread(self.face_params)
+        self.facemovie.start()
 
     def on_stopbutton_pressed(self, widget):
         """
@@ -137,12 +147,48 @@ class IvolutionWindow():
                                                 self.speed)
 
     def print_parameters(self):
-        print self.in_fo
-        print self.out_fo
-        print self.param
-        print self.speed
-        print self.mode
-        print self.sort
+        print "#########"
+        print "Settings:"
+        print "input folder :   %s" %( self.in_fo)
+        print "output folder :   %s" %( self.out_fo)
+
+        print "Face Type :   %s" %( self.param)
+        print "Speed chosen :   %s" %( self.speed)
+        print "Mode chosen :   %s" %( self.mode)
+        print "Sort method :   %s" %( self.sort)
+
+        print "#########"   
+
+
+    def setup_logger(self):
+        """
+        Configures our logger to save error messages
+        Start logging in file here
+        """
+        # create logger for  'facemovie'
+        self.my_logger = logging.getLogger('FileLog')
+        self.my_logger.setLevel(logging.DEBUG)
+        # create file handler which logs even debug messages
+        fh = logging.FileHandler('log/fm.log')
+        fh.setLevel(logging.DEBUG)
+        # create console handler with a higher log level
+        self.console_logger = logging.getLogger('ConsoleLog')
+        self.console_logger.setLevel(logging.DEBUG) # not needed
+
+        ch = logging.StreamHandler()
+        #ch.setLevel(logging.DEBUG) # not needed
+
+        # add the handlers to the logger
+        self.my_logger.addHandler(fh)
+        
+        self.my_logger.info("######") # Separating different sessions
+
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        # create formatter and add it to the handlers
+        fh.setFormatter(formatter)
+        #ch.setFormatter(formatter)
+
+        self.console_logger.addHandler(ch)
 
 if __name__ == "__main__":
     app = IvolutionWindow()
