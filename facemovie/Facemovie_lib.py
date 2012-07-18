@@ -79,6 +79,7 @@ class FaceMovie(object):
 
         self.speed = [2, 5, 9]# this one should be internal. Number of fps for the video
 
+        self.run = True # command used to stop the processing if needed
 
     def list_guys(self):
         """
@@ -100,28 +101,29 @@ class FaceMovie(object):
         # loading images, create Guys and store it into guys
         for root, _, files in os.walk(self.source):
             for a_file in files:
-                guy_source = os.path.join(root, a_file)
-                try:
-                    image = cv.LoadImage(guy_source)
-                    guy_name = os.path.splitext(a_file)[0]
-
-                    # Tries to extract date from metadata
+                if run : # as long as we want to continue
+                    guy_source = os.path.join(root, a_file)
                     try:
-                        guy_date = exif.parse(guy_source)['DateTime']
-                    except Exception:
-                        self.my_logger.warning("No metadata found for %s" %(guy_name))                        
-                        if self.sort_method == "exif":
-                            self.console_logger.warning(" No metadata found for %s" %(guy_name))
+                        image = cv.LoadImage(guy_source)
+                        guy_name = os.path.splitext(a_file)[0]
 
-                        guy_date = ''
+                        # Tries to extract date from metadata
+                        try:
+                            guy_date = exif.parse(guy_source)['DateTime']
+                        except Exception:
+                            self.my_logger.warning("No metadata found for %s" %(guy_name))                        
+                            if self.sort_method == "exif":
+                                self.console_logger.warning(" No metadata found for %s" %(guy_name))
 
-                    a_guy = Guy.Guy(guy_name, guy_date, guy_source)
-                 
-                    # populating guys
-                    self.guys.append(a_guy)
-                except:
-                    self.console_logger.info("Skipping %s. Not an image file" %(guy_source))
-                    self.my_logger.info("Skipping %s. Not an image file" %(guy_source))
+                            guy_date = ''
+
+                        a_guy = Guy.Guy(guy_name, guy_date, guy_source)
+                     
+                        # populating guys
+                        self.guys.append(a_guy)
+                    except:
+                        self.console_logger.info("Skipping %s. Not an image file" %(guy_source))
+                        self.my_logger.info("Skipping %s. Not an image file" %(guy_source))
 
         self.sort_guys()
         self.console_logger.info("%d guys found in source folder." %(self.number_guys()))
@@ -149,13 +151,14 @@ class FaceMovie(object):
         In case no face is found, a warning is returned and Guy is set to None
         """
         for a_guy in self.guys:
-            a_guy.search_face(self.face_params)
-            if a_guy.has_face(): # face(s) have been found
-                self.console_logger.info("Face found for %s" % (a_guy.name))
-                self.my_logger.info("Face found for %s" % (a_guy.name))                
-            else:
-                self.console_logger.warning("No face found for %s. Skipped . . ." %(a_guy.name))
-                self.my_logger.warning("No face found for %s. Skipped . . ." %(a_guy.name))
+            if run:
+                a_guy.search_face(self.face_params)
+                if a_guy.has_face(): # face(s) have been found
+                    self.console_logger.info("Face found for %s" % (a_guy.name))
+                    self.my_logger.info("Face found for %s" % (a_guy.name))                
+                else:
+                    self.console_logger.warning("No face found for %s. Skipped . . ." %(a_guy.name))
+                    self.my_logger.warning("No face found for %s. Skipped . . ." %(a_guy.name))
         
     def clean_guys(self):
         """
@@ -276,19 +279,20 @@ class FaceMovie(object):
         x_af = 0
         y_af = 0
         for a_guy in self.guys:
-            (xc, yc) = a_guy.resized_center()
-            (inx, iny) = a_guy.resized_dims()
-                    
-            # update center
-            if xc > self.center[0]:
-                self.center[0] = xc
-            if yc > self.center[1]:
-                self.center[1] = yc
-            # update right part
-            if (inx - xc) > x_af:
-                x_af = inx - xc
-            if (iny - yc) > y_af:
-                y_af = iny - yc
+            if run :
+                (xc, yc) = a_guy.resized_center()
+                (inx, iny) = a_guy.resized_dims()
+                        
+                # update center
+                if xc > self.center[0]:
+                    self.center[0] = xc
+                if yc > self.center[1]:
+                    self.center[1] = yc
+                # update right part
+                if (inx - xc) > x_af:
+                    x_af = inx - xc
+                if (iny - yc) > y_af:
+                    y_af = iny - yc
         
         self.dims = [x_af + self.center[0], y_af + self.center[1]]
 
@@ -303,19 +307,20 @@ class FaceMovie(object):
         wl = 1000000 # space left left of eyes
         wr = 1000000 # space left right of eyes
         for a_guy in self.guys:
-            (xc, yc) = a_guy.resized_center()
-            (inx, iny) = a_guy.resized_dims()            
-            
-            # finding width    
-            if xc < wl:
-                wl = xc
-            if (inx - xc) < wr:
-                wr = inx - xc
-            # finding height
-            if yc < ht:
-                ht = yc
-            if (iny - yc) < hb:
-                hb = iny - yc
+            if run:
+                (xc, yc) = a_guy.resized_center()
+                (inx, iny) = a_guy.resized_dims()            
+                
+                # finding width    
+                if xc < wl:
+                    wl = xc
+                if (inx - xc) < wr:
+                    wr = inx - xc
+                # finding height
+                if yc < ht:
+                    ht = yc
+                if (iny - yc) < hb:
+                    hb = iny - yc
                                      
         self.dims = [wl + wr, ht + hb]                 
         self.center = [wl, ht]
@@ -360,14 +365,15 @@ class FaceMovie(object):
                                       1)
         ii = 0 
         for a_guy in self.guys:
-            ii += 1 
-            self.console_logger.info("Saving frame %d / %d" %(ii, self.number_guys()) )
-            self.my_logger.info("Saving frame %d / %d" %(ii, self.number_guys()) )             
-            out_im = self.prepare_image(a_guy)
+            if run:
+                ii += 1 
+                self.console_logger.info("Saving frame %d / %d" %(ii, self.number_guys()) )
+                self.my_logger.info("Saving frame %d / %d" %(ii, self.number_guys()) )             
+                out_im = self.prepare_image(a_guy)
 
-            cv.Resize(out_im, corr_im, cv.CV_INTER_LINEAR)
+                cv.Resize(out_im, corr_im, cv.CV_INTER_LINEAR)
 
-            cv.WriteFrame(my_video, corr_im)
+                cv.WriteFrame(my_video, corr_im)
 
     def show_faces(self, mytime=1000):
         """
@@ -382,9 +388,10 @@ class FaceMovie(object):
         cv.ResizeWindow(win_name, 640, 480) 
 
         for a_guy in self.guys:    
-            out_im = self.prepare_image(a_guy)
-            cv.ShowImage(win_name, out_im)
-            cv.WaitKey(mytime)
+            if run:
+                out_im = self.prepare_image(a_guy)
+                cv.ShowImage(win_name, out_im)
+                cv.WaitKey(mytime)
 
         cv.DestroyWindow(win_name)
 
@@ -399,8 +406,9 @@ class FaceMovie(object):
         :type im_format: string        
         """
         for a_guy in self.guys: 
-            out_im = self.prepare_image(a_guy)
-            self.save_guy(out_im, a_guy.name, im_format)    
+            if run:
+                out_im = self.prepare_image(a_guy)
+                self.save_guy(out_im, a_guy.name, im_format)    
 
     def number_guys(self):
         """
