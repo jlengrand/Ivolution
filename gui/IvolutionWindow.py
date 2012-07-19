@@ -12,13 +12,15 @@ from AboutDialog import AboutDialog
 
 import os
 parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-os.sys.path.insert(0,parentdir) 
+os.sys.path.insert(0,parentdir) # import parent folder
+
 from facemovie import Facemovie_lib
 from facemovie import FaceParams
 from facemovie import FacemovieThread
 
-class IvolutionWindow():       
-    def __init__(self):
+class IvolutionWindow(FacemovieThread.Observer):       
+    def __init__(self, name):
+        FacemovieThread.Observer.__init__(self, name)
 
         self.my_logger = None
         self.console_logger = None
@@ -96,6 +98,7 @@ class IvolutionWindow():
         self.print_parameters()
         # Instantiating the facemovie
         self.facemovie = FacemovieThread.FacemovieThread(self.face_params)
+        self.facemovie.subscribe(self) # I want new information !
         self.facemovie.start()
 
     def on_stopbutton_pressed(self, widget):

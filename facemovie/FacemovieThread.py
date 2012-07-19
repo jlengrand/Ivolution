@@ -14,7 +14,81 @@ import logging
 
 from facemovie import Facemovie_lib
 
-class FacemovieThread(threading.Thread):
+class Observer():
+    """
+    Implements a simple Observer from the Observer pattern
+    """
+
+    def __init__(self, name="bob"):
+        """
+        """
+        self.name = name
+
+
+    def update(self, message):
+        """
+        """
+        if message is not None:
+            print "%s received %s" %(self.name, message)
+
+    def __str__(self):
+        return self.name
+
+
+class Observable():
+    """
+    Implements a simple Observable from the Observer pattern
+    """
+
+    def __init__(self):
+        """
+        """
+        self.val = 1
+        self.obs_collection = []
+
+
+    def subscribe(self, observer):
+        """
+        """
+        try:
+            if not(observer in self.obs_collection):
+                self.obs_collection.append(observer)
+                print "%s added to collection" %(str(observer))
+            else:
+                print "%s already in collection" %(str(observer))
+
+        except TypeError:
+            print "Failed to add %s" %(str(observer))
+
+    def unsubscribe(self, observer):
+        """
+        """
+        try:
+            if observer in self.obs_collection:
+                self.obs_collection.remove(observer)
+                print "%s removed from collection" %(str(observer))
+            else:
+                print "%s not in collection" %(str(observer))
+
+        except TypeError:
+            print "Failed to remove %s" %(str(observer))
+
+    def notify(self, message):
+        """
+        """
+        for observer in self.obs_collection:
+            print "sent %s to %s" %(message, str(observer))
+            observer.update(message)
+
+
+    def set_val(self, val=1):
+        """
+        """
+        self.val += val
+        self.notify(str(self.val))
+
+
+class FacemovieThread(threading.Thread, Observable):
     '''
     Creates a Thread version of Facemovie using the facemovie_lib.
     This class can then be run anywhere, from a GUI, script, ...
@@ -27,6 +101,8 @@ class FacemovieThread(threading.Thread):
         :param face_params: A faceparams object that contains all needed information to run the Facemovie.
         :type face_params: FaceParams      
         """
+        Observable.__init__(self)
+
         threading.Thread.__init__(self)
 
         self.face_params = face_params
@@ -35,6 +111,7 @@ class FacemovieThread(threading.Thread):
     def run(self):
         my_logger = logging.getLogger('FileLog')
         my_logger.debug("Thread started")
+        self.notify("Thread Started")
 
         self.facemovie.list_guys()
         my_logger.debug("Guys listed")

@@ -8,6 +8,6 @@ from gi.repository import Gtk, GObject
 from gui import IvolutionWindow
 
 
-my_app = IvolutionWindow.IvolutionWindow()
+my_app = IvolutionWindow.IvolutionWindow("Ivolution")
 GObject.threads_init()
 Gtk.main()

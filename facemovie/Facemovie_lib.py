@@ -101,7 +101,7 @@ class FaceMovie(object):
         # loading images, create Guys and store it into guys
         for root, _, files in os.walk(self.source):
             for a_file in files:
-                if run : # as long as we want to continue
+                if self.run : # as long as we want to continue
                     guy_source = os.path.join(root, a_file)
                     try:
                         image = cv.LoadImage(guy_source)
@@ -151,7 +151,7 @@ class FaceMovie(object):
         In case no face is found, a warning is returned and Guy is set to None
         """
         for a_guy in self.guys:
-            if run:
+            if self.run:
                 a_guy.search_face(self.face_params)
                 if a_guy.has_face(): # face(s) have been found
                     self.console_logger.info("Face found for %s" % (a_guy.name))
@@ -279,7 +279,7 @@ class FaceMovie(object):
         x_af = 0
         y_af = 0
         for a_guy in self.guys:
-            if run :
+            if self.run :
                 (xc, yc) = a_guy.resized_center()
                 (inx, iny) = a_guy.resized_dims()
                         
@@ -307,7 +307,7 @@ class FaceMovie(object):
         wl = 1000000 # space left left of eyes
         wr = 1000000 # space left right of eyes
         for a_guy in self.guys:
-            if run:
+            if self.run:
                 (xc, yc) = a_guy.resized_center()
                 (inx, iny) = a_guy.resized_dims()            
                 
@@ -365,7 +365,7 @@ class FaceMovie(object):
                                       1)
         ii = 0 
         for a_guy in self.guys:
-            if run:
+            if self.run:
                 ii += 1 
                 self.console_logger.info("Saving frame %d / %d" %(ii, self.number_guys()) )
                 self.my_logger.info("Saving frame %d / %d" %(ii, self.number_guys()) )             
@@ -388,7 +388,7 @@ class FaceMovie(object):
         cv.ResizeWindow(win_name, 640, 480) 
 
         for a_guy in self.guys:    
-            if run:
+            if self.run:
                 out_im = self.prepare_image(a_guy)
                 cv.ShowImage(win_name, out_im)
                 cv.WaitKey(mytime)
@@ -406,7 +406,7 @@ class FaceMovie(object):
         :type im_format: string        
         """
         for a_guy in self.guys: 
-            if run:
+            if self.run:
                 out_im = self.prepare_image(a_guy)
                 self.save_guy(out_im, a_guy.name, im_format)    
 
