@@ -200,6 +200,10 @@ class IvolutionWindow(FacemovieThread.Observer):
         self.console_logger.addHandler(ch)
 
     def update(self, message):
+        """
+        Trigerred by Facemovie Thread. 
+        Uses the Observer pattern to inform the user about the progress of the current job.
+        """
         self.console_logger.debug(message[0])
 
         self.my_logger.debug(message[0])
