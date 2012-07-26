@@ -665,7 +665,7 @@ automatically generate a movie!   </property>
           </packing>
         </child>
         <child>
-          <object class="GtkProgressBar" id="progressbar1">
+          <object class="GtkProgressBar" id="progressbar">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
           </object>
@@ -681,7 +681,7 @@ automatically generate a movie!   </property>
             <property name="can_focus">False</property>
             <property name="spacing">2</property>
             <child>
-              <object class="GtkLabel" id="label2">
+              <object class="GtkLabel" id="statuslabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="xalign">0</property>

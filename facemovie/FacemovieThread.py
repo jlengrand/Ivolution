@@ -9,6 +9,8 @@
 import os
 import sys
 import threading
+import time
+
 
 import logging
 
@@ -29,7 +31,8 @@ class Observer():
         """
         """
         if message is not None:
-            print "%s received %s" %(self.name, message)
+            #print "%s received %s" %(self.name, message)
+            pass
 
     def __str__(self):
         return self.name
@@ -53,12 +56,14 @@ class Observable():
         try:
             if not(observer in self.obs_collection):
                 self.obs_collection.append(observer)
-                print "%s added to collection" %(str(observer))
+                #print "%s added to collection" %(str(observer))
             else:
-                print "%s already in collection" %(str(observer))
+                #print "%s already in collection" %(str(observer))
+                pass
 
         except TypeError:
-            print "Failed to add %s" %(str(observer))
+            #print "Failed to add %s" %(str(observer))
+            pass
 
     def unsubscribe(self, observer):
         """
@@ -66,18 +71,20 @@ class Observable():
         try:
             if observer in self.obs_collection:
                 self.obs_collection.remove(observer)
-                print "%s removed from collection" %(str(observer))
+                #print "%s removed from collection" %(str(observer))
             else:
-                print "%s not in collection" %(str(observer))
+                #print "%s not in collection" %(str(observer))
+                pass
 
         except TypeError:
-            print "Failed to remove %s" %(str(observer))
+            #print "Failed to remove %s" %(str(observer))
+            pass
 
     def notify(self, message):
         """
         """
         for observer in self.obs_collection:
-            print "sent %s to %s" %(message, str(observer))
+            #print "sent %s to %s" %(message, str(observer))
             observer.update(message)
 
 
@@ -111,15 +118,24 @@ class FacemovieThread(threading.Thread, Observable):
     def run(self):
         my_logger = logging.getLogger('FileLog')
         my_logger.debug("Thread started")
-        self.notify("Thread Started")
 
         self.facemovie.list_guys()
+
         my_logger.debug("Guys listed")
+        self.notify(["Pictures listed", 0.2])
         self.facemovie.prepare_faces() # I want to search for the faces, and characteristics of the images   
+
         my_logger.debug("Faces prepared")
+        self.notify(["Faces detected", 0.6])
+
         self.facemovie.find_final_dimensions() # finds output size for desired mode.
+
         my_logger.debug("Final dimensions found")
+        self.notify(["Video dimensions found", 0.8])
+
         self.facemovie.save_movie()       
+
         my_logger.debug("Movie saved")
+        self.notify(["Movie saved", 1.0])
 
         my_logger.debug("Thread terminated")

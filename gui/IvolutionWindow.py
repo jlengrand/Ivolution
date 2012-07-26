@@ -18,6 +18,8 @@ from facemovie import Facemovie_lib
 from facemovie import FaceParams
 from facemovie import FacemovieThread
 
+import time
+
 class IvolutionWindow(FacemovieThread.Observer):       
     def __init__(self, name):
         FacemovieThread.Observer.__init__(self, name)
@@ -69,6 +71,10 @@ class IvolutionWindow(FacemovieThread.Observer):
 
         self.cropradiobutton = self.builder.get_object("cropradiobutton")
         self.namesortradiobutton = self.builder.get_object("namesortradiobutton")
+
+        self.progressbar = self.builder.get_object("progressbar")
+        self.statuslabel = self.builder.get_object("statuslabel")
+
 
     # Signal handling related stuff
 
@@ -192,6 +198,15 @@ class IvolutionWindow(FacemovieThread.Observer):
         #ch.setFormatter(formatter)
 
         self.console_logger.addHandler(ch)
+
+    def update(self, message):
+        self.console_logger.debug(message[0])
+
+        self.my_logger.debug(message[0])
+        self.console_logger.debug(float(message[1]))
+        #self.progressbar.pulse()
+        self.statuslabel.set_text(message[0])
+        self.progressbar.set_fraction(float(message[1]))
 
 if __name__ == "__main__":
     app = IvolutionWindow()
