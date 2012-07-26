@@ -7,10 +7,14 @@
 
 """
 import os
+parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+os.sys.path.insert(0,parentdir) # import parent folder
+
 import sys
 import threading
 import time
 
+#from gui import IvolutionWindow
 
 import logging
 
@@ -95,7 +99,7 @@ class Observable():
         self.notify(str(self.val))
 
 
-class FacemovieThread(threading.Thread, Observable):
+class FacemovieThread(threading.Thread, Observable, Observer):
     '''
     Creates a Thread version of Facemovie using the facemovie_lib.
     This class can then be run anywhere, from a GUI, script, ...
@@ -108,34 +112,61 @@ class FacemovieThread(threading.Thread, Observable):
         :param face_params: A faceparams object that contains all needed information to run the Facemovie.
         :type face_params: FaceParams      
         """
-        Observable.__init__(self)
-
         threading.Thread.__init__(self)
+        Observable.__init__(self)
+        Observer.__init__(self, "Facemovie")
+
+        self.stop_process = False
 
         self.face_params = face_params
         self.facemovie = Facemovie_lib.FaceMovie(self.face_params)
 
+        self.my_logger = logging.getLogger('FileLog')
+        self.console_logger = logging.getLogger('ConsoleLog')
+
+    def update(self, message):
+        """
+        Trigerred by IvolutionWindow. 
+        Uses the Observer pattern to inform the user about the progress of the GUI.
+        """
+        if message[0] == "STOP":
+            self.console_logger.debug("Facemovie is going to stop")
+            self.my_logger.debug("Facemovie is going to stop")
+
+            self.stop_process = True
+        elif message[0] == "START":
+            self.console_logger.debug("Facemovie is asked to stop")
+            self.my_logger.debug("Facemovie is asked to stop")
+
+            self.stop_process = False
+        else:
+            self.console_logger.debug(message[0])
+            self.my_logger.debug(message[0])
     def run(self):
-        my_logger = logging.getLogger('FileLog')
-        my_logger.debug("Thread started")
 
-        self.facemovie.list_guys()
+        # FIXME : Quite ugly way of doing. Find better!
+        if not self.stop_process:
+            self.facemovie.list_guys()
+            self.my_logger.debug("Guys listed")
+            self.notify(["Pictures listed", 0.2])
 
-        my_logger.debug("Guys listed")
-        self.notify(["Pictures listed", 0.2])
-        self.facemovie.prepare_faces() # I want to search for the faces, and characteristics of the images   
+        if not self.stop_process:
+            self.facemovie.prepare_faces() # I want to search for the faces, and characteristics of the images   
+            self.my_logger.debug("Faces prepared")
+            self.notify(["Faces detected", 0.6])
 
-        my_logger.debug("Faces prepared")
-        self.notify(["Faces detected", 0.6])
+        if not self.stop_process:
+            self.facemovie.find_final_dimensions() # finds output size for desired mode.
+            self.my_logger.debug("Final dimensions found")
+            self.notify(["Video dimensions found", 0.8])
 
-        self.facemovie.find_final_dimensions() # finds output size for desired mode.
+        if not self.stop_process:
+            self.facemovie.save_movie()       
+            self.my_logger.debug("Movie saved")
+            self.notify(["Movie saved, Finished!", 1.0])
 
-        my_logger.debug("Final dimensions found")
-        self.notify(["Video dimensions found", 0.8])
+        if not self.stop_process:
+            self.my_logger.debug("Thread terminated")
 
-        self.facemovie.save_movie()       
-
-        my_logger.debug("Movie saved")
-        self.notify(["Movie saved, Finished!", 1.0])
-
-        my_logger.debug("Thread terminated")
+        if self.stop_process:
+            self.notify(["Process cancelled!", 1.0])            

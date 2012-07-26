@@ -20,9 +20,10 @@ from facemovie import FacemovieThread
 
 import time
 
-class IvolutionWindow(FacemovieThread.Observer):       
+class IvolutionWindow(FacemovieThread.Observer, FacemovieThread.Observable):       
     def __init__(self, name):
         FacemovieThread.Observer.__init__(self, name)
+        FacemovieThread.Observable.__init__(self)
 
         self.my_logger = None
         self.console_logger = None
@@ -109,6 +110,8 @@ class IvolutionWindow(FacemovieThread.Observer):
             # Instantiating the facemovie
             self.facemovie = FacemovieThread.FacemovieThread(self.face_params)
             self.facemovie.subscribe(self) # I want new information ! Subscribes to facemovie reports
+            self.subscribe(self.facemovie) # Trying to subscribe facemovie to our messages
+
             self.facemovie.start()
 
             self.process_running = True
@@ -122,6 +125,7 @@ class IvolutionWindow(FacemovieThread.Observer):
         """
         self.my_logger.debug("Stop pressed")
         self.console_logger.debug("Stop pressed") 
+        self.notify(["STOP", 0.0]) # Asking the Facemovie to stop
         self.process_running = False
 
     def on_destroy(self, widget, data=None):
@@ -212,7 +216,7 @@ class IvolutionWindow(FacemovieThread.Observer):
 
     def update(self, message):
         """
-        Trigerred by Facemovie Thread. 
+        Trigerred by FacemovieThread. 
         Uses the Observer pattern to inform the user about the progress of the current job.
         """
         self.console_logger.debug(message[0])
