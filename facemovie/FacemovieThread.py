@@ -136,6 +136,6 @@ class FacemovieThread(threading.Thread, Observable):
         self.facemovie.save_movie()       
 
         my_logger.debug("Movie saved")
-        self.notify(["Movie saved", 1.0])
+        self.notify(["Movie saved, Finished!", 1.0])
 
         my_logger.debug("Thread terminated")

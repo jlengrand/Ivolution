@@ -6,7 +6,7 @@ import webbrowser
 
 import logging
 
-from gi.repository import Gtk
+from gi.repository import Gtk, GLib
 
 from AboutDialog import AboutDialog
 
@@ -204,9 +204,9 @@ class IvolutionWindow(FacemovieThread.Observer):
 
         self.my_logger.debug(message[0])
         self.console_logger.debug(float(message[1]))
-        #self.progressbar.pulse()
-        self.statuslabel.set_text(message[0])
-        self.progressbar.set_fraction(float(message[1]))
+        # Uses GLib to run Thread safe operations on GUI
+        GLib.idle_add(self.progressbar.set_fraction, float(message[1]))
+        GLib.idle_add(self.statuslabel.set_text, message[0])
 
 if __name__ == "__main__":
     app = IvolutionWindow()
