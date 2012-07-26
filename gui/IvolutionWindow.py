@@ -43,7 +43,9 @@ class IvolutionWindow(FacemovieThread.Observer):
         self.speed = 1 # Speed of the movie
         self.param = "frontal_face" # type of face profile to be searched for
 
-        self.in_fo = "" # Input folder, where imaes are located
+        self.in_fo = "" # Input folder, where images are located
+
+        self.process_running = False
 
         self.facemovie = None
 
@@ -100,18 +102,27 @@ class IvolutionWindow(FacemovieThread.Observer):
         """
         Sets all parameters and start processing
         """
-        self.set_parameters()
-        self.print_parameters()
-        # Instantiating the facemovie
-        self.facemovie = FacemovieThread.FacemovieThread(self.face_params)
-        self.facemovie.subscribe(self) # I want new information !
-        self.facemovie.start()
+        self.my_logger.debug("start pressed")
+        if not self.process_running: # start only if not already running
+            self.set_parameters()
+            self.print_parameters()
+            # Instantiating the facemovie
+            self.facemovie = FacemovieThread.FacemovieThread(self.face_params)
+            self.facemovie.subscribe(self) # I want new information ! Subscribes to facemovie reports
+            self.facemovie.start()
+
+            self.process_running = True
+        else:
+            self.console_logger.error("Cannot start, process already running !")
+            self.my_logger.error("Cannot start, process already running !")            
 
     def on_stopbutton_pressed(self, widget):
         """
         Asks the Facemovie thread to terminate
         """
-        print "Stop"    
+        self.my_logger.debug("Stop pressed")
+        self.console_logger.debug("Stop pressed") 
+        self.process_running = False
 
     def on_destroy(self, widget, data=None):
         """Called when the IvolutionWindow is closed."""
@@ -211,6 +222,11 @@ class IvolutionWindow(FacemovieThread.Observer):
         # Uses GLib to run Thread safe operations on GUI
         GLib.idle_add(self.progressbar.set_fraction, float(message[1]))
         GLib.idle_add(self.statuslabel.set_text, message[0])
+
+        if float(message[1]) >= 1.0: # 100% of process
+            self.my_logger.debug("Reached end of facemovie process")
+            self.console_logger.debug("Reached end of facemovie process") 
+            self.process_running = False            
 
 if __name__ == "__main__":
     app = IvolutionWindow()
