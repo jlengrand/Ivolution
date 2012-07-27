@@ -1,0 +1,49 @@
+#!/usr/bin/make -f
+%:
+ifneq ($(shell dh -l | grep -xF translations),)
+	dh $@ --with python2,translations
+else
+	dh $@ --with python2
+endif
+
+
+override_dh_auto_install:
+	dh_auto_install -- --install-scripts=/opt/extras.ubuntu.com/ivolution                 --install-data=/opt/extras.ubuntu.com/ivolution                 
+	--install-lib=/opt/extras.ubuntu.com/ivolution
+
+override_dh_python2:
+	dh_python2 /opt/extras.ubuntu.com/ivolution
+
+
+#!/usr/bin/make -f
+%:
+ifneq ($(shell dh -l | grep -xF translations),)
+	dh $@ --with python2,translations
+else
+	dh $@ --with python2
+endif
+
+override_dh_auto_install:
+	dh_auto_install -- --install-scripts=/opt/extras.ubuntu.com/ivolution                 --install-data=/opt/extras.ubuntu.com/ivolution                 --install-lib=/opt/extras.ubuntu.com/ivolution
+
+override_dh_python2:
+	dh_python2 /opt/extras.ubuntu.com/ivolution
+
+
+override_dh_install:
+	dh_install
+	mkdir -p debian/ivolution/opt/extras.ubuntu.com/ivolution/bin
+	if [ -x debian/ivolution/opt/extras.ubuntu.com/ivolution/ivolution ]; then mv debian/ivolution/opt/extras.ubuntu.com/ivolution/ivolution debian/ivolution/opt/extras.ubuntu.com/ivolution/bin; fi
+	if [ -f debian/ivolution/opt/extras.ubuntu.com/ivolution/share/applications/ivolution.desktop ]; then \
+		mkdir -p debian/ivolution/usr/share/applications; \
+		mv debian/ivolution/opt/extras.ubuntu.com/ivolution/share/applications/ivolution.desktop debian/ivolution/usr/share/applications/extras-ivolution.desktop; \
+		rmdir --ignore-fail-on-non-empty debian/ivolution/opt/extras.ubuntu.com/ivolution/share/applications; \
+		sed -i 's|Exec=.*|Exec=/opt/extras.ubuntu.com/ivolution/bin/ivolution|' debian/ivolution/usr/share/applications/extras-ivolution.desktop; \
+		sed -i 's|Icon=/usr/|Icon=/opt/extras.ubuntu.com/ivolution/|' debian/ivolution/usr/share/applications/extras-ivolution.desktop; \
+	fi
+	grep -RlZ 'import gettext' debian/ivolution/* | xargs -0 -r sed -i 's|\(import\) gettext$$|\1 locale|'
+	grep -RlZ 'from gettext import gettext as _' debian/ivolution/* | xargs -0 -r sed -i 's|from gettext \(import gettext as _\)|from locale \1|'
+	grep -RlZ "gettext.textdomain('ivolution')" debian/ivolution/* | xargs -0 -r sed -i "s|gettext\(\.textdomain('ivolution')\)|locale\.bindtextdomain('ivolution', '/opt/extras.ubuntu.com/ivolution/share/locale')\nlocale\1|" 
+	sed -i "s|__ivolution_data_directory__ =.*|__ivolution_data_directory__ = '/opt/extras.ubuntu.com/ivolution/share/ivolution/'|" debian/ivolution/opt/extras.ubuntu.com/ivolution/download_monitor*/download_monitorconfig.py
+	sed -i 's|        sys.path.insert(0, opt_path)|\0\n    os.putenv("XDG_DATA_DIRS", "%s:%s" % ("/opt/extras.ubuntu.com/ivolution/share/", os.getenv("XDG_DATA_DIRS", "")))|' debian/ivolution/opt/extras.ubuntu.com/ivolution/bin/ivolution
+	if [ -d debian/ivolution/opt/extras.ubuntu.com/ivolution/share/glib-2.0/schemas ]; then glib-compile-schemas debian/ivolution/opt/extras.ubuntu.com/ivolution/share/glib-2.0/schemas; fi
