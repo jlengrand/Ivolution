@@ -9,11 +9,7 @@ import sys
 import os
 import glob
 
-if "win" in sys.platform:
-    import py2exe
 import facemovie
-
-sys.argv.append('py2exe')
 
 def find_data_files(source,target,patterns):
     """Locates the specified data-files and returns the matches
@@ -46,7 +42,7 @@ haar_files = find_data_files('facemovie','',['haarcascades/*.xml'])
 
 setup(
     name = "Facemovie",
-    version = "0.8.2",
+    version = "1.0",
     author = "Julien Lengrand-Lambert",
     author_email = "jlengrand@gmail.com",
     description = ("Take one picture of yourself a day, automatically generate a movie!"),
@@ -54,8 +50,8 @@ setup(
     keywords = "image_processing computer_vision one_picture_a_day photography",
     url = "http://jlengrand.github.com/FaceMovie/",
     download_url = "http://jlengrand.github.com/FaceMovie/",
-    packages=['facemovie', 'facemovie.lib', 'haarcascades'],
-    long_description=read('README.rst'),
+    packages=['facemovie', 'facemovie.lib', 'haarcascades', 'gui'],
+    long_description=read('README.markdown'),
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Topic :: Multimedia :: Graphics",
@@ -67,8 +63,4 @@ setup(
         "Programming Language :: Python :: 2 :: Only",
     ],
 	data_files = haar_files,
-    options = {'py2exe': {'bundle_files': 1, # 3 dont bundle, 2 bundle but python interpreter, 1 bundle everything
-                          'includes': ['numpy'] } },
-    console=['Facemoviefier.py'],
-    zipfile = None,
 )

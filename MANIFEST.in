@@ -1,9 +1,9 @@
-recursive-include test *.py
-recursive-include data\input\sample *
-recursive-include data\output
-recursive-include facemovie\haarcascades *.xml
+recursive-include log *
+recursive-include bin *
+recursive-include data/inputs/sample-test *
+recursive-include data/media *
+recursive-include data/ui *
+recursive-include haarcascades *.xml
 recursive-include docs *
-include CHANGES
 include LICENSE
-include *.sh
-include README.rst
+include README*
