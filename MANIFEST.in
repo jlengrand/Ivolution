@@ -1,9 +1,7 @@
 recursive-include log *
 recursive-include bin *
-recursive-include data/inputs/sample-test *
-recursive-include data/media *
-recursive-include data/ui *
-recursive-include haarcascades *.xml
 recursive-include docs *
 include LICENSE
 include README*
+include AUTHORS
+include CHANGES

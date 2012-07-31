@@ -14,9 +14,9 @@ import os
 parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.sys.path.insert(0,parentdir) # import parent folder
 
-from facemovie import Facemovie_lib
-from facemovie import FaceParams
-from facemovie import FacemovieThread
+import Facemovie_lib
+import FaceParams
+import FacemovieThread
 
 import time
 
@@ -29,7 +29,7 @@ class IvolutionWindow(FacemovieThread.Observer, FacemovieThread.Observable):
         self.console_logger = None
 
         self.builder = Gtk.Builder()
-        self.builder.add_from_file("data/ui/IvolutionWindow.glade")
+        self.builder.add_from_file("ivolution/data/ui/IvolutionWindow.glade")
         #self.builder.connect_signals({ "on_ivolutionwindow_destroy" : Gtk.main_quit })
         self.window = self.builder.get_object("ivolution_window")
         self.window.show()
@@ -161,7 +161,7 @@ class IvolutionWindow(FacemovieThread.Observer, FacemovieThread.Observable):
         self.speed = self.speedcombobox.get_active() # We need and integer between 0 and 2
 
         # Instantiating the face_params object that will be needed by the facemovie
-        par_fo = os.path.join(self.root_fo, "haarcascades")
+        par_fo = os.path.join(self.root_fo, "ivolution/data/haarcascades")
         self.face_params = FaceParams.FaceParams(par_fo,
                                                 self.in_fo,
                                                 self.out_fo,

@@ -14,7 +14,7 @@ import logging
 
 import cv
 
-from lib import exif
+from util import exif
 import Guy
 
 class FaceMovie(object):

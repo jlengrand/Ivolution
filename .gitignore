@@ -1,6 +1,7 @@
 *.pyc
-data/inputs/*
-data/*.avi
+ivolution/*.pyc
+ivolution/data/inputs/*
+ivolution/data/*.avi
 build
 dist
 MANIFEST
@@ -8,5 +9,4 @@ packaging
 doc/build
 *~
 README.rst
-test.py
 log

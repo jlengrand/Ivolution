@@ -24,7 +24,7 @@ def find_data_files(source,target,patterns):
     """
     if glob.has_magic(source) or glob.has_magic(target):
         raise ValueError("Magic not allowed in src, target")
-    ret = {}
+    ret = {}l
     for pattern in patterns:
         pattern = os.path.join(source,pattern)
         for filename in glob.glob(pattern):
@@ -40,17 +40,23 @@ def read(fname):
 
 haar_files = find_data_files('facemovie','',['haarcascades/*.xml'])   
 
+setup(...,
+      packages=['mypkg'],
+      package_dir={'mypkg': 'src/mypkg'},
+      package_data={'mypkg': ['data/*.dat']},
+      )
+
 setup(
-    name = "Facemovie",
+    name = "Ivolution",
     version = "1.0",
     author = "Julien Lengrand-Lambert",
-    author_email = "jlengrand@gmail.com",
+    author_email = "julien@lengrand.fr",
     description = ("Take one picture of yourself a day, automatically generate a movie!"),
     license = "BSD License",
     keywords = "image_processing computer_vision one_picture_a_day photography",
     url = "http://jlengrand.github.com/FaceMovie/",
     download_url = "http://jlengrand.github.com/FaceMovie/",
-    packages=['facemovie', 'facemovie.lib', 'haarcascades', 'gui'],
+    packages=['facemovie', 'facemovie.lib', 'gui'],
     long_description=read('README.markdown'),
     classifiers=[
         "Development Status :: 3 - Alpha",
@@ -62,5 +68,6 @@ setup(
         "Operating System :: Microsoft",
         "Programming Language :: Python :: 2 :: Only",
     ],
-	data_files = haar_files,
+	data_files = data_files,
+    scripts=['bin/Ivolution.py']
 )
