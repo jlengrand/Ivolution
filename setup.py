@@ -51,7 +51,7 @@ setup(
     version = "1.0",
     author = "Julien Lengrand-Lambert",
     author_email = "julien@lengrand.fr",
-    description = ("Take one picture of yourself a day, automatically generate a movie!"),
+    description = ("Timelapse creation using Face Recognition"),
     license = "BSD License",
     keywords = "image_processing computer_vision one_picture_a_day photography",
     url = "http://jlengrand.github.com/FaceMovie/",
@@ -70,5 +70,6 @@ setup(
     ],
 	#data_files = data_files,
     scripts=['Ivolution.py', 'Facemoviefier.py'],
-    package_dir={'haarcascades' : 'ivolution/data/haarcascades', 'samples':'ivolution/data/inputs/sample-test', 'ui':'ivolution/data/ui', 'media':'ivolution/data/media'}
+    package_dir={'data' : 'ivolution/data'},
+    package_data={'data' : ['haarcascades/*.xml'], 'data' : ['samples/*'], 'data' : ['ui/*'], 'data' : ['media/*']}
 )
