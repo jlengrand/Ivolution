@@ -1,8 +1,19 @@
 '''
 Created on 19 avr. 2012
 
-@author: jll
+@author: julien Lengrand-Lambert
 '''
+import sys
+# Check dependencies before installing anything
+# Refuse if necessary
+try: 
+    import cv # opencv python bindings
+    from gi.repository import Gtk, GLib # GTK+ dependencies
+except ImportError:
+    print "Some of the dependencies are missing. Please install them and try again"
+    print "You can learn more about the dependencies in the documentation"
+    sys.exit(0)
+
 # creating executable here
 from distutils.core import setup
 import os
@@ -27,7 +38,6 @@ def create_personal():
         open(log_file, 'w').close()     
 
     os.chmod(log_file, 02777) # allow read write access
-
 
 setup(
     name = "Ivolution",
