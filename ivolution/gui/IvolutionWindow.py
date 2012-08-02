@@ -204,7 +204,7 @@ class IvolutionWindow(FacemovieThread.Observer, FacemovieThread.Observable):
         
         #fh = logging.StreamHandler()
         fh = logging.FileHandler(log_file)
-        
+
         fh.setLevel(logging.DEBUG)
         # create console handler with a higher log level
         self.console_logger = logging.getLogger('ConsoleLog')

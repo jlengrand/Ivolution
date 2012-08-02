@@ -8,7 +8,7 @@ import sys
 # Refuse if necessary
 try: 
     import cv # opencv python bindings
-    from gi.repository import Gtk, GLib # GTK+ dependencies
+    from gi.repository import Gtk, GLib, GObject # GTK+ dependencies
 except ImportError:
     print "Some of the dependencies are missing. Please install them and try again"
     print "You can learn more about the dependencies in the documentation"
