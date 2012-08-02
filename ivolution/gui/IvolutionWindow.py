@@ -192,15 +192,18 @@ class IvolutionWindow(FacemovieThread.Observer, FacemovieThread.Observable):
         Configures our logger to save error messages
         Start logging in file here
         """
+        personal_dir = "~/.ivolution"
+        log_root = 'fm.log'
+        log_file = os.path.join(os.path.expanduser(personal_dir),log_root) 
+
         # create logger for  'facemovie'
-        #self.my_logger = logging.getLogger('FileLog')
-        self.my_logger = logging.getLogger('ConsoleLog')
+        self.my_logger = logging.getLogger('FileLog')
         
         self.my_logger.setLevel(logging.DEBUG)
         # create file handler which logs even debug messages
         
-        fh = logging.StreamHandler()
-        #fh = logging.FileHandler('log/fm.log')
+        #fh = logging.StreamHandler()
+        fh = logging.FileHandler(log_file)
         
         fh.setLevel(logging.DEBUG)
         # create console handler with a higher log level

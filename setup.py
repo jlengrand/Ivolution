@@ -7,9 +7,27 @@ Created on 19 avr. 2012
 from distutils.core import setup
 import os
 
+personal_dir = "~/.ivolution"
+
 # Utility function to read the README file.
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
+
+def create_personal():
+    # creating personal folder
+    if not os.path.exists(os.path.expanduser(personal_dir)):
+        print os.path.expanduser(personal_dir)
+        os.makedirs(os.path.expanduser(personal_dir))
+
+    # creating personal file
+    log_root = 'fm.log'
+    log_file = os.path.join(os.path.expanduser(personal_dir),log_root) 
+    if not os.path.exists(log_file): 
+        print log_file
+        open(log_file, 'w').close()     
+
+    os.chmod(log_file, 02777) # allow read write access
+
 
 setup(
     name = "Ivolution",
@@ -34,8 +52,9 @@ setup(
         "Programming Language :: Python :: 2 :: Only",
     ],
 	#data_files = data_files,
-    scripts=['Ivolution.py', 'Facemoviefier.py'],
+    scripts=['Ivolution', 'Facemoviefier'],
     package_dir={'ivolution.data' : 'ivolution/data'},
-    #package_data={'ivolution.data' : ['haarcascades/*'], 'ivolution.data' : ['samples/*'], 'ivolution.data' : ['ui/*'], 'ivolution.media' : ['media/*']}
-    package_data={'ivolution.data' : ['haarcascades/*', 'samples/*', 'ui/*', 'media/*']}
+    package_data={'ivolution.data' : ['haarcascades/*', 'samples/*', 'ui/*', 'media/*']},
 )
+
+create_personal()
