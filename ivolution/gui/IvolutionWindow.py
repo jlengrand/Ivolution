@@ -10,13 +10,15 @@ from gi.repository import Gtk, GLib
 
 from AboutDialog import AboutDialog
 
-import os
-parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-os.sys.path.insert(0,parentdir) # import parent folder
+from .. import get_data
 
-import Facemovie_lib
-import FaceParams
-import FacemovieThread
+# import os
+# parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# os.sys.path.insert(0,parentdir) # import parent folder
+
+from .. import Facemovie_lib
+from .. import FaceParams
+from .. import FacemovieThread
 
 import time
 
@@ -28,10 +30,9 @@ class IvolutionWindow(FacemovieThread.Observer, FacemovieThread.Observable):
         self.my_logger = None
         self.console_logger = None
 
-        print "GUI"
-        print os.getcwd()
         self.builder = Gtk.Builder()
-        self.builder.add_from_file("ivolution/data/ui/IvolutionWindow.glade")
+        self.builder.add_from_file(get_data('ui/IvolutionWindow.glade'))
+        #self.builder.add_from_file("ivolution/data/ui/IvolutionWindow.glade")
         #self.builder.connect_signals({ "on_ivolutionwindow_destroy" : Gtk.main_quit })
         self.window = self.builder.get_object("ivolution_window")
         self.window.show()
@@ -163,7 +164,7 @@ class IvolutionWindow(FacemovieThread.Observer, FacemovieThread.Observable):
         self.speed = self.speedcombobox.get_active() # We need and integer between 0 and 2
 
         # Instantiating the face_params object that will be needed by the facemovie
-        par_fo = os.path.join(self.root_fo, "ivolution/data/haarcascades")
+        par_fo = os.path.join(self.root_fo, get_data("haarcascades"))
         self.face_params = FaceParams.FaceParams(par_fo,
                                                 self.in_fo,
                                                 self.out_fo,
