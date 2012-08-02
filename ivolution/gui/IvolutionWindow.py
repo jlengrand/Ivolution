@@ -28,6 +28,8 @@ class IvolutionWindow(FacemovieThread.Observer, FacemovieThread.Observable):
         self.my_logger = None
         self.console_logger = None
 
+        print "GUI"
+        print os.getcwd()
         self.builder = Gtk.Builder()
         self.builder.add_from_file("ivolution/data/ui/IvolutionWindow.glade")
         #self.builder.connect_signals({ "on_ivolutionwindow_destroy" : Gtk.main_quit })
@@ -190,10 +192,15 @@ class IvolutionWindow(FacemovieThread.Observer, FacemovieThread.Observable):
         Start logging in file here
         """
         # create logger for  'facemovie'
-        self.my_logger = logging.getLogger('FileLog')
+        #self.my_logger = logging.getLogger('FileLog')
+        self.my_logger = logging.getLogger('ConsoleLog')
+        
         self.my_logger.setLevel(logging.DEBUG)
         # create file handler which logs even debug messages
-        fh = logging.FileHandler('log/fm.log')
+        
+        fh = logging.StreamHandler()
+        #fh = logging.FileHandler('log/fm.log')
+        
         fh.setLevel(logging.DEBUG)
         # create console handler with a higher log level
         self.console_logger = logging.getLogger('ConsoleLog')
