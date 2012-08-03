@@ -20,9 +20,12 @@ from .. import Facemovie_lib
 from .. import FaceParams
 from .. import FacemovieThread
 
+from ..util.Notifier import Observer 
+from ..util.Notifier import Observable
+
 import time
 
-class IvolutionWindow(FacemovieThread.Observer, FacemovieThread.Observable):       
+class IvolutionWindow(Observer, Observable):       
     def __init__(self, name):
         FacemovieThread.Observer.__init__(self, name)
         FacemovieThread.Observable.__init__(self)
@@ -233,7 +236,7 @@ class IvolutionWindow(FacemovieThread.Observer, FacemovieThread.Observable):
         self.console_logger.debug(message[0])
 
         self.my_logger.debug(message[0])
-        self.console_logger.debug(float(message[1]))
+        #self.console_logger.debug(float(message[1]))
         # Uses GLib to run Thread safe operations on GUI
         GLib.idle_add(self.progressbar.set_fraction, float(message[1]))
         GLib.idle_add(self.statuslabel.set_text, message[0])
