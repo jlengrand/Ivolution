@@ -53,7 +53,7 @@ setup(
     long_description=read('README.markdown'),
     classifiers=[
         "Development Status :: 4 - Beta",
-        "Topic :: Multimedia :: Graphics"
+        "Topic :: Multimedia :: Graphics",
         "Topic :: Multimedia :: Video :: Conversion",
         "Topic :: Scientific/Engineering :: Image Recognition",
         "Intended Audience :: End Users/Desktop",
