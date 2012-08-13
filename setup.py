@@ -65,7 +65,7 @@ setup(
         "Programming Language :: Python :: 2 :: Only",
     ],
 	#data_files = data_files,
-    scripts=['Ivolution', 'Facemoviefier'],
+    scripts=['Ivolutioner', 'Facemoviefier'],
     package_dir={'ivolution.data' : 'ivolution/data'},
     package_data={'ivolution.data' : ['haarcascades/*', 'samples/*', 'ui/*', 'media/*']},
 )
