@@ -64,6 +64,9 @@ class FacemovieThread(threading.Thread, Observable, Observer):
             # notifications
             #self.console_logger.debug(message)
             self.my_logger.debug(message)
+            # notify gui about small updates
+            self.notify(["STATUS", message[0], message[1]])
+
         else:
             self.console_logger.debug("Unrecognized command")
             self.my_logger.debug("Unrecognized command")

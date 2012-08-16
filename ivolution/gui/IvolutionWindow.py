@@ -246,11 +246,12 @@ class IvolutionWindow(Observer, Observable):
 
                 # Uses GLib to run Thread safe operations on GUI
                 GLib.idle_add(self.progressbar.set_fraction, float(message[2]))
-                GLib.idle_add(self.statuslabel.set_text, message[1])
+                GLib.idle_add(self.progressbar.set_text, message[1])
 
             elif message[0] == "STATUS": # status label
                 # intermediate results
-                pass
+                GLib.idle_add(self.statuslabel.set_text, message[1])
+                #pass
 
             if float(message[2]) >= 1.0: # 100% of process
                 self.my_logger.debug("Reached end of facemovie process")
@@ -262,7 +263,6 @@ class IvolutionWindow(Observer, Observable):
             self.my_logger.debug("Unrecognized command")
             self.console_logger.debug(message)
             self.my_logger.debug(message)   
-
 
 if __name__ == "__main__":
     app = IvolutionWindow()

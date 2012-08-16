@@ -161,7 +161,8 @@ class FaceMovie(object, Observable):
 
                 # notifying the Observers
                 try:
-                    self.notify(["Face", self.percent(ptr, len(self.guys))])
+                    message = "Processing picture  %d / %d" %(ptr, len(self.guys))
+                    self.notify([message, self.percent(ptr, len(self.guys))])
                 except (ArithmeticError, ZeroDivisionError):
                     #pass
                     self.notify(["Error", 0])
