@@ -18,8 +18,9 @@ from util import exif
 import Guy
 
 from util.Notifier import Observable
+from util.Notifier import Observer
 
-class FaceMovie(object, Observable):
+class FaceMovie(object, Observable, Observer):
     '''
     Main class of the whole application. 
     Contains the core image processing functions.
@@ -39,6 +40,7 @@ class FaceMovie(object, Observable):
         :type face_param: string        
         """
         Observable.__init__(self) # used to send notifications to process
+        Observer.__init__(self, "Library") # used to receive notification to stop
 
         self.console_logger = logging.getLogger('ConsoleLog') # Used to send messages to the console
         self.my_logger = logging.getLogger('FileLog') # Used to save events into a file
@@ -83,6 +85,13 @@ class FaceMovie(object, Observable):
         self.speed = [2, 5, 9]# this one should be internal. Number of fps for the video
 
         self.run = True # command used to stop the processing if needed
+
+    def update(self, message):
+        """
+        Used to receive system commands, using the Observer pattern
+        """
+        if len(message) == 1: # system command
+            self.run = False
 
     def list_guys(self):
         """

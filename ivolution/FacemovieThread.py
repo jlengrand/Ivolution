@@ -39,6 +39,7 @@ class FacemovieThread(threading.Thread, Observable, Observer):
         self.face_params = face_params
         self.facemovie = Facemovie_lib.FaceMovie(self.face_params)
         self.facemovie.subscribe(self) # Subscribing to facemovie reports
+        self.subscribe(self.facemovie) # Used to send request to stop
 
         self.my_logger = logging.getLogger('FileLog')
         self.console_logger = logging.getLogger('ConsoleLog')
@@ -55,6 +56,7 @@ class FacemovieThread(threading.Thread, Observable, Observer):
                 self.my_logger.debug("Facemovie is going to stop")
 
                 self.stop_process = True
+                self.notify(["STOP"])
             else : 
                 self.console_logger.debug("Unrecognized system command")
                 self.my_logger.debug("Unrecognized system command")

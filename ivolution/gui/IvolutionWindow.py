@@ -250,7 +250,7 @@ class IvolutionWindow(Observer, Observable):
 
                 if float(message[2]) >= 1.0: # 100% of process
                     self.my_logger.debug("Reached end of facemovie process")
-                    self.console_logger.debug("Reached end of facemovie process") 
+                    #self.console_logger.debug("Reached end of facemovie process") 
                     self.process_running = False  
 
             elif message[0] == "STATUS": # status label
@@ -258,7 +258,7 @@ class IvolutionWindow(Observer, Observable):
                 GLib.idle_add(self.statuslabel.set_text, message[1])
                 #pass
 
-        else:
+        elif len(message) > 1: #system commands shall be ignored
             self.console_logger.debug("Unrecognized command")
             self.my_logger.debug("Unrecognized command")
             self.console_logger.debug(message)
