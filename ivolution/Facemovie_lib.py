@@ -106,14 +106,8 @@ class FaceMovie(object, Observable):
         for root, _, files in os.walk(self.source):
             for a_file in files:
                 ptr += 1
-
                 # notifying the Observers
-                try:
-                    message = "Processing file  %d / %d" %(ptr, len(files))
-                    self.notify([message, self.percent(ptr, len(files))])
-                except (ArithmeticError, ZeroDivisionError):
-                    #pass
-                    self.notify(["Error", 0])
+                self.notify_progress("Processing file", ptr, len(files))
 
                 if self.run : # as long as we want to continue
                     guy_source = os.path.join(root, a_file)
@@ -171,12 +165,7 @@ class FaceMovie(object, Observable):
                 a_guy.search_face(self.face_params)
 
                 # notifying the Observers
-                try:
-                    message = "Processing picture  %d / %d" %(ptr, len(self.guys))
-                    self.notify([message, self.percent(ptr, len(self.guys))])
-                except (ArithmeticError, ZeroDivisionError):
-                    #pass
-                    self.notify(["Error", 0])
+                self.notify_progress("Processing picture", ptr, self.number_guys())
 
                 if a_guy.has_face(): # face(s) have been found
                     self.console_logger.info("Face found for %s" % (a_guy.name))
@@ -195,6 +184,18 @@ class FaceMovie(object, Observable):
             raise ZeroDivisionError
 
         return (num / float(den))
+
+    def notify_progress(self, message_root, num, den):
+        """
+        A notification scheme to quickly notify most common messages
+        """
+        # notifying the Observers
+        try:
+            message = message_root + "  %d / %d" %(num, den)
+            self.notify([message, self.percent(num, den)])
+        except (ArithmeticError, ZeroDivisionError):
+            #pass
+            self.notify(["Error", 0])
 
     def clean_guys(self):
         """
@@ -310,11 +311,17 @@ class FaceMovie(object, Observable):
         the image input image is placed in the output at the correct position.
         Black borders are set everywhere else.
         """
-        # FIXME: badly done !
+        # TODO: badly done !
         x_af = 0
         y_af = 0
+
+        ptr = 0
         for a_guy in self.guys:
             if self.run :
+                ptr +=1
+                # notifying the Observers
+                self.notify_progress("Processing picture", ptr, self.number_guys())
+
                 (xc, yc) = a_guy.resized_center()
                 (inx, iny) = a_guy.resized_dims()
                         
@@ -336,13 +343,21 @@ class FaceMovie(object, Observable):
         Calculates smallest output image that can be used to avoid adding black borders on image
         It will later be used to create the final image. 
         """
-        # FIXME: badly done !
+        # TODO: badly done !
         ht = 1000000 # space left above eyes
         hb = 1000000 # space left beneath eyes
         wl = 1000000 # space left left of eyes
         wr = 1000000 # space left right of eyes
+
+        tr = 0
+
+        ptr = 0
         for a_guy in self.guys:
             if self.run:
+                ptr +=1
+                # notifying the Observers
+                self.notify_progress("Processing picture", ptr, self.number_guys())
+
                 (xc, yc) = a_guy.resized_center()
                 (inx, iny) = a_guy.resized_dims()            
                 
@@ -402,6 +417,8 @@ class FaceMovie(object, Observable):
         for a_guy in self.guys:
             if self.run:
                 ii += 1 
+                self.notify_progress("Saving frame", ii, self.number_guys())
+
                 self.console_logger.info("Saving frame %d / %d" %(ii, self.number_guys()) )
                 self.my_logger.info("Saving frame %d / %d" %(ii, self.number_guys()) )             
                 out_im = self.prepare_image(a_guy)

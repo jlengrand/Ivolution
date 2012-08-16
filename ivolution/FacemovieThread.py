@@ -98,6 +98,8 @@ class FacemovieThread(threading.Thread, Observable, Observer):
             self.facemovie.save_movie()       
             self.my_logger.debug("Movie saved")
             self.notify(["PROGRESS", "Movie saved, Finished!", 1.0])
+            # updating status to avoid remanent messages
+            self.notify(["STATUS", " ", 1.0])
 
         if not self.stop_process:
             self.my_logger.debug("Thread terminated")

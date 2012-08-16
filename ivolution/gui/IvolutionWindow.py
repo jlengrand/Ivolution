@@ -248,15 +248,15 @@ class IvolutionWindow(Observer, Observable):
                 GLib.idle_add(self.progressbar.set_fraction, float(message[2]))
                 GLib.idle_add(self.progressbar.set_text, message[1])
 
+                if float(message[2]) >= 1.0: # 100% of process
+                    self.my_logger.debug("Reached end of facemovie process")
+                    self.console_logger.debug("Reached end of facemovie process") 
+                    self.process_running = False  
+
             elif message[0] == "STATUS": # status label
                 # intermediate results
                 GLib.idle_add(self.statuslabel.set_text, message[1])
                 #pass
-
-            if float(message[2]) >= 1.0: # 100% of process
-                self.my_logger.debug("Reached end of facemovie process")
-                self.console_logger.debug("Reached end of facemovie process") 
-                self.process_running = False  
 
         else:
             self.console_logger.debug("Unrecognized command")
