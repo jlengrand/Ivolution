@@ -77,21 +77,24 @@ class FacemovieThread(threading.Thread, Observable, Observer):
 
         # FIXME : Quite ugly way of doing. Find better!
         if not self.stop_process:
+
+            self.my_logger.debug("Listing pictures")
+            self.notify(["PROGRESS", "Listing pictures", 0.0])
             self.facemovie.list_guys()
-            self.my_logger.debug("Guys listed")
-            self.notify(["PROGRESS", "Pictures listed", 0.2])
 
         if not self.stop_process:
+            self.my_logger.debug("Detecting Faces")
+            self.notify(["PROGRESS", "Detecting Faces", 0.2])
             self.facemovie.prepare_faces() # I want to search for the faces, and characteristics of the images   
-            self.my_logger.debug("Faces prepared")
-            self.notify(["PROGRESS", "Faces detected", 0.6])
 
         if not self.stop_process:
+            self.my_logger.debug("Calculating video requirements")
+            self.notify(["PROGRESS", "Calculating video requirements", 0.6])
             self.facemovie.find_final_dimensions() # finds output size for desired mode.
-            self.my_logger.debug("Final dimensions found")
-            self.notify(["PROGRESS", "Video dimensions found", 0.8])
 
         if not self.stop_process:
+            self.my_logger.debug("Generating movie")
+            self.notify(["PROGRESS", "Generating movie", 0.8])
             self.facemovie.save_movie()       
             self.my_logger.debug("Movie saved")
             self.notify(["PROGRESS", "Movie saved, Finished!", 1.0])

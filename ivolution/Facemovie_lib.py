@@ -102,8 +102,19 @@ class FaceMovie(object, Observable):
             sys.exit(0)
                 
         # loading images, create Guys and store it into guys
+        ptr = 0
         for root, _, files in os.walk(self.source):
             for a_file in files:
+                ptr += 1
+
+                # notifying the Observers
+                try:
+                    message = "Processing file  %d / %d" %(ptr, len(files))
+                    self.notify([message, self.percent(ptr, len(files))])
+                except (ArithmeticError, ZeroDivisionError):
+                    #pass
+                    self.notify(["Error", 0])
+
                 if self.run : # as long as we want to continue
                     guy_source = os.path.join(root, a_file)
                     try:
@@ -209,7 +220,6 @@ class FaceMovie(object, Observable):
         self.check_depth()
 
         if self.number_guys() == 0:
-            print 
             self.console_logger.error("No face has been found in the whole repository! Exiting. . . ")
             self.my_logger.error("No face has been found in the whole repository! Exiting. . . ")            
             sys.exit(0) # FIXME : Find better way to do that
