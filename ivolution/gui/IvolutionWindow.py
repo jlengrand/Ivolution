@@ -116,7 +116,7 @@ class IvolutionWindow(Observer, Observable):
             # Instantiating the facemovie
             self.facemovie = FacemovieThread.FacemovieThread(self.face_params)
             self.facemovie.subscribe(self) # I want new information ! Subscribes to facemovie reports
-            self.subscribe(self.facemovie) # Trying to subscribe facemovie to our messages
+            self.subscribe(self.facemovie) # Subscribing facemovie to our messages
 
             self.facemovie.start()
 

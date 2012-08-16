@@ -17,7 +17,9 @@ import cv
 from util import exif
 import Guy
 
-class FaceMovie(object):
+from util.Notifier import Observable
+
+class FaceMovie(object, Observable):
     '''
     Main class of the whole application. 
     Contains the core image processing functions.
@@ -36,6 +38,7 @@ class FaceMovie(object):
         :param face_param: the location of the profile file used to train the classifier
         :type face_param: string        
         """
+        Observable.__init__(self) # used to send notifications to process
 
         self.console_logger = logging.getLogger('ConsoleLog') # Used to send messages to the console
         self.my_logger = logging.getLogger('FileLog') # Used to save events into a file
@@ -150,9 +153,20 @@ class FaceMovie(object):
         The Face of each guy is searched.
         In case no face is found, a warning is returned and Guy is set to None
         """
+        ptr = 0
         for a_guy in self.guys:
+            ptr += 1
             if self.run:
                 a_guy.search_face(self.face_params)
+
+                # notifying the Observers
+                print ptr, len(self.guys)
+                try:
+                    self.notify(["Face", self.percent(ptr, len(self.guys))])
+                except (ArithmeticError, ZeroDivisionError):
+                    #pass
+                    self.notify(["Error", 0])
+
                 if a_guy.has_face(): # face(s) have been found
                     self.console_logger.info("Face found for %s" % (a_guy.name))
                     self.my_logger.info("Face found for %s" % (a_guy.name))                
@@ -160,6 +174,17 @@ class FaceMovie(object):
                     self.console_logger.warning("No face found for %s. Skipped . . ." %(a_guy.name))
                     self.my_logger.warning("No face found for %s. Skipped . . ." %(a_guy.name))
         
+    def percent(self, num, den):
+        """
+        Returns a float between 0 and 1, being the percentage given by num / den
+        """
+        if num > den :
+            raise ArithmeticError
+        if den <= 0 : 
+            raise ZeroDivisionError
+
+        return (num / float(den))
+
     def clean_guys(self):
         """
         Removes all guys for who no face has been found.

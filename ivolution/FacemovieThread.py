@@ -38,6 +38,7 @@ class FacemovieThread(threading.Thread, Observable, Observer):
 
         self.face_params = face_params
         self.facemovie = Facemovie_lib.FaceMovie(self.face_params)
+        self.facemovie.subscribe(self) # Subscribing to facemovie reports
 
         self.my_logger = logging.getLogger('FileLog')
         self.console_logger = logging.getLogger('ConsoleLog')
@@ -60,6 +61,7 @@ class FacemovieThread(threading.Thread, Observable, Observer):
         else:
             self.console_logger.debug(message[0])
             self.my_logger.debug(message[0])
+
     def run(self):
 
         # FIXME : Quite ugly way of doing. Find better!
