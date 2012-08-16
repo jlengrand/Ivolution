@@ -58,11 +58,11 @@ class FacemovieThread(threading.Thread, Observable, Observer):
             else : 
                 self.console_logger.debug("Unrecognized system command")
                 self.my_logger.debug("Unrecognized system command")
-                self.console_logger.debug(message)
+                #self.console_logger.debug(message)
                 self.my_logger.debug(message)   
         elif len(message) == 2:
             # notifications
-            self.console_logger.debug(message)
+            #self.console_logger.debug(message)
             self.my_logger.debug(message)
         else:
             self.console_logger.debug("Unrecognized command")
@@ -76,25 +76,25 @@ class FacemovieThread(threading.Thread, Observable, Observer):
         if not self.stop_process:
             self.facemovie.list_guys()
             self.my_logger.debug("Guys listed")
-            self.notify(["Pictures listed", 0.2])
+            self.notify(["PROGRESS", "Pictures listed", 0.2])
 
         if not self.stop_process:
             self.facemovie.prepare_faces() # I want to search for the faces, and characteristics of the images   
             self.my_logger.debug("Faces prepared")
-            self.notify(["Faces detected", 0.6])
+            self.notify(["PROGRESS", "Faces detected", 0.6])
 
         if not self.stop_process:
             self.facemovie.find_final_dimensions() # finds output size for desired mode.
             self.my_logger.debug("Final dimensions found")
-            self.notify(["Video dimensions found", 0.8])
+            self.notify(["PROGRESS", "Video dimensions found", 0.8])
 
         if not self.stop_process:
             self.facemovie.save_movie()       
             self.my_logger.debug("Movie saved")
-            self.notify(["Movie saved, Finished!", 1.0])
+            self.notify(["PROGRESS", "Movie saved, Finished!", 1.0])
 
         if not self.stop_process:
             self.my_logger.debug("Thread terminated")
 
         if self.stop_process:
-            self.notify(["Process cancelled!", 1.0])            
+            self.notify(["PROGRESS", "Process cancelled!", 1.0])            

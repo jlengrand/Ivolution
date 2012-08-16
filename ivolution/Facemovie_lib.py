@@ -160,7 +160,6 @@ class FaceMovie(object, Observable):
                 a_guy.search_face(self.face_params)
 
                 # notifying the Observers
-                print ptr, len(self.guys)
                 try:
                     self.notify(["Face", self.percent(ptr, len(self.guys))])
                 except (ArithmeticError, ZeroDivisionError):

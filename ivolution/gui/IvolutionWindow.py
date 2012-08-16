@@ -139,7 +139,7 @@ class IvolutionWindow(Observer, Observable):
         # Clean up code for saving application state should be added here.
         self.notify(["STOP"]) # Asking the Facemovie to stop
         self.process_running = False
-        
+
         Gtk.main_quit()
         print "Gtk Exited"
 
@@ -236,18 +236,33 @@ class IvolutionWindow(Observer, Observable):
         Trigerred by FacemovieThread. 
         Uses the Observer pattern to inform the user about the progress of the current job.
         """
-        self.console_logger.debug(message[0])
+        if len(message) == 3:
+            # notifications
+            #self.console_logger.debug(message)
+            self.my_logger.debug(message)
 
-        self.my_logger.debug(message[0])
-        #self.console_logger.debug(float(message[1]))
-        # Uses GLib to run Thread safe operations on GUI
-        GLib.idle_add(self.progressbar.set_fraction, float(message[1]))
-        GLib.idle_add(self.statuslabel.set_text, message[0])
+            if message[0] == "PROGRESS": # progress bar
+                # big steps performed
 
-        if float(message[1]) >= 1.0: # 100% of process
-            self.my_logger.debug("Reached end of facemovie process")
-            self.console_logger.debug("Reached end of facemovie process") 
-            self.process_running = False            
+                # Uses GLib to run Thread safe operations on GUI
+                GLib.idle_add(self.progressbar.set_fraction, float(message[2]))
+                GLib.idle_add(self.statuslabel.set_text, message[1])
+
+            elif message[0] == "STATUS": # status label
+                # intermediate results
+                pass
+
+            if float(message[2]) >= 1.0: # 100% of process
+                self.my_logger.debug("Reached end of facemovie process")
+                self.console_logger.debug("Reached end of facemovie process") 
+                self.process_running = False  
+
+        else:
+            self.console_logger.debug("Unrecognized command")
+            self.my_logger.debug("Unrecognized command")
+            self.console_logger.debug(message)
+            self.my_logger.debug(message)   
+
 
 if __name__ == "__main__":
     app = IvolutionWindow()
