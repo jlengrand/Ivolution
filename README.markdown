@@ -20,12 +20,12 @@ First of all, install the dependencies :
 
 Retrieve the archive from [pypi](http://pypi.python.org/pypi/Ivolution/1.0)
  ```
- $ wget http://pypi.python.org/packages/source/I/Ivolution/Ivolution-1.0.tar.gz
+ $ wget http://pypi.python.org/packages/source/I/Ivolution/Ivolution-0.5.1.tar.gz
  ``` 
 
 Uncompress the archive and move into it
  ```
- $ tar xvf Ivolution-1.0.tar.gz; cd Ivolution-1.0
+ $ tar xvf Ivolution-0.5.1.tar.gz; cd Ivolution-0.5.1
  ``` 
 
 Finally, install the application (need administrators rights)
@@ -56,7 +56,7 @@ git clone git://github.com/jlengrand/FaceMovie.git
 Now that Ivolution is installed on your system, let's start playing with it !
 To run Ivolution, simply run it from any terminal :
  ```
- $ Ivolution
+ $ Ivolutioner
  ``` 
 
 ## Work in progress
@@ -97,4 +97,4 @@ I would enjoy having feedback if you like this idea, or even used it. Send me a 
 
 You can contact me at julien at lengrand dot fr, or on my [current website](http://www.lengrand.fr).
 
-Version : 1.0
+Version : 0.5.1
