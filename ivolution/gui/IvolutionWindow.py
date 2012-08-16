@@ -131,12 +131,15 @@ class IvolutionWindow(Observer, Observable):
         """
         self.my_logger.debug("Stop pressed")
         self.console_logger.debug("Stop pressed") 
-        self.notify(["STOP", 0.0]) # Asking the Facemovie to stop
+        self.notify(["STOP"]) # Asking the Facemovie to stop
         self.process_running = False
 
     def on_destroy(self, widget, data=None):
         """Called when the IvolutionWindow is closed."""
         # Clean up code for saving application state should be added here.
+        self.notify(["STOP"]) # Asking the Facemovie to stop
+        self.process_running = False
+        
         Gtk.main_quit()
         print "Gtk Exited"
 

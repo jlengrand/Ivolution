@@ -48,19 +48,27 @@ class FacemovieThread(threading.Thread, Observable, Observer):
         Trigerred by IvolutionWindow. 
         Uses the Observer pattern to inform the user about the progress of the GUI.
         """
-        if message[0] == "STOP":
-            self.console_logger.debug("Facemovie is going to stop")
-            self.my_logger.debug("Facemovie is going to stop")
+        if len(message) == 1 :
+            # system commands
+            if message[0] == "STOP":
+                self.console_logger.debug("Facemovie is going to stop")
+                self.my_logger.debug("Facemovie is going to stop")
 
-            self.stop_process = True
-        elif message[0] == "START":
-            self.console_logger.debug("Facemovie is asked to stop")
-            self.my_logger.debug("Facemovie is asked to stop")
-
-            self.stop_process = False
+                self.stop_process = True
+            else : 
+                self.console_logger.debug("Unrecognized system command")
+                self.my_logger.debug("Unrecognized system command")
+                self.console_logger.debug(message)
+                self.my_logger.debug(message)   
+        elif len(message) == 2:
+            # notifications
+            self.console_logger.debug(message)
+            self.my_logger.debug(message)
         else:
-            self.console_logger.debug(message[0])
-            self.my_logger.debug(message[0])
+            self.console_logger.debug("Unrecognized command")
+            self.my_logger.debug("Unrecognized command")
+            self.console_logger.debug(message)
+            self.my_logger.debug(message)            
 
     def run(self):
 
