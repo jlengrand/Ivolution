@@ -12,10 +12,11 @@ import wx
 import os
 import logging
 
+from AboutDialog import AboutDialog
 
 class IvolutionWindow(wx.Frame):
     """
-    Main Window of the application
+    Main Window of the Ivolution application
     """
     def __init__(self, parent, title):
         """
@@ -69,13 +70,23 @@ class IvolutionWindow(wx.Frame):
     # Events Handling
     def on_about(self, event):
         """
+        Displays the about box for Ivolution
+        TODO : Create the About Window
         """
+        about = AboutDialog(self, "Ivolution")
+        about.ShowModal()  # Show it
+        about.Destroy()  # finally destroy it when finished.
+        # A message dialog box with an OK button. wx.OK is a standard ID in wxWidgets.
+        # dlg = wx.MessageDialog(self, "Ivolution", "About Ivolution", wx.OK)
+        # dlg.ShowModal()  # Show it
+        # dlg.Destroy()  # finally destroy it when finished.
         print "About !"
 
     def on_exit(self, event):
         """
+        Called when the IvolutionWindow is closed, or File/Exit is called.
         """
-        print "Exit !"
+        self.Close(True)  # Close the frame.
 
     def setup_logger(self):
         """
