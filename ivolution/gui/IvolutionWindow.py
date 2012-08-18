@@ -16,14 +16,11 @@ from .. import get_data
 # parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # os.sys.path.insert(0,parentdir) # import parent folder
 
-from .. import Facemovie_lib
 from .. import FaceParams
 from .. import FacemovieThread
 
-from ..util.Notifier import Observer 
+from ..util.Notifier import Observer
 from ..util.Notifier import Observable
-
-import time
 
 class IvolutionWindow(Observer, Observable):       
     def __init__(self, name):
