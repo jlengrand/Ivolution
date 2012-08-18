@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 
 import os
-
 import webbrowser
-
 import logging
 
 from gi.repository import Gtk, GLib
-
 from AboutDialog import AboutDialog
 
 from .. import get_data
@@ -18,7 +15,6 @@ from .. import get_data
 
 from .. import FaceParams
 from .. import FacemovieThread
-
 from ..util.Notifier import Observer
 from ..util.Notifier import Observable
 
