@@ -14,6 +14,7 @@ import logging
 
 from AboutDialog import AboutDialog
 
+
 class IvolutionWindow(wx.Frame):
     """
     Main Window of the Ivolution application
@@ -32,10 +33,31 @@ class IvolutionWindow(wx.Frame):
         #self.control = wx.TextCtrl(self, style=wx.TE_MULTILINE)
         #self.CreateStatusBar()  # A Statusbar in the bottom of the window
 
+        # Creating the main grid
+        self.maingrid = self.setup_maingrid()
+
         # Creating the menubar.
         self.menubar = self.setup_menubar()
 
+        # Creating the status bar
+        # self.statusbar = self.setup_statusbar()
+
     # GUI set up
+
+    def setup_maingrid(self):
+        """
+        Defines the main grid that will be used as layout in the window.
+        """
+        maingrid = wx.FlexGridSizer(4, 1, vgap=0, hgap=0)
+        return maingrid
+
+
+
+    # def setup_statusbar(self):
+    #     """
+    #     Sets up all elements of the status bar
+    #     """
+
     def setup_filemenu(self):
         """
         Sets up all elements of the file menu
