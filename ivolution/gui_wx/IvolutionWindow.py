@@ -25,7 +25,7 @@ class IvolutionWindow(wx.Frame):
         """
         Overrides init frame wx.Frame
         """
-        wx.Frame.__init__(self, parent, title=title, size=(200, 100))
+        wx.Frame.__init__(self, parent, title=title, size=(500, 700))
 
         # Sets up logging capability
         self.my_logger = None
@@ -46,6 +46,7 @@ class IvolutionWindow(wx.Frame):
         # Creating the main grid
         maingrid = self.setup_maingrid(title)
         self.panel.SetSizer(maingrid)
+        self.panel.Layout()
         self.Show(True)
 
     # GUI set up
@@ -55,20 +56,22 @@ class IvolutionWindow(wx.Frame):
         """
         hbox = wx.BoxSizer(wx.HORIZONTAL)  # used to contain logo part and text part
         vbox = wx.BoxSizer(wx.VERTICAL)  # used to separate title and one-liner
+        logobox = wx.BoxSizer(wx.HORIZONTAL)
 
         wx_logo = wx.EmptyBitmap(1, 1)  # Create a bitmap container object.
         wx_logo.LoadFile("ivolution/data/media/vitruve_50.jpg", wx.BITMAP_TYPE_ANY)  # Load it with a file image.
 
-        #logo = wx.StaticBitmap(self, 1, wx_logo)
-        logo = wx.StaticText(self.panel, label="Logo Here") # Change for proper logo
+        logo = wx.StaticBitmap(self, 1, wx_logo)
+        #logo = wx.StaticText(self.panel, label="Logo Here")  # Change for proper logo
         title = wx.StaticText(self.panel, label="Ivolution")
         one_liner = wx.StaticText(self.panel, label="Take one picture of yourself a day,\
  automatically generate a movie!")
 
+        logobox.Add(logo)
         vbox.Add(title, flag=wx.RIGHT, border=8)
         vbox.Add(one_liner, flag=wx.RIGHT, border=8)
 
-        hbox.Add(logo, flag=wx.RIGHT, border=8)
+        hbox.Add(logobox, flag=wx.RIGHT, border=8)
         hbox.Add(vbox, flag=wx.RIGHT, border=8)
 
         return hbox
