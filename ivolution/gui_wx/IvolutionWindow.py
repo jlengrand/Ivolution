@@ -12,6 +12,8 @@ import wx
 import os
 import logging
 
+from .. import get_data
+
 from AboutDialog import AboutDialog
 
 
@@ -33,8 +35,10 @@ class IvolutionWindow(wx.Frame):
         #self.control = wx.TextCtrl(self, style=wx.TE_MULTILINE)
         #self.CreateStatusBar()  # A Statusbar in the bottom of the window
 
-        # Creating the main grid
-        self.maingrid = self.setup_maingrid()
+        self.panel = wx.Panel(self)
+
+        # Creating the title layout
+        title = self.setup_titlelayout()
 
         # Creating the menubar.
         self.menubar = self.setup_menubar()
@@ -42,22 +46,47 @@ class IvolutionWindow(wx.Frame):
         # Creating the status bar
         # self.statusbar = self.setup_statusbar()
 
-    # GUI set up
+        # Creating the main grid
+        maingrid = self.setup_maingrid(title)
+        self.panel.SetSizer(maingrid)
 
-    def setup_maingrid(self):
+    # GUI set up
+    def setup_titlelayout(self):
+        """
+        Defines the first part of the GUI, showing the title and logo
+        """
+        hbox = wx.BoxSizer(wx.HORIZONTAL)  # used to contain logo part and text part
+        vbox = wx.BoxSizer(wx.VERTICAL)  # used to separate title and one-liner
+
+        wx_logo = wx.EmptyBitmap(1, 1)  # Create a bitmap container object.
+        wx_logo.LoadFile("ivolution/data/media/vitruve_50.jpg", wx.BITMAP_TYPE_ANY)  # Load it with a file image.
+
+        logo = wx.StaticBitmap(self, 1, wx_logo)
+        # logo = wx.StaticText(self.panel, label="Logo Here")
+        title = wx.StaticText(self.panel, label="Ivolution")
+        one_liner = wx.StaticText(self.panel, label="Take one picture of yourself a day,\
+ automatically generate a movie!")
+
+        vbox.Add(title, flag=wx.RIGHT, border=8)
+        vbox.Add(one_liner, flag=wx.RIGHT, border=8)
+
+        hbox.Add(logo, flag=wx.RIGHT, border=8)
+        hbox.Add(vbox, flag=wx.RIGHT, border=8)
+
+        return hbox
+
+    def setup_maingrid(self, title):
         """
         Defines the main grid that will be used as layout in the window.
         """
         maingrid = wx.FlexGridSizer(4, 1, vgap=0, hgap=0)
+        maingrid.Add(title)
         return maingrid
-
-
 
     # def setup_statusbar(self):
     #     """
     #     Sets up all elements of the status bar
     #     """
-
     def setup_filemenu(self):
         """
         Sets up all elements of the file menu
@@ -84,7 +113,7 @@ class IvolutionWindow(wx.Frame):
 
         filemenu = self.setup_filemenu()
 
-        menuBar.Append(filemenu, "&File")  # Adding the "filemenu" to the MenuBar
+        menuBar.Append(filemenu, "File")  # Adding the "filemenu" to the MenuBar
         self.SetMenuBar(menuBar)  # Adding the MenuBar to the Frame content.
         self.Show(True)
         return menuBar
