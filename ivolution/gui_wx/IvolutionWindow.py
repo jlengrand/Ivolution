@@ -32,16 +32,13 @@ class IvolutionWindow(wx.Frame):
         self.console_logger = None
         self.setup_logger()
 
-        #self.control = wx.TextCtrl(self, style=wx.TE_MULTILINE)
-        #self.CreateStatusBar()  # A Statusbar in the bottom of the window
+        # Creating the menubar
+        self.menubar = self.setup_menubar()
 
         self.panel = wx.Panel(self)
 
         # Creating the title layout
         title = self.setup_titlelayout()
-
-        # Creating the menubar.
-        self.menubar = self.setup_menubar()
 
         # Creating the status bar
         # self.statusbar = self.setup_statusbar()
@@ -49,6 +46,7 @@ class IvolutionWindow(wx.Frame):
         # Creating the main grid
         maingrid = self.setup_maingrid(title)
         self.panel.SetSizer(maingrid)
+        self.Show(True)
 
     # GUI set up
     def setup_titlelayout(self):
@@ -61,8 +59,8 @@ class IvolutionWindow(wx.Frame):
         wx_logo = wx.EmptyBitmap(1, 1)  # Create a bitmap container object.
         wx_logo.LoadFile("ivolution/data/media/vitruve_50.jpg", wx.BITMAP_TYPE_ANY)  # Load it with a file image.
 
-        logo = wx.StaticBitmap(self, 1, wx_logo)
-        # logo = wx.StaticText(self.panel, label="Logo Here")
+        #logo = wx.StaticBitmap(self, 1, wx_logo)
+        logo = wx.StaticText(self.panel, label="Logo Here") # Change for proper logo
         title = wx.StaticText(self.panel, label="Ivolution")
         one_liner = wx.StaticText(self.panel, label="Take one picture of yourself a day,\
  automatically generate a movie!")
@@ -115,7 +113,6 @@ class IvolutionWindow(wx.Frame):
 
         menuBar.Append(filemenu, "File")  # Adding the "filemenu" to the MenuBar
         self.SetMenuBar(menuBar)  # Adding the MenuBar to the Frame content.
-        self.Show(True)
         return menuBar
 
     # Events Handling
