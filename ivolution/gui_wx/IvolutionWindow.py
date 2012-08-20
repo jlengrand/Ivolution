@@ -40,16 +40,67 @@ class IvolutionWindow(wx.Frame):
         # Creating the title layout
         title = self.setup_titlelayout()
 
+        # Creating the settings layout
+        settings = self.setup_settingslayout()
+
         # Creating the status bar
         # self.statusbar = self.setup_statusbar()
 
         # Creating the main grid
-        maingrid = self.setup_maingrid(title)
+        maingrid = self.setup_maingrid(title, settings)
         self.panel.SetSizer(maingrid)
         self.panel.Layout()
         self.Show(True)
 
     # GUI set up
+    def setup_requiredsettings(self):
+        """
+        Creates the box containing all required settings
+        """
+        requiredbox = wx.FlexGridSizer(3, 1, 0, 0)
+
+        title = wx.StaticText(self.panel, label="Required parameters:")
+
+        # Creates input box, allowing to choose the input folder
+        inputbox = wx.FlexGridSizer(2, 1, 0, 0)
+        inputtext = wx.StaticText(self.panel, label="Choose your input folder:")
+        inputchooser = wx.StaticText(self.panel, label="input folder")
+        inputbox.AddMany([inputtext, inputchooser])
+
+        # Creates output box, allowing to choose the output folder
+        outputbox = wx.FlexGridSizer(2, 1, 0, 0)
+        outputtext = wx.StaticText(self.panel, label="Choose your output folder:")
+        outputchooser = wx.StaticText(self.panel, label="output folder")
+        outputbox.AddMany([outputtext, outputchooser])
+
+        requiredbox.AddMany([title, inputbox, outputbox])
+
+        return requiredbox
+
+    def setup_optionalsettings(self):
+        """
+        Creates the box containing all optional settings
+        """
+        optionalbox = wx.FlexGridSizer(5, 1, 0, 0)
+
+        return optionalbox
+
+    def setup_settingslayout(self):
+        """
+        Defines the second part of the GUI, containing all parameters
+        that can be changed
+        """
+        settingsbox = wx.FlexGridSizer(2, 1, 9, 15)  # main box
+
+        # contains a box with required parameters
+        requiredbox = self.setup_requiredsettings()
+        # and another with optional parameters
+        optionalbox = self.setup_optionalsettings()
+
+        settingsbox.AddMany([(requiredbox), (optionalbox)])
+
+        return settingsbox
+
     def setup_titlelayout(self):
         """
         Defines the first part of the GUI, showing the title and logo
@@ -76,12 +127,12 @@ class IvolutionWindow(wx.Frame):
 
         return hbox
 
-    def setup_maingrid(self, title):
+    def setup_maingrid(self, title, settings):
         """
         Defines the main grid that will be used as layout in the window.
         """
         maingrid = wx.FlexGridSizer(4, 1, vgap=0, hgap=0)
-        maingrid.Add(title)
+        maingrid.AddMany([title, settings])
         return maingrid
 
     # def setup_statusbar(self):
