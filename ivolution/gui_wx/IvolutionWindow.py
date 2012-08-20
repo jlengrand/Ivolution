@@ -81,21 +81,27 @@ class IvolutionWindow(wx.Frame):
         # Creates input box, allowing to choose the input folder
         inputbox = wx.FlexGridSizer(2, 1, 0, 0)
         inputtext = wx.StaticText(self.panel, label="Choose your input folder:")
-        inputchooser = wx.Button(self.panel, label="~/Pictures")
-        #inputchooser = wx.StaticText(self.panel, label="input folder")
-        #inputchooser = wx.FileDialog(self.panel, message="Open an Image...", defaultDir=os.getcwd(), defaultFile="", style=wx.OPEN)
-        #inputchooser = wx.DirDialog(self.panel, "Please choose your project directory:", style=1 ,defaultPath=os.getcwd())
 
-        inputbox.AddMany([inputtext, inputchooser])
+        inputchooserbox = wx.FlexGridSizer(1, 2, 0, 0)
+        inputchoosertext = wx.StaticText(self.panel, label="~/Pictures")
+        inputchooserbutton = wx.Button(self.panel, label="..")
+        #inputchooser = wx.DirDialog(self.panel, "Please choose your project directory:", style=1 ,defaultPath=os.getcwd())
+        inputchooserbox.AddMany([inputchoosertext, inputchooserbutton])
+
+        inputbox.AddMany([inputtext, inputchooserbox])
 
         # Creates output box, allowing to choose the output folder
         outputbox = wx.FlexGridSizer(2, 1, 0, 0)
         outputtext = wx.StaticText(self.panel, label="Choose your output folder:")
-        outputchooser = wx.Button(self.panel, label="~/Videos")
-        #outputchooser = wx.StaticText(self.panel, label="output folder")
+
+        outputchooserbox = wx.FlexGridSizer(1, 2, 0, 0)
+        outputchoosertext = wx.StaticText(self.panel, label="~/Videos")
+        outputchooserbutton = wx.Button(self.panel, label="..")
+        #inputchooser = wx.DirDialog(self.panel, "Please choose your project directory:", style=1 ,defaultPath=os.getcwd())
+        outputchooserbox.AddMany([outputchoosertext, outputchooserbutton])
         #outputchooser = wx.DirDialog(self.panel, "Choose a directory:",style=wx.DD_DEFAULT_STYLE | wx.DD_NEW_DIR_BUTTON)
 
-        outputbox.AddMany([outputtext, outputchooser])
+        outputbox.AddMany([outputtext, outputchooserbox])
 
         requiredbox.AddMany([title, inputbox, outputbox])
 
