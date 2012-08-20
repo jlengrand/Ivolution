@@ -61,7 +61,7 @@ class IvolutionWindow(wx.Frame):
         wx_logo = wx.EmptyBitmap(1, 1)  # Create a bitmap container object.
         wx_logo.LoadFile("ivolution/data/media/vitruve_50.jpg", wx.BITMAP_TYPE_ANY)  # Load it with a file image.
 
-        logo = wx.StaticBitmap(self, 1, wx_logo)
+        logo = wx.StaticBitmap(self.panel, 1, wx_logo)
         #logo = wx.StaticText(self.panel, label="Logo Here")  # Change for proper logo
         title = wx.StaticText(self.panel, label="Ivolution")
         one_liner = wx.StaticText(self.panel, label="Take one picture of yourself a day,\
