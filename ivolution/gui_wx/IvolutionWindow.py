@@ -12,7 +12,7 @@ import wx
 import os
 import logging
 
-from .. import get_data
+from .. import get_data # used to load images and files
 
 from AboutDialog import AboutDialog
 
