@@ -43,16 +43,32 @@ class IvolutionWindow(wx.Frame):
         # Creating the settings layout
         settings = self.setup_settingslayout()
 
+        # Creating the buttons layout
+        buttons = self.setup_buttonslayout()
+
         # Creating the status bar
         # self.statusbar = self.setup_statusbar()
 
         # Creating the main grid
-        maingrid = self.setup_maingrid(title, settings)
+        maingrid = self.setup_maingrid(title, settings, buttons)
         self.panel.SetSizer(maingrid)
         self.panel.Layout()
         self.Show(True)
 
     # GUI set up
+    def setup_buttonslayout(self):
+        """
+        Creates the box containing Start/Stop buttons
+        """
+        buttonsbox = wx.FlexGridSizer(1, 2, 0, 0)
+
+        startbutton = wx.StaticText(self.panel, label="Create Movie!")
+        stopbutton = wx.StaticText(self.panel, label="Stop processing")
+
+        buttonsbox.AddMany([startbutton, stopbutton])
+
+        return buttonsbox
+
     def setup_requiredsettings(self):
         """
         Creates the box containing all required settings
@@ -161,12 +177,12 @@ class IvolutionWindow(wx.Frame):
 
         return hbox
 
-    def setup_maingrid(self, title, settings):
+    def setup_maingrid(self, title, settings, buttons):
         """
         Defines the main grid that will be used as layout in the window.
         """
         maingrid = wx.FlexGridSizer(4, 1, vgap=0, hgap=0)
-        maingrid.AddMany([title, settings])
+        maingrid.AddMany([title, settings, buttons])
         return maingrid
 
     # def setup_statusbar(self):
