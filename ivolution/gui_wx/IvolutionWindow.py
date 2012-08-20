@@ -62,9 +62,7 @@ class IvolutionWindow(wx.Frame):
         """
         buttonsbox = wx.FlexGridSizer(1, 2, 0, 0)
 
-        #startbutton = wx.StaticText(self.panel, label="Create Movie!")
         startbutton = wx.Button(self.panel, label='Create Movie!')
-        #stopbutton = wx.StaticText(self.panel, label="Stop processing")
         stopbutton = wx.Button(self.panel, label='Stop processing')
         #stopbutton.Bind(wx.EVT_BUTTON, self.on_exit)  # Example of event
 
@@ -110,7 +108,6 @@ class IvolutionWindow(wx.Frame):
         # Creates typeface box, allowing to choose face or profile
         typefacebox = wx.FlexGridSizer(2, 1, 0, 0)
         typefacetext = wx.StaticText(self.panel, label="Type of face:")
-        #typefacelist = wx.StaticText(self.panel, label="typeface list")
         types = ['frontal_face', 'profile_face']
         typefacelist = wx.ComboBox(self.panel, choices=types, style=wx.CB_READONLY)
         typefacelist.SetValue(types[0])
@@ -120,7 +117,6 @@ class IvolutionWindow(wx.Frame):
         # Creates the video speed box
         videospeedbox = wx.FlexGridSizer(2, 1, 0, 0)
         videospeedtext = wx.StaticText(self.panel, label="Video Speed:")
-        #videospeedlist = wx.StaticText(self.panel, label="Speeds")
         speeds = ['slow', 'medium', 'fast']
         videospeedlist = wx.ComboBox(self.panel, choices=speeds, style=wx.CB_READONLY)
         videospeedlist.SetValue(speeds[1])
@@ -131,18 +127,19 @@ class IvolutionWindow(wx.Frame):
         videomodebox = wx.FlexGridSizer(2, 1, 0, 0)
         videomodetext = wx.StaticText(self.panel, label="Choose your prefered mode:")
         videomodechoices = wx.FlexGridSizer(1, 2, 0, 0)
-        cropchoice = wx.StaticText(self.panel, label="Crop mode")
-        conservativemode = wx.StaticText(self.panel, label="Conservative mode")
-        videomodechoices.AddMany([cropchoice, conservativemode])
+
+        cropmode = wx.RadioButton(self.panel, label='Crop Mode', style=wx.RB_GROUP)
+        conservativemode = wx.RadioButton(self.panel, label='Conservative Mode')
+        videomodechoices.AddMany([cropmode, conservativemode])
         videomodebox.AddMany([videomodetext, videomodechoices])
 
         # Creates the file method box
         filemethodbox = wx.FlexGridSizer(2, 1, 0, 0)
         filemethodtext = wx.StaticText(self.panel, label="Choose your prefered mode:")
         filemethodchoices = wx.FlexGridSizer(1, 2, 0, 0)
-        namechoice = wx.StaticText(self.panel, label="File name")
-        exifchoice = wx.StaticText(self.panel, label="EXIF metadata")
-        filemethodchoices.AddMany([namechoice, exifchoice])
+        namemode = wx.RadioButton(self.panel, label="File name", style=wx.RB_GROUP)
+        exifmode = wx.RadioButton(self.panel, label="EXIF metadata")
+        filemethodchoices.AddMany([namemode, exifmode])
         filemethodbox.AddMany([filemethodtext, filemethodchoices])
 
         optionalbox.AddMany([title, typefacebox, videospeedbox, videomodebox, filemethodbox])
