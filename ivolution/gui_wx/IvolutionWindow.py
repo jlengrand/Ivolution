@@ -83,6 +83,40 @@ class IvolutionWindow(wx.Frame):
         """
         optionalbox = wx.FlexGridSizer(5, 1, 0, 0)
 
+        title = wx.StaticText(self.panel, label="Optional parameters:")
+
+        # Creates typeface box, allowing to choose face or profile
+        typefacebox = wx.FlexGridSizer(2, 1, 0, 0)
+        typefacetext = wx.StaticText(self.panel, label="Type of face:")
+        typefacelist = wx.StaticText(self.panel, label="typeface list")
+        typefacebox.AddMany([typefacetext, typefacelist])
+
+        # Creates the video speed box
+        videospeedbox = wx.FlexGridSizer(2, 1, 0, 0)
+        videospeedtext = wx.StaticText(self.panel, label="Video Speed:")
+        videospeedlist = wx.StaticText(self.panel, label="Speeds")
+        videospeedbox.AddMany([videospeedtext, videospeedlist])
+
+        # Creates the video mode box
+        videomodebox = wx.FlexGridSizer(2, 1, 0, 0)
+        videomodetext = wx.StaticText(self.panel, label="Choose your prefered mode:")
+        videomodechoices = wx.FlexGridSizer(1, 2, 0, 0)
+        cropchoice = wx.StaticText(self.panel, label="Crop mode")
+        conservativemode = wx.StaticText(self.panel, label="Conservative mode")
+        videomodechoices.AddMany([cropchoice, conservativemode])
+        videomodebox.AddMany([videomodetext, videomodechoices])
+
+        # Creates the file method box
+        filemethodbox = wx.FlexGridSizer(2, 1, 0, 0)
+        filemethodtext = wx.StaticText(self.panel, label="Choose your prefered mode:")
+        filemethodchoices = wx.FlexGridSizer(1, 2, 0, 0)
+        namechoice = wx.StaticText(self.panel, label="File name")
+        exifchoice = wx.StaticText(self.panel, label="EXIF metadata")
+        filemethodchoices.AddMany([namechoice, exifchoice])
+        filemethodbox.AddMany([filemethodtext, filemethodchoices])
+
+        optionalbox.AddMany([title, typefacebox, videospeedbox, videomodebox, filemethodbox])
+
         return optionalbox
 
     def setup_settingslayout(self):
