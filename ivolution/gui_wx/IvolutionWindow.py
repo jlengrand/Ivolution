@@ -66,6 +66,7 @@ class IvolutionWindow(wx.Frame):
         startbutton = wx.Button(self.panel, label='Create Movie!')
         #stopbutton = wx.StaticText(self.panel, label="Stop processing")
         stopbutton = wx.Button(self.panel, label='Stop processing')
+        #stopbutton.Bind(wx.EVT_BUTTON, self.on_exit)  # Example of event
 
         buttonsbox.AddMany([startbutton, stopbutton])
 
@@ -109,13 +110,21 @@ class IvolutionWindow(wx.Frame):
         # Creates typeface box, allowing to choose face or profile
         typefacebox = wx.FlexGridSizer(2, 1, 0, 0)
         typefacetext = wx.StaticText(self.panel, label="Type of face:")
-        typefacelist = wx.StaticText(self.panel, label="typeface list")
+        #typefacelist = wx.StaticText(self.panel, label="typeface list")
+        types = ['frontal_face', 'profile_face']
+        typefacelist = wx.ComboBox(self.panel, choices=types, style=wx.CB_READONLY)
+        typefacelist.SetValue(types[0])
+
         typefacebox.AddMany([typefacetext, typefacelist])
 
         # Creates the video speed box
         videospeedbox = wx.FlexGridSizer(2, 1, 0, 0)
         videospeedtext = wx.StaticText(self.panel, label="Video Speed:")
-        videospeedlist = wx.StaticText(self.panel, label="Speeds")
+        #videospeedlist = wx.StaticText(self.panel, label="Speeds")
+        speeds = ['slow', 'medium', 'fast']
+        videospeedlist = wx.ComboBox(self.panel, choices=speeds, style=wx.CB_READONLY)
+        videospeedlist.SetValue(speeds[1])
+
         videospeedbox.AddMany([videospeedtext, videospeedlist])
 
         # Creates the video mode box
