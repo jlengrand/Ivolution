@@ -62,8 +62,10 @@ class IvolutionWindow(wx.Frame):
         """
         buttonsbox = wx.FlexGridSizer(1, 2, 0, 0)
 
-        startbutton = wx.StaticText(self.panel, label="Create Movie!")
-        stopbutton = wx.StaticText(self.panel, label="Stop processing")
+        #startbutton = wx.StaticText(self.panel, label="Create Movie!")
+        startbutton = wx.Button(self.panel, label='Create Movie!')
+        #stopbutton = wx.StaticText(self.panel, label="Stop processing")
+        stopbutton = wx.Button(self.panel, label='Stop processing')
 
         buttonsbox.AddMany([startbutton, stopbutton])
 
@@ -81,6 +83,9 @@ class IvolutionWindow(wx.Frame):
         inputbox = wx.FlexGridSizer(2, 1, 0, 0)
         inputtext = wx.StaticText(self.panel, label="Choose your input folder:")
         inputchooser = wx.StaticText(self.panel, label="input folder")
+        #inputchooser = wx.FileDialog(self.panel, message="Open an Image...", defaultDir=os.getcwd(), defaultFile="", style=wx.OPEN)
+        #inputchooser = wx.DirDialog(self.panel, "Please choose your project directory:", style=1 ,defaultPath=os.getcwd())
+
         inputbox.AddMany([inputtext, inputchooser])
 
         # Creates output box, allowing to choose the output folder
