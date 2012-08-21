@@ -38,6 +38,8 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
         Observer.__init__(self, title)
         Observable.__init__(self)
 
+        self.gaugerange = 100 # max value of progress bar
+
         # Sets icon
         # ib = wx.IconBundle()
         # ib.AddIconFromFile("ivolution/data/media/vitruve_64.png", wx.BITMAP_TYPE_ANY)
@@ -87,11 +89,14 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
 
         self.process_running = False
         self.facemovie = None
+
     # GUI set up
     def setup_buttonslayout(self):
         """
         Creates the box containing Start/Stop buttons
         """
+        commandbox = wx.FlexGridSizer(2, 1, 0, 0)
+
         buttonsbox = wx.FlexGridSizer(1, 2, 0, 0)
 
         startbutton = wx.Button(self.panel, label='Create Movie!')
@@ -101,7 +106,12 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
 
         buttonsbox.AddMany([startbutton, stopbutton])
 
-        return buttonsbox
+        # progress bar
+        self.progressgauge = wx.Gauge(self.panel, range=self.gaugerange) # range is max value of gauge
+
+        commandbox.AddMany([buttonsbox, self.progressgauge])
+
+        return commandbox
 
     def setup_requiredsettings(self):
         """
@@ -469,7 +479,9 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
 
             if message[0] == "PROGRESS":  # progress bar
                 # big steps performed
-
+                wx.MutexGuiEnter()  # to avoid thread problems
+                self.progressgauge.SetValue(self.gaugerange * float(message[2]))
+                wx.MutexGuiLeave()
                 # TODO : status bar here
                 # Uses GLib to run Thread safe operations on GUI
                 #GLib.idle_add(self.progressbar.set_fraction, float(message[2]))
@@ -481,7 +493,7 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
                     self.process_running = False
 
             elif message[0] == "STATUS":  # status label
-                wx.MutexGuiEnter() # to avoid thread problems
+                wx.MutexGuiEnter()  # to avoid thread problems
                 self.sb.SetStatusText(message[1])
                 wx.MutexGuiLeave()
 
