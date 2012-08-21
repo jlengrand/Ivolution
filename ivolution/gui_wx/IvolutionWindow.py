@@ -495,6 +495,7 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
                     self.sb.SetStatusText("Error detected", 0)
                     self.progressgauge.SetValue(0)
                     wx.MutexGuiLeave()
+                    self.process_running = False
 
                 wx.MutexGuiEnter()  # to avoid thread problems
                 self.sb.SetStatusText(message[1], 1)
