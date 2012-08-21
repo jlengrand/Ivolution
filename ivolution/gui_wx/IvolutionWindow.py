@@ -148,10 +148,10 @@ class IvolutionWindow(wx.Frame):
         typefacebox = wx.FlexGridSizer(2, 1, 0, 0)
         typefacetext = wx.StaticText(self.panel, label="Type of face:")
         types = ['frontal_face', 'profile_face']
-        typefacelist = wx.ComboBox(self.panel, choices=types, style=wx.CB_READONLY)
-        typefacelist.SetValue(types[0])
+        self.typefacelist = wx.ComboBox(self.panel, choices=types, style=wx.CB_READONLY)
+        self.typefacelist.SetValue(types[0])
 
-        typefacebox.AddMany([typefacetext, typefacelist])
+        typefacebox.AddMany([typefacetext, self.typefacelist])
 
         # Creates the video speed box
         videospeedbox = wx.FlexGridSizer(2, 1, 0, 0)
@@ -330,7 +330,7 @@ class IvolutionWindow(wx.Frame):
         """
         self.in_fo = self.inputchoosertext.GetLabel() + "/" 
         self.out_fo =self.outputchoosertext.GetLabel()  + "/"
-        #self.param = 
+        self.param = self.typefacelist.GetString()
         #self.speed =   # We need and integer between 0 and 2
 
         # Instantiating the face_params object that will be needed by the facemovie
