@@ -32,10 +32,10 @@ class IvolutionWindow(wx.Frame):
         # ib.AddIconFromFile("ivolution/data/media/vitruve_64.png", wx.BITMAP_TYPE_ANY)
         # self.SetIcons(ib)
 
-        image = wx.Image("ivolution/data/media/vitruve_64.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap() 
-        icon = wx.EmptyIcon() 
-        icon.CopyFromBitmap(image) 
-        self.SetIcon(icon) 
+        # image = wx.Image("ivolution/data/media/vitruve_64.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap() 
+        # icon = wx.EmptyIcon() 
+        # icon.CopyFromBitmap(image) 
+        # self.SetIcon(icon) 
 
         # Sets up logging capability
         self.my_logger = None
@@ -65,6 +65,21 @@ class IvolutionWindow(wx.Frame):
         self.panel.Layout()
         self.Show(True)
 
+        # Defines all our parameters neededfor the facemovie
+        self.root_fo = ""
+        self.in_fo = ""  # Input folder, where images are located
+        self.out_fo = ""  # Input folder, where the video will be saved
+        self.mode = "crop"  # type of video to be created
+        self.sort = "name"  # how image files will be chronologically sorted
+        self.speed = 1  # Speed of the movie
+        self.param = "frontal_face"  # type of face profile to be searched for
+
+        self.in_fo = ""  # Input folder, where images are located
+
+        self.process_running = False
+
+        self.facemovie = None
+
     # GUI set up
     def setup_buttonslayout(self):
         """
@@ -73,8 +88,9 @@ class IvolutionWindow(wx.Frame):
         buttonsbox = wx.FlexGridSizer(1, 2, 0, 0)
 
         startbutton = wx.Button(self.panel, label='Create Movie!')
+        startbutton.Bind(wx.EVT_BUTTON, self.on_start)
         stopbutton = wx.Button(self.panel, label='Stop processing')
-        #stopbutton.Bind(wx.EVT_BUTTON, self.on_exit)  # Example of event
+        stopbutton.Bind(wx.EVT_BUTTON, self.on_stop)
 
         buttonsbox.AddMany([startbutton, stopbutton])
 
@@ -254,27 +270,39 @@ class IvolutionWindow(wx.Frame):
         return menuBar
 
     # Events Handling
+    def on_start(self, event):
+        """
+        User asks for starting the algorithm
+        """
+        self.set_parameters()
+
+    def on_stop(self, event):
+        """
+        User asks for stopping the algorithm
+        """
+        self.on_exit(event)
+
     def on_input(self, event):
         """
         Activated when a user clicks to choose its input location
         """
         default_dir = "~/Pictures"
-        inputdialog = wx.DirDialog(self, "Please choose your input directory", style=1, defaultPath=default_dir)
+        self.inputdialog = wx.DirDialog(self, "Please choose your input directory", style=1, defaultPath=default_dir)
 
-        if inputdialog.ShowModal() == wx.ID_OK:
-            self.inputchoosertext.SetLabel(inputdialog.GetPath())
-        inputdialog.Destroy()
+        if self.inputdialog.ShowModal() == wx.ID_OK:
+            self.inputchoosertext.SetLabel(self.inputdialog.GetPath())
+        self.inputdialog.Destroy()
 
     def on_output(self, event):
         """
         Activated when a user clicks to choose its output location
         """
         default_dir = "~/Videos"
-        outputdialog = wx.DirDialog(self, "Please choose your output directory", style=1, defaultPath=default_dir)
+        self.outputdialog = wx.DirDialog(self, "Please choose your output directory", style=1, defaultPath=default_dir)
 
-        if outputdialog.ShowModal() == wx.ID_OK:
-            self.outputchoosertext.SetLabel(outputdialog.GetPath())
-        outputdialog.Destroy()
+        if self.outputdialog.ShowModal() == wx.ID_OK:
+            self.outputchoosertext.SetLabel(self.outputdialog.GetPath())
+        self.outputdialog.Destroy()
 
     def on_about(self, event):
         """
@@ -295,6 +323,40 @@ class IvolutionWindow(wx.Frame):
         Called when the IvolutionWindow is closed, or File/Exit is called.
         """
         self.Close(True)  # Close the frame.
+
+    def set_parameters(self):
+        """
+        Retrieves all parameters needed for the algorithm to run
+        """
+        self.in_fo = self.inputchoosertext.GetLabel() + "/" 
+        self.out_fo =self.outputchoosertext.GetLabel()  + "/"
+        #self.param = 
+        #self.speed =   # We need and integer between 0 and 2
+
+        # Instantiating the face_params object that will be needed by the facemovie
+        par_fo = os.path.join(self.root_fo, get_data("haarcascades"))
+        # self.face_params = FaceParams.FaceParams(par_fo,
+                                                # self.in_fo,
+                                                # self.out_fo,
+                                                # self.param,
+                                                # self.sort,
+                                                # self.mode,
+                                                # self.speed)
+
+        self.print_parameters()
+
+    def print_parameters(self):
+        print "#########"
+        print "Settings:"
+        print "input folder :   %s" % (self.in_fo)
+        print "output folder :   %s" % (self.out_fo)
+
+        print "Face Type :   %s" % (self.param)
+        print "Speed chosen :   %s" % (self.speed)
+        print "Mode chosen :   %s" % (self.mode)
+        print "Sort method :   %s" % (self.sort)
+
+        print "#########"
 
     def setup_logger(self):
         """
