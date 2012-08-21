@@ -192,7 +192,6 @@ class FaceMovie(object, Observable, Observer):
             message = message_root + "  %d / %d" % (num, den)
             self.notify([message, self.percent(num, den)])
         except (ArithmeticError, ZeroDivisionError):
-            #pass
             self.notify(["Error", 0])
 
     def clean_guys(self):
@@ -221,7 +220,8 @@ class FaceMovie(object, Observable, Observer):
         if self.number_guys() == 0:
             self.console_logger.error("No face has been found in the whole repository! Exiting. . . ")
             self.my_logger.error("No face has been found in the whole repository! Exiting. . . ")
-            sys.exit(0)   # FIXME : Find better way to do that
+            self.notify(["Error", 0])
+            sys.exit(0)
 
         # normalize faces to make them clean
         self.set_guys_ratio()  # sets all faces to the same size, by calculating a ratio to a reference
