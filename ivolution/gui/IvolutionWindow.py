@@ -21,8 +21,8 @@ from ..util.Notifier import Observable
 
 class IvolutionWindow(Observer, Observable):
     def __init__(self, name):
-        FacemovieThread.Observer.__init__(self, name)
-        FacemovieThread.Observable.__init__(self)
+        Observer.__init__(self, name)
+        Observable.__init__(self)
 
         self.my_logger = None
         self.console_logger = None

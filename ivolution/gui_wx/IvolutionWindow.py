@@ -15,11 +15,15 @@ import logging
 from .. import get_data # used to load images and files
 
 from .. import FaceParams
+from .. import FacemovieThread
+
+from ..util.Notifier import Observer
+from ..util.Notifier import Observable
 
 from AboutDialog import AboutDialog
 
 
-class IvolutionWindow(wx.Frame):
+class IvolutionWindow(wx.Frame, Observer, Observable):
     """
     Main Window of the Ivolution application
     """
@@ -28,6 +32,8 @@ class IvolutionWindow(wx.Frame):
         Overrides init frame wx.Frame
         """
         wx.Frame.__init__(self, parent, title=title, size=(500, 700))
+        Observer.__init__(self, title)
+        Observable.__init__(self)
 
         # Sets icon
         # ib = wx.IconBundle()
@@ -44,20 +50,17 @@ class IvolutionWindow(wx.Frame):
         self.console_logger = None
         self.setup_logger()
 
+        ####
+        ## Setting up interface
         # Creating the menubar
         self.menubar = self.setup_menubar()
-
         self.panel = wx.Panel(self)
-
         # Creating the title layout
         title = self.setup_titlelayout()
-
         # Creating the settings layout
         settings = self.setup_settingslayout()
-
         # Creating the buttons layout
         buttons = self.setup_buttonslayout()
-
         # Creating the status bar
         # self.statusbar = self.setup_statusbar()
 
@@ -66,6 +69,7 @@ class IvolutionWindow(wx.Frame):
         self.panel.SetSizer(maingrid)
         self.panel.Layout()
         self.Show(True)
+        ####
 
         # Defines all our parameters neededfor the facemovie
         self.root_fo = ""
@@ -79,9 +83,7 @@ class IvolutionWindow(wx.Frame):
         self.in_fo = ""  # Input folder, where images are located
 
         self.process_running = False
-
         self.facemovie = None
-
     # GUI set up
     def setup_buttonslayout(self):
         """
@@ -275,14 +277,35 @@ class IvolutionWindow(wx.Frame):
     def on_start(self, event):
         """
         User asks for starting the algorithm
+        Sets all parameters and start processing
         """
-        self.set_parameters()
+        self.my_logger.debug("start pressed")
+        if not self.process_running:  # start only if not already running
+            self.set_parameters()
+            self.print_parameters()
+            # Instantiating the facemovie
+            self.facemovie = FacemovieThread.FacemovieThread(self.face_params)
+            self.facemovie.subscribe(self)  # I want new information ! Subscribes to facemovie reports
+            self.subscribe(self.facemovie)  # Subscribing facemovie to our messages
+
+            self.facemovie.start()
+
+            self.process_running = True
+        else:
+            self.console_logger.error("Cannot start, process already running !")
+            self.my_logger.error("Cannot start, process already running !")
 
     def on_stop(self, event):
         """
         User asks for stopping the algorithm
+        Asks the FacemovieThread to terminate
         """
-        self.on_exit(event)
+        self.my_logger.debug("Stop pressed")
+        self.console_logger.debug("Stop pressed")
+        self.notify(["STOP"])  # Asking the Facemovie to stop
+        self.process_running = False
+
+        self.on_exit(event) # Finally shuts down the interface
 
     def on_input(self, event):
         """
@@ -319,6 +342,9 @@ class IvolutionWindow(wx.Frame):
         """
         Called when the IvolutionWindow is closed, or File/Exit is called.
         """
+        # Clean up code for saving application state should be added here.
+        self.notify(["STOP"])  # Asking the Facemovie to stop
+        self.process_running = False
         self.Close(True)  # Close the frame.
 
     def get_current_mode(self):
@@ -415,6 +441,41 @@ class IvolutionWindow(wx.Frame):
         #ch.setFormatter(formatter)
 
         self.console_logger.addHandler(ch)
+
+    def update(self, message):
+        """
+        Trigerred by FacemovieThread.
+        Uses the Observer pattern to inform the user about the progress of the current job.
+        """
+        if len(message) == 3:
+            # notifications
+            #self.console_logger.debug(message)
+            self.my_logger.debug(message)
+
+            if message[0] == "PROGRESS":  # progress bar
+                # big steps performed
+
+                # TODO : status bar here
+                # Uses GLib to run Thread safe operations on GUI
+                #GLib.idle_add(self.progressbar.set_fraction, float(message[2]))
+                #GLib.idle_add(self.progressbar.set_text, message[1])
+
+                if float(message[2]) >= 1.0:  # 100% of process
+                    self.my_logger.debug("Reached end of facemovie process")
+                    #self.console_logger.debug("Reached end of facemovie process")
+                    self.process_running = False
+
+            elif message[0] == "STATUS":  # status label
+                # TODO : status bar here
+                # intermediate results
+                #GLib.idle_add(self.statuslabel.set_text, message[1])
+                pass
+
+        elif len(message) > 1:  # system commands shall be ignored
+            self.console_logger.debug("Unrecognized command")
+            self.my_logger.debug("Unrecognized command")
+            self.console_logger.debug(message)
+            self.my_logger.debug(message)
 
 if __name__ == "__main__":
     app = wx.App(False)
