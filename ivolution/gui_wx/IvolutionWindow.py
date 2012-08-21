@@ -9,6 +9,8 @@
 """
 
 import wx
+import wx.lib.newevent
+
 import os
 import logging
 import webbrowser
@@ -479,13 +481,9 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
                     self.process_running = False
 
             elif message[0] == "STATUS":  # status label
-                # TODO : status bar here
-                # intermediate results
-                #GLib.idle_add(self.statuslabel.set_text, message[1])
-                #self.sb.SetStatusText(message[1])
-                wx.CallAfter( self.sb.SetStatusText , message[1])
-                #self.sb.Update()
-                #wx.Yield()
+                wx.MutexGuiEnter() # to avoid thread problems
+                self.sb.SetStatusText(message[1])
+                wx.MutexGuiLeave()
 
         elif len(message) > 1:  # system commands shall be ignored
             self.console_logger.debug("Unrecognized command")
