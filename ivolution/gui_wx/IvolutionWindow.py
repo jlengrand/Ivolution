@@ -169,18 +169,18 @@ class IvolutionWindow(wx.Frame):
         videomodetext = wx.StaticText(self.panel, label="Choose your prefered mode:")
         videomodechoices = wx.FlexGridSizer(1, 2, 0, 0)
 
-        cropmode = wx.RadioButton(self.panel, label='Crop Mode', style=wx.RB_GROUP)
-        conservativemode = wx.RadioButton(self.panel, label='Conservative Mode')
-        videomodechoices.AddMany([cropmode, conservativemode])
+        self.cropmode = wx.RadioButton(self.panel, label='Crop Mode', style=wx.RB_GROUP)
+        self.conservativemode = wx.RadioButton(self.panel, label='Conservative Mode')
+        videomodechoices.AddMany([self.cropmode, self.conservativemode])
         videomodebox.AddMany([videomodetext, videomodechoices])
 
         # Creates the file method box
         filemethodbox = wx.FlexGridSizer(2, 1, 0, 0)
         filemethodtext = wx.StaticText(self.panel, label="Choose your prefered mode:")
         filemethodchoices = wx.FlexGridSizer(1, 2, 0, 0)
-        namemode = wx.RadioButton(self.panel, label="File name", style=wx.RB_GROUP)
-        exifmode = wx.RadioButton(self.panel, label="EXIF metadata")
-        filemethodchoices.AddMany([namemode, exifmode])
+        self.namemode = wx.RadioButton(self.panel, label="File name", style=wx.RB_GROUP)
+        self.exifmode = wx.RadioButton(self.panel, label="EXIF metadata")
+        filemethodchoices.AddMany([self.namemode, self.exifmode])
         filemethodbox.AddMany([filemethodtext, filemethodchoices])
 
         optionalbox.AddMany([title, typefacebox, videospeedbox, videomodebox, filemethodbox])
@@ -321,6 +321,26 @@ class IvolutionWindow(wx.Frame):
         """
         self.Close(True)  # Close the frame.
 
+    def get_current_mode(self):
+        """
+        """
+        if self.cropmode.GetValue():
+            mode = "crop"
+        else:
+            mode = "conservative"
+
+        return mode
+
+    def get_current_sort(self):
+        """
+        """
+        if self.namemode.GetValue():
+            sort = "name"
+        else:
+            sort = "exif"
+
+        return sort
+
     def set_parameters(self):
         """
         Retrieves all parameters needed for the algorithm to run
@@ -329,6 +349,9 @@ class IvolutionWindow(wx.Frame):
         self.out_fo = self.outputchoosertext.GetLabel() + "/"
         self.param = self.typefacelist.GetValue()
         self.speed = self.speedvals.index(self.videospeedlist.GetValue())  # We need and integer between 0 and 2
+
+        self.mode = get_current_mode()
+        self.sort = get_current_sort()
 
         # Instantiating the face_params object that will be needed by the facemovie
         par_fo = os.path.join(self.root_fo, get_data("haarcascades"))
