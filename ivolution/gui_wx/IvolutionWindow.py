@@ -11,6 +11,7 @@
 import wx
 import os
 import logging
+import webbrowser
 
 from .. import get_data # used to load images and files
 
@@ -249,6 +250,10 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
         """
         file_menu = wx.Menu()
 
+        #Sets up the Help menu item
+        menuHelp = file_menu.Append(wx.ID_HELP, "Help", "Help online")
+        self.Bind(wx.EVT_MENU, self.on_help, menuHelp)
+
         # Sets up the About menu item
         menuAbout = file_menu.Append(wx.ID_ABOUT, "About", " Information about this program")
         self.Bind(wx.EVT_MENU, self.on_about, menuAbout)
@@ -305,7 +310,7 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
         self.notify(["STOP"])  # Asking the Facemovie to stop
         self.process_running = False
 
-        self.on_exit(event) # Finally shuts down the interface
+        #self.on_exit(event) # Finally shuts down the interface
 
     def on_input(self, event):
         """
@@ -329,10 +334,16 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
             self.outputchoosertext.SetLabel(self.outputdialog.GetPath())
         self.outputdialog.Destroy()
 
+    def on_help(self, event):
+        """
+        Opens a browser and points to online help.
+        """
+        url = "http://jlengrand.github.com/FaceMovie/"
+        webbrowser.open(url, new=2)  # in new tab if possible
+
     def on_about(self, event):
         """
         Displays the about box for Ivolution
-        TODO : Create the About Window
         """
         about = AboutDialog(self, "Ivolution")
         about.ShowModal()  # Show it
