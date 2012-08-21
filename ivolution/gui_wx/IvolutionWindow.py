@@ -93,10 +93,11 @@ class IvolutionWindow(wx.Frame):
         inputtext = wx.StaticText(self.panel, label="Choose your input folder:")
 
         inputchooserbox = wx.FlexGridSizer(1, 2, 0, 0)
-        inputchoosertext = wx.StaticText(self.panel, label="~/Pictures")
+        self.inputchoosertext = wx.StaticText(self.panel, label="~/Pictures")
         inputchooserbutton = wx.Button(self.panel, label="..")
+        inputchooserbutton.Bind(wx.EVT_BUTTON, self.on_input)
         #inputchooser = wx.DirDialog(self.panel, "Please choose your project directory:", style=1 ,defaultPath=os.getcwd())
-        inputchooserbox.AddMany([inputchoosertext, inputchooserbutton])
+        inputchooserbox.AddMany([self.inputchoosertext, inputchooserbutton])
 
         inputbox.AddMany([inputtext, inputchooserbox])
 
@@ -105,10 +106,10 @@ class IvolutionWindow(wx.Frame):
         outputtext = wx.StaticText(self.panel, label="Choose your output folder:")
 
         outputchooserbox = wx.FlexGridSizer(1, 2, 0, 0)
-        outputchoosertext = wx.StaticText(self.panel, label="~/Videos")
+        self.outputchoosertext = wx.StaticText(self.panel, label="~/Videos")
         outputchooserbutton = wx.Button(self.panel, label="..")
         #inputchooser = wx.DirDialog(self.panel, "Please choose your project directory:", style=1 ,defaultPath=os.getcwd())
-        outputchooserbox.AddMany([outputchoosertext, outputchooserbutton])
+        outputchooserbox.AddMany([self.outputchoosertext, outputchooserbutton])
         #outputchooser = wx.DirDialog(self.panel, "Choose a directory:",style=wx.DD_DEFAULT_STYLE | wx.DD_NEW_DIR_BUTTON)
 
         outputbox.AddMany([outputtext, outputchooserbox])
@@ -251,6 +252,18 @@ class IvolutionWindow(wx.Frame):
         return menuBar
 
     # Events Handling
+    def on_input(self, event):
+        """
+        Activated an a user clicks to choose its input folder
+        """
+        default_dir = "~/Pictures"
+        inputdialog = wx.DirDialog(self, "Please choose your input directory", style=1, defaultPath=default_dir)
+        #inputchooser = wx.DirDialog(self.panel, "Please choose your project directory:", style=1 ,defaultPath=os.getcwd())
+
+        if inputdialog.ShowModal() == wx.ID_OK:
+            self.inputchoosertext.SetLabel(inputdialog.GetPath())
+        inputdialog.Destroy()
+
     def on_about(self, event):
         """
         Displays the about box for Ivolution
