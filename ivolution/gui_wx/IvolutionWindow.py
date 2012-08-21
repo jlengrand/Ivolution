@@ -63,7 +63,7 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
         # Creating the buttons layout
         buttons = self.setup_buttonslayout()
         # Creating the status bar
-        # self.statusbar = self.setup_statusbar()
+        self.statusbar = self.setup_statusbar()
 
         # Creating the main grid
         maingrid = self.setup_maingrid(title, settings, buttons)
@@ -114,7 +114,7 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
         inputtext = wx.StaticText(self.panel, label="Choose your input folder:")
 
         inputchooserbox = wx.FlexGridSizer(1, 2, 0, 0)
-        self.inputchoosertext = wx.StaticText(self.panel, label="~/Pictures")
+        self.inputchoosertext = wx.StaticText(self.panel, label="/home/jll/Documents/Ivolution/ivolution/data/samples/")
         inputchooserbutton = wx.Button(self.panel, label="..")
         inputchooserbutton.Bind(wx.EVT_BUTTON, self.on_input)
         #inputchooser = wx.DirDialog(self.panel, "Please choose your project directory:", style=1 ,defaultPath=os.getcwd())
@@ -240,10 +240,12 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
         maingrid.AddMany([title, settings, buttons])
         return maingrid
 
-    # def setup_statusbar(self):
-    #     """
-    #     Sets up all elements of the status bar
-    #     """
+    def setup_statusbar(self):
+        """
+        Sets up all elements of the status bar
+        """
+        self.sb = self.CreateStatusBar()
+
     def setup_filemenu(self):
         """
         Sets up all elements of the file menu
@@ -480,7 +482,10 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
                 # TODO : status bar here
                 # intermediate results
                 #GLib.idle_add(self.statuslabel.set_text, message[1])
-                pass
+                #self.sb.SetStatusText(message[1])
+                wx.CallAfter( self.sb.SetStatusText , message[1])
+                #self.sb.Update()
+                #wx.Yield()
 
         elif len(message) > 1:  # system commands shall be ignored
             self.console_logger.debug("Unrecognized command")
