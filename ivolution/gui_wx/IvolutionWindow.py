@@ -14,6 +14,8 @@ import logging
 
 from .. import get_data # used to load images and files
 
+from .. import FaceParams
+
 from AboutDialog import AboutDialog
 
 
@@ -32,10 +34,10 @@ class IvolutionWindow(wx.Frame):
         # ib.AddIconFromFile("ivolution/data/media/vitruve_64.png", wx.BITMAP_TYPE_ANY)
         # self.SetIcons(ib)
 
-        # image = wx.Image("ivolution/data/media/vitruve_64.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap() 
-        # icon = wx.EmptyIcon() 
-        # icon.CopyFromBitmap(image) 
-        # self.SetIcon(icon) 
+        # image = wx.Image("ivolution/data/media/vitruve_64.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        # icon = wx.EmptyIcon()
+        # icon.CopyFromBitmap(image)
+        # self.SetIcon(icon)
 
         # Sets up logging capability
         self.my_logger = None
@@ -156,9 +158,9 @@ class IvolutionWindow(wx.Frame):
         # Creates the video speed box
         videospeedbox = wx.FlexGridSizer(2, 1, 0, 0)
         videospeedtext = wx.StaticText(self.panel, label="Video Speed:")
-        self.speeds = ['slow', 'medium', 'fast']
-        self.videospeedlist = wx.ComboBox(self.panel, choices=speeds, style=wx.CB_READONLY)
-        self.videospeedlist.SetValue(speeds[1])
+        self.speedvals = ['slow', 'medium', 'fast']
+        self.videospeedlist = wx.ComboBox(self.panel, choices=self.speedvals, style=wx.CB_READONLY)
+        self.videospeedlist.SetValue(self.speedvals[1])
 
         videospeedbox.AddMany([videospeedtext, self.videospeedlist])
 
@@ -312,11 +314,6 @@ class IvolutionWindow(wx.Frame):
         about = AboutDialog(self, "Ivolution")
         about.ShowModal()  # Show it
         about.Destroy()  # finally destroy it when finished.
-        # A message dialog box with an OK button. wx.OK is a standard ID in wxWidgets.
-        # dlg = wx.MessageDialog(self, "Ivolution", "About Ivolution", wx.OK)
-        # dlg.ShowModal()  # Show it
-        # dlg.Destroy()  # finally destroy it when finished.
-        print "About !"
 
     def on_exit(self, event):
         """
@@ -328,20 +325,20 @@ class IvolutionWindow(wx.Frame):
         """
         Retrieves all parameters needed for the algorithm to run
         """
-        self.in_fo = self.inputchoosertext.GetLabel() + "/" 
-        self.out_fo =self.outputchoosertext.GetLabel()  + "/"
+        self.in_fo = self.inputchoosertext.GetLabel() + "/"
+        self.out_fo = self.outputchoosertext.GetLabel() + "/"
         self.param = self.typefacelist.GetValue()
-        self.speed = self.videospeedlist.GetValue()  # We need and integer between 0 and 2
+        self.speed = self.speedvals.index(self.videospeedlist.GetValue())  # We need and integer between 0 and 2
 
         # Instantiating the face_params object that will be needed by the facemovie
         par_fo = os.path.join(self.root_fo, get_data("haarcascades"))
-        # self.face_params = FaceParams.FaceParams(par_fo,
-                                                # self.in_fo,
-                                                # self.out_fo,
-                                                # self.param,
-                                                # self.sort,
-                                                # self.mode,
-                                                # self.speed)
+        self.face_params = FaceParams.FaceParams(par_fo,
+                                                 self.in_fo,
+                                                 self.out_fo,
+                                                 self.param,
+                                                 self.sort,
+                                                 self.mode,
+                                                 self.speed)
 
         self.print_parameters()
 
