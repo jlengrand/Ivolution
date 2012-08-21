@@ -27,6 +27,16 @@ class IvolutionWindow(wx.Frame):
         """
         wx.Frame.__init__(self, parent, title=title, size=(500, 700))
 
+        # Sets icon
+        # ib = wx.IconBundle()
+        # ib.AddIconFromFile("ivolution/data/media/vitruve_64.png", wx.BITMAP_TYPE_ANY)
+        # self.SetIcons(ib)
+
+        image = wx.Image("ivolution/data/media/vitruve_64.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap() 
+        icon = wx.EmptyIcon() 
+        icon.CopyFromBitmap(image) 
+        self.SetIcon(icon) 
+
         # Sets up logging capability
         self.my_logger = None
         self.console_logger = None
