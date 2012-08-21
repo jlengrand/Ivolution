@@ -156,11 +156,11 @@ class IvolutionWindow(wx.Frame):
         # Creates the video speed box
         videospeedbox = wx.FlexGridSizer(2, 1, 0, 0)
         videospeedtext = wx.StaticText(self.panel, label="Video Speed:")
-        speeds = ['slow', 'medium', 'fast']
-        videospeedlist = wx.ComboBox(self.panel, choices=speeds, style=wx.CB_READONLY)
-        videospeedlist.SetValue(speeds[1])
+        self.speeds = ['slow', 'medium', 'fast']
+        self.videospeedlist = wx.ComboBox(self.panel, choices=speeds, style=wx.CB_READONLY)
+        self.videospeedlist.SetValue(speeds[1])
 
-        videospeedbox.AddMany([videospeedtext, videospeedlist])
+        videospeedbox.AddMany([videospeedtext, self.videospeedlist])
 
         # Creates the video mode box
         videomodebox = wx.FlexGridSizer(2, 1, 0, 0)
@@ -330,8 +330,8 @@ class IvolutionWindow(wx.Frame):
         """
         self.in_fo = self.inputchoosertext.GetLabel() + "/" 
         self.out_fo =self.outputchoosertext.GetLabel()  + "/"
-        self.param = self.typefacelist.GetString()
-        #self.speed =   # We need and integer between 0 and 2
+        self.param = self.typefacelist.GetValue()
+        self.speed = self.videospeedlist.GetValue()  # We need and integer between 0 and 2
 
         # Instantiating the face_params object that will be needed by the facemovie
         par_fo = os.path.join(self.root_fo, get_data("haarcascades"))
