@@ -256,7 +256,7 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
         """
         Sets up all elements of the status bar
         """
-        self.sb = self.CreateStatusBar()
+        self.sb = self.CreateStatusBar(2)
 
     def setup_filemenu(self):
         """
@@ -481,11 +481,8 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
                 # big steps performed
                 wx.MutexGuiEnter()  # to avoid thread problems
                 self.progressgauge.SetValue(self.gaugerange * float(message[2]))
+                self.sb.SetStatusText(message[1], 0)
                 wx.MutexGuiLeave()
-                # TODO : status bar here
-                # Uses GLib to run Thread safe operations on GUI
-                #GLib.idle_add(self.progressbar.set_fraction, float(message[2]))
-                #GLib.idle_add(self.progressbar.set_text, message[1])
 
                 if float(message[2]) >= 1.0:  # 100% of process
                     self.my_logger.debug("Reached end of facemovie process")
@@ -494,7 +491,7 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
 
             elif message[0] == "STATUS":  # status label
                 wx.MutexGuiEnter()  # to avoid thread problems
-                self.sb.SetStatusText(message[1])
+                self.sb.SetStatusText(message[1], 1)
                 wx.MutexGuiLeave()
 
         elif len(message) > 1:  # system commands shall be ignored
