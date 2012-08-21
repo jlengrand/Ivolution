@@ -350,8 +350,8 @@ class IvolutionWindow(wx.Frame):
         self.param = self.typefacelist.GetValue()
         self.speed = self.speedvals.index(self.videospeedlist.GetValue())  # We need and integer between 0 and 2
 
-        self.mode = get_current_mode()
-        self.sort = get_current_sort()
+        self.mode = self.get_current_mode()
+        self.sort = self.get_current_sort()
 
         # Instantiating the face_params object that will be needed by the facemovie
         par_fo = os.path.join(self.root_fo, get_data("haarcascades"))
