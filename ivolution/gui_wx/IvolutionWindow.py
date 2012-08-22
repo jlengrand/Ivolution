@@ -102,12 +102,18 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
         stopbutton = wx.Button(self.panel, label='Stop processing')
         stopbutton.Bind(wx.EVT_BUTTON, self.on_stop)
 
-        buttonsbox.AddMany([startbutton, stopbutton])
+        buttonsbox.AddMany([(startbutton, 0, wx.EXPAND),
+                            (stopbutton, 0, wx.EXPAND)])
 
         # progress bar
-        self.progressgauge = wx.Gauge(self.panel, range=self.gaugerange) # range is max value of gauge
+        gaugebox = wx.BoxSizer(wx.HORIZONTAL)
+        self.progressgauge = wx.Gauge(self.panel, range=self.gaugerange)  # range is max value of gauge
+        gaugebox.Add(self.progressgauge, proportion=1)
 
-        commandbox.AddMany([buttonsbox, self.progressgauge])
+        commandbox.AddMany([(buttonsbox, 0, wx.EXPAND),
+                            (gaugebox, 0, wx.EXPAND)])
+        #commandbox.Add(buttonsbox)
+        #commandbox.Add(gaugebox, flag=wx.EXPAND | wx.LEFT | wx.RIGHT | wx.TOP, border=10)
 
         return commandbox
 
@@ -128,9 +134,11 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
         inputchooserbutton = wx.Button(self.panel, label="..")
         inputchooserbutton.Bind(wx.EVT_BUTTON, self.on_input)
         #inputchooser = wx.DirDialog(self.panel, "Please choose your project directory:", style=1 ,defaultPath=os.getcwd())
-        inputchooserbox.AddMany([self.inputchoosertext, inputchooserbutton])
+        inputchooserbox.AddMany([(self.inputchoosertext, 0, wx.EXPAND),
+                                    (inputchooserbutton, 0, wx.EXPAND)])
 
-        inputbox.AddMany([inputtext, inputchooserbox])
+        inputbox.AddMany([(inputtext, 0, wx.EXPAND),
+                            (inputchooserbox, 0, wx.EXPAND)])
 
         # Creates output box, allowing to choose the output folder
         outputbox = wx.FlexGridSizer(2, 1, 0, 0)
@@ -142,12 +150,16 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
         outputchooserbutton.Bind(wx.EVT_BUTTON, self.on_output)
 
         #inputchooser = wx.DirDialog(self.panel, "Please choose your project directory:", style=1 ,defaultPath=os.getcwd())
-        outputchooserbox.AddMany([self.outputchoosertext, outputchooserbutton])
+        outputchooserbox.AddMany([(self.outputchoosertext, 0, wx.EXPAND),
+                                    (outputchooserbutton, 0, wx.EXPAND)])
         #outputchooser = wx.DirDialog(self.panel, "Choose a directory:",style=wx.DD_DEFAULT_STYLE | wx.DD_NEW_DIR_BUTTON)
 
-        outputbox.AddMany([outputtext, outputchooserbox])
+        outputbox.AddMany([(outputtext, 0, wx.EXPAND),
+                                (outputchooserbox, 0, wx.EXPAND)])
 
-        requiredbox.AddMany([title, inputbox, outputbox])
+        requiredbox.AddMany([(title, 0, wx.EXPAND),
+                                (inputbox, 0, wx.EXPAND),
+                                (outputbox, 0, wx.EXPAND)])
 
         return requiredbox
 
@@ -166,7 +178,8 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
         self.typefacelist = wx.ComboBox(self.panel, choices=types, style=wx.CB_READONLY)
         self.typefacelist.SetValue(types[0])
 
-        typefacebox.AddMany([typefacetext, self.typefacelist])
+        typefacebox.AddMany([(typefacetext, 0, wx.EXPAND),
+                                (self.typefacelist, 0, wx.EXPAND)])
 
         # Creates the video speed box
         videospeedbox = wx.FlexGridSizer(2, 1, 0, 0)
@@ -175,7 +188,8 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
         self.videospeedlist = wx.ComboBox(self.panel, choices=self.speedvals, style=wx.CB_READONLY)
         self.videospeedlist.SetValue(self.speedvals[1])
 
-        videospeedbox.AddMany([videospeedtext, self.videospeedlist])
+        videospeedbox.AddMany([(videospeedtext, 0, wx.EXPAND),
+                                (self.videospeedlist, 0, wx.EXPAND)])
 
         # Creates the video mode box
         videomodebox = wx.FlexGridSizer(2, 1, 0, 0)
@@ -185,7 +199,8 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
         self.cropmode = wx.RadioButton(self.panel, label='Crop Mode', style=wx.RB_GROUP)
         self.conservativemode = wx.RadioButton(self.panel, label='Conservative Mode')
         videomodechoices.AddMany([self.cropmode, self.conservativemode])
-        videomodebox.AddMany([videomodetext, videomodechoices])
+        videomodebox.AddMany([(videomodetext, 0, wx.EXPAND),
+                                (videomodechoices, 0, wx.EXPAND)])
 
         # Creates the file method box
         filemethodbox = wx.FlexGridSizer(2, 1, 0, 0)
@@ -194,9 +209,14 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
         self.namemode = wx.RadioButton(self.panel, label="File name", style=wx.RB_GROUP)
         self.exifmode = wx.RadioButton(self.panel, label="EXIF metadata")
         filemethodchoices.AddMany([self.namemode, self.exifmode])
-        filemethodbox.AddMany([filemethodtext, filemethodchoices])
+        filemethodbox.AddMany([(filemethodtext, 0, wx.EXPAND),
+                                (filemethodchoices, 0, wx.EXPAND)])
 
-        optionalbox.AddMany([title, typefacebox, videospeedbox, videomodebox, filemethodbox])
+        optionalbox.AddMany([(title, 0, wx.EXPAND),
+                                (typefacebox, 0, wx.EXPAND),
+                                (videospeedbox, 0, wx.EXPAND),
+                                (videomodebox, 0, wx.EXPAND),
+                                (filemethodbox, 0, wx.EXPAND)])
 
         return optionalbox
 
@@ -212,7 +232,8 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
         # and another with optional parameters
         optionalbox = self.setup_optionalsettings()
 
-        settingsbox.AddMany([(requiredbox), (optionalbox)])
+        settingsbox.AddMany([(requiredbox, 0, wx.EXPAND),
+                                (optionalbox, 0, wx.EXPAND)])
 
         return settingsbox
 
@@ -234,11 +255,11 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
  automatically generate a movie!")
 
         logobox.Add(logo)
-        vbox.Add(title, flag=wx.RIGHT, border=8)
-        vbox.Add(one_liner, flag=wx.RIGHT, border=8)
+        vbox.Add(title, flag=wx.EXPAND | wx.RIGHT, border=8)
+        vbox.Add(one_liner, flag=wx.EXPAND | wx.RIGHT, border=8)
 
-        hbox.Add(logobox, flag=wx.RIGHT, border=8)
-        hbox.Add(vbox, flag=wx.RIGHT, border=8)
+        hbox.Add(logobox, flag=wx.EXPAND | wx.RIGHT, border=8)
+        hbox.Add(vbox, flag=wx.EXPAND | wx.RIGHT, border=8)
 
         return hbox
 
@@ -246,8 +267,10 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
         """
         Defines the main grid that will be used as layout in the window.
         """
-        maingrid = wx.FlexGridSizer(4, 1, vgap=0, hgap=0)
-        maingrid.AddMany([title, settings, buttons])
+        maingrid = wx.FlexGridSizer(3, 1, vgap=0, hgap=0)
+        maingrid.AddMany([(title, 0, wx.EXPAND),
+                            (settings, 0, wx.EXPAND),
+                            (buttons, 0, wx.EXPAND)])
         return maingrid
 
     def setup_statusbar(self):
