@@ -38,14 +38,10 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
         Observer.__init__(self, title)
         Observable.__init__(self)
 
-        self.gaugerange = 100 # max value of progress bar
+        self.gaugerange = 100  # max value of progress bar
 
         # Sets icon
-        # ib = wx.IconBundle()
-        # ib.AddIconFromFile("ivolution/data/media/vitruve_64.png", wx.BITMAP_TYPE_ANY)
-        # self.SetIcons(ib)
-
-        # image = wx.Image("ivolution/data/media/vitruve_64.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        # image = wx.Image("ivolution/data/media/vitruve.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         # icon = wx.EmptyIcon()
         # icon.CopyFromBitmap(image)
         # self.SetIcon(icon)
