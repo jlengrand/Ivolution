@@ -24,55 +24,36 @@ from ..util.Notifier import Observer
 from ..util.Notifier import Observable
 
 from AboutDialog import AboutDialog
+from IvolutionTemplate import IvolutionTemplate
 
 
-class IvolutionWindow(wx.Frame, Observer, Observable):
+class IvolutionWindow(IvolutionTemplate, Observer, Observable):
     """
     Main Window of the Ivolution application
     """
     def __init__(self, parent, title):
         """
-        Overrides init frame wx.Frame
+        Overrides init frame IvolutionTemplate
         """
-        wx.Frame.__init__(self, parent, title=title, size=(500, 700))
+        IvolutionTemplate.__init__(self, parent)
         Observer.__init__(self, title)
         Observable.__init__(self)
 
-        self.gaugerange = 100  # max value of progress bar
-
-        # Sets icon
-
-        self.SetIcon(wx.Icon('ivolution/data/media/tipi.ico', wx.BITMAP_TYPE_ICO))
-        # image = wx.Image("ivolution/data/media/vitruve.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        # icon = wx.EmptyIcon()
-        # icon.CopyFromBitmap(image)
-        # self.SetIcon(icon)
+        self.videospeedlistChoices = [u"slow", u"medium", u"fast"]  # FIXME: Is there a way to do better?
+        self.gaugerange = 100
 
         # Sets up logging capability
         self.my_logger = None
         self.console_logger = None
         self.setup_logger()
 
-        ####
-        ## Setting up interface
-        # Creating the menubar
-        self.menubar = self.setup_menubar()
-        self.panel = wx.Panel(self)
-        # Creating the title layout
-        title = self.setup_titlelayout()
-        # Creating the settings layout
-        settings = self.setup_settingslayout()
-        # Creating the buttons layout
-        buttons = self.setup_buttonslayout()
-        # Creating the status bar
-        self.statusbar = self.setup_statusbar()
-
-        # Creating the main grid
-        maingrid = self.setup_maingrid(title, settings, buttons)
-        self.panel.SetSizer(maingrid)
-        self.panel.Layout()
-        self.Show(True)
-        ####
+        self.logo = wx.StaticBitmap(self, wx.ID_ANY, wx.Bitmap(u"ivolution/data/media/vitruve_50.jpg", wx.BITMAP_TYPE_ANY), wx.DefaultPosition, wx.Size(50, 50), 0)  # Sets logo
+        # Sets icon
+        self.SetIcon(wx.Icon('ivolution/data/media/vitruve.ico', wx.BITMAP_TYPE_ICO))
+        # image = wx.Image("ivolution/data/media/vitruve.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        # icon = wx.EmptyIcon()
+        # icon.CopyFromBitmap(image)
+        # self.SetIcon(icon)
 
         # Defines all our parameters neededfor the facemovie
         self.root_fo = ""
@@ -88,232 +69,9 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
         self.process_running = False
         self.facemovie = None
 
-    # GUI set up
-    def setup_buttonslayout(self):
-        """
-        Creates the box containing Start/Stop buttons
-        """
-        commandbox = wx.FlexGridSizer(2, 1, 0, 0)
+        self.Show(True)  # Finally show the frame
 
-        buttonsbox = wx.FlexGridSizer(1, 2, 0, 0)
-
-        startbutton = wx.Button(self.panel, label='Create Movie!')
-        startbutton.Bind(wx.EVT_BUTTON, self.on_start)
-        stopbutton = wx.Button(self.panel, label='Stop processing')
-        stopbutton.Bind(wx.EVT_BUTTON, self.on_stop)
-
-        buttonsbox.AddMany([(startbutton, 0, wx.EXPAND),
-                            (stopbutton, 0, wx.EXPAND)])
-
-        # progress bar
-        gaugebox = wx.BoxSizer(wx.HORIZONTAL)
-        self.progressgauge = wx.Gauge(self.panel, range=self.gaugerange)  # range is max value of gauge
-        gaugebox.Add(self.progressgauge, proportion=1)
-
-        commandbox.AddMany([(buttonsbox, 0, wx.EXPAND),
-                            (gaugebox, 0, wx.EXPAND)])
-        #commandbox.Add(buttonsbox)
-        #commandbox.Add(gaugebox, flag=wx.EXPAND | wx.LEFT | wx.RIGHT | wx.TOP, border=10)
-
-        return commandbox
-
-    def setup_requiredsettings(self):
-        """
-        Creates the box containing all required settings
-        """
-        requiredbox = wx.FlexGridSizer(3, 1, 0, 0)
-
-        title = wx.StaticText(self.panel, label="Required parameters:")
-
-        # Creates input box, allowing to choose the input folder
-        inputbox = wx.FlexGridSizer(2, 1, 0, 0)
-        inputtext = wx.StaticText(self.panel, label="Choose your input folder:")
-
-        inputchooserbox = wx.FlexGridSizer(1, 2, 0, 0)
-        self.inputchoosertext = wx.StaticText(self.panel, label="/home/jll/Documents/Ivolution/ivolution/data/samples/")
-        inputchooserbutton = wx.Button(self.panel, label="..")
-        inputchooserbutton.Bind(wx.EVT_BUTTON, self.on_input)
-        #inputchooser = wx.DirDialog(self.panel, "Please choose your project directory:", style=1 ,defaultPath=os.getcwd())
-        inputchooserbox.AddMany([(self.inputchoosertext, 0, wx.EXPAND),
-                                    (inputchooserbutton, 0, wx.EXPAND)])
-
-        inputbox.AddMany([(inputtext, 0, wx.EXPAND),
-                            (inputchooserbox, 0, wx.EXPAND)])
-
-        # Creates output box, allowing to choose the output folder
-        outputbox = wx.FlexGridSizer(2, 1, 0, 0)
-        outputtext = wx.StaticText(self.panel, label="Choose your output folder:")
-
-        outputchooserbox = wx.FlexGridSizer(1, 2, 0, 0)
-        self.outputchoosertext = wx.StaticText(self.panel, label="~/Videos")
-        outputchooserbutton = wx.Button(self.panel, label="..")
-        outputchooserbutton.Bind(wx.EVT_BUTTON, self.on_output)
-
-        #inputchooser = wx.DirDialog(self.panel, "Please choose your project directory:", style=1 ,defaultPath=os.getcwd())
-        outputchooserbox.AddMany([(self.outputchoosertext, 0, wx.EXPAND),
-                                    (outputchooserbutton, 0, wx.EXPAND)])
-        #outputchooser = wx.DirDialog(self.panel, "Choose a directory:",style=wx.DD_DEFAULT_STYLE | wx.DD_NEW_DIR_BUTTON)
-
-        outputbox.AddMany([(outputtext, 0, wx.EXPAND),
-                                (outputchooserbox, 0, wx.EXPAND)])
-
-        requiredbox.AddMany([(title, 0, wx.EXPAND),
-                                (inputbox, 0, wx.EXPAND),
-                                (outputbox, 0, wx.EXPAND)])
-
-        return requiredbox
-
-    def setup_optionalsettings(self):
-        """
-        Creates the box containing all optional settings
-        """
-        optionalbox = wx.FlexGridSizer(5, 1, 0, 0)
-
-        title = wx.StaticText(self.panel, label="Optional parameters:")
-
-        # Creates typeface box, allowing to choose face or profile
-        typefacebox = wx.FlexGridSizer(2, 1, 0, 0)
-        typefacetext = wx.StaticText(self.panel, label="Type of face:")
-        types = ['frontal_face', 'profile_face']
-        self.typefacelist = wx.ComboBox(self.panel, choices=types, style=wx.CB_READONLY)
-        self.typefacelist.SetValue(types[0])
-
-        typefacebox.AddMany([(typefacetext, 0, wx.EXPAND),
-                                (self.typefacelist, 0, wx.EXPAND)])
-
-        # Creates the video speed box
-        videospeedbox = wx.FlexGridSizer(2, 1, 0, 0)
-        videospeedtext = wx.StaticText(self.panel, label="Video Speed:")
-        self.speedvals = ['slow', 'medium', 'fast']
-        self.videospeedlist = wx.ComboBox(self.panel, choices=self.speedvals, style=wx.CB_READONLY)
-        self.videospeedlist.SetValue(self.speedvals[1])
-
-        videospeedbox.AddMany([(videospeedtext, 0, wx.EXPAND),
-                                (self.videospeedlist, 0, wx.EXPAND)])
-
-        # Creates the video mode box
-        videomodebox = wx.FlexGridSizer(2, 1, 0, 0)
-        videomodetext = wx.StaticText(self.panel, label="Choose your prefered mode:")
-        videomodechoices = wx.FlexGridSizer(1, 2, 0, 0)
-
-        self.cropmode = wx.RadioButton(self.panel, label='Crop Mode', style=wx.RB_GROUP)
-        self.conservativemode = wx.RadioButton(self.panel, label='Conservative Mode')
-        videomodechoices.AddMany([self.cropmode, self.conservativemode])
-        videomodebox.AddMany([(videomodetext, 0, wx.EXPAND),
-                                (videomodechoices, 0, wx.EXPAND)])
-
-        # Creates the file method box
-        filemethodbox = wx.FlexGridSizer(2, 1, 0, 0)
-        filemethodtext = wx.StaticText(self.panel, label="Choose your prefered mode:")
-        filemethodchoices = wx.FlexGridSizer(1, 2, 0, 0)
-        self.namemode = wx.RadioButton(self.panel, label="File name", style=wx.RB_GROUP)
-        self.exifmode = wx.RadioButton(self.panel, label="EXIF metadata")
-        filemethodchoices.AddMany([self.namemode, self.exifmode])
-        filemethodbox.AddMany([(filemethodtext, 0, wx.EXPAND),
-                                (filemethodchoices, 0, wx.EXPAND)])
-
-        optionalbox.AddMany([(title, 0, wx.EXPAND),
-                                (typefacebox, 0, wx.EXPAND),
-                                (videospeedbox, 0, wx.EXPAND),
-                                (videomodebox, 0, wx.EXPAND),
-                                (filemethodbox, 0, wx.EXPAND)])
-
-        return optionalbox
-
-    def setup_settingslayout(self):
-        """
-        Defines the second part of the GUI, containing all parameters
-        that can be changed
-        """
-        settingsbox = wx.FlexGridSizer(2, 1, 9, 15)  # main box
-
-        # contains a box with required parameters
-        requiredbox = self.setup_requiredsettings()
-        # and another with optional parameters
-        optionalbox = self.setup_optionalsettings()
-
-        settingsbox.AddMany([(requiredbox, 0, wx.EXPAND),
-                                (optionalbox, 0, wx.EXPAND)])
-
-        return settingsbox
-
-    def setup_titlelayout(self):
-        """
-        Defines the first part of the GUI, showing the title and logo
-        """
-        hbox = wx.BoxSizer(wx.HORIZONTAL)  # used to contain logo part and text part
-        vbox = wx.BoxSizer(wx.VERTICAL)  # used to separate title and one-liner
-        logobox = wx.BoxSizer(wx.HORIZONTAL)
-
-        wx_logo = wx.EmptyBitmap(1, 1)  # Create a bitmap container object.
-        wx_logo.LoadFile("ivolution/data/media/vitruve_50.jpg", wx.BITMAP_TYPE_ANY)  # Load it with a file image.
-
-        logo = wx.StaticBitmap(self.panel, 1, wx_logo)
-        #logo = wx.StaticText(self.panel, label="Logo Here")  # Change for proper logo
-        title = wx.StaticText(self.panel, label="Ivolution")
-        one_liner = wx.StaticText(self.panel, label="Take one picture of yourself a day,\
- automatically generate a movie!")
-
-        logobox.Add(logo)
-        vbox.Add(title, flag=wx.EXPAND | wx.RIGHT, border=8)
-        vbox.Add(one_liner, flag=wx.EXPAND | wx.RIGHT, border=8)
-
-        hbox.Add(logobox, flag=wx.EXPAND | wx.RIGHT, border=8)
-        hbox.Add(vbox, flag=wx.EXPAND | wx.RIGHT, border=8)
-
-        return hbox
-
-    def setup_maingrid(self, title, settings, buttons):
-        """
-        Defines the main grid that will be used as layout in the window.
-        """
-        maingrid = wx.FlexGridSizer(3, 1, vgap=0, hgap=0)
-        maingrid.AddMany([(title, 0, wx.EXPAND),
-                            (settings, 0, wx.EXPAND),
-                            (buttons, 0, wx.EXPAND)])
-        return maingrid
-
-    def setup_statusbar(self):
-        """
-        Sets up all elements of the status bar
-        """
-        self.sb = self.CreateStatusBar(2)
-
-    def setup_filemenu(self):
-        """
-        Sets up all elements of the file menu
-        """
-        file_menu = wx.Menu()
-
-        #Sets up the Help menu item
-        menuHelp = file_menu.Append(wx.ID_HELP, "Help", "Help online")
-        self.Bind(wx.EVT_MENU, self.on_help, menuHelp)
-
-        # Sets up the About menu item
-        menuAbout = file_menu.Append(wx.ID_ABOUT, "About", " Information about this program")
-        self.Bind(wx.EVT_MENU, self.on_about, menuAbout)
-
-        file_menu.AppendSeparator()
-
-        # Sets up the Exit menu item
-        menuExit = file_menu.Append(wx.ID_EXIT, "Exit", " Terminate the program")
-        self.Bind(wx.EVT_MENU, self.on_exit, menuExit)
-
-        return file_menu
-
-    def setup_menubar(self):
-        """
-        """
-        # Creating the menubar.
-        menuBar = wx.MenuBar()
-
-        filemenu = self.setup_filemenu()
-
-        menuBar.Append(filemenu, "File")  # Adding the "filemenu" to the MenuBar
-        self.SetMenuBar(menuBar)  # Adding the MenuBar to the Frame content.
-        return menuBar
-
-    # Events Handling
+    # Overriding event handling methods
     def on_start(self, event):
         """
         User asks for starting the algorithm
@@ -355,7 +113,7 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
         self.inputdialog = wx.DirDialog(self, "Please choose your input directory", style=1, defaultPath=default_dir)
 
         if self.inputdialog.ShowModal() == wx.ID_OK:
-            self.inputchoosertext.SetLabel(self.inputdialog.GetPath())
+            self.inputtextbox.SetLabel(self.inputdialog.GetPath())
         self.inputdialog.Destroy()
 
     def on_output(self, event):
@@ -393,6 +151,7 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
         self.process_running = False
         self.Close(True)  # Close the frame.
 
+    # system methods
     def get_current_mode(self):
         """
         """
@@ -417,10 +176,10 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
         """
         Retrieves all parameters needed for the algorithm to run
         """
-        self.in_fo = self.inputchoosertext.GetLabel() + "/"
+        self.in_fo = self.inputtextbox.GetLabel() + "/"
         self.out_fo = self.outputchoosertext.GetLabel() + "/"
         self.param = self.typefacelist.GetValue()
-        self.speed = self.speedvals.index(self.videospeedlist.GetValue())  # We need and integer between 0 and 2
+        self.speed = self.videospeedlistChoices.index(self.videospeedlist.GetValue())  # We need and integer between 0 and 2
 
         self.mode = self.get_current_mode()
         self.sort = self.get_current_sort()
@@ -527,8 +286,3 @@ class IvolutionWindow(wx.Frame, Observer, Observable):
             self.my_logger.debug("Unrecognized command")
             self.console_logger.debug(message)
             self.my_logger.debug(message)
-
-if __name__ == "__main__":
-    app = wx.App(False)
-    frame = IvolutionWindow(None, "Ivolution Window")
-    app.MainLoop()  # Runs application
