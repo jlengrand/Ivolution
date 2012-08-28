@@ -60,7 +60,7 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
         """
         """
         # FIXME: You gotta try on a Mac
-        self.videospeedlistChoices = [u"slow", u"medium", u"fast"]  # FIXME: Is there a way to do better?
+        self.videospeedlistChoices = [u"slow", u"medium", u"fast"]
         self.gaugerange = 100
 
         self.root_fo = ""
