@@ -31,7 +31,7 @@ class FacemovieThread(threading.Thread, Observable, Observer):
         """
         threading.Thread.__init__(self)
         Observable.__init__(self)
-        Observer.__init__(self, "Facemovie")
+        Observer.__init__(self, "Application")
 
         self.stop_process = False
 
@@ -54,7 +54,7 @@ class FacemovieThread(threading.Thread, Observable, Observer):
                 self.my_logger.debug("Facemovie is going to stop")
 
                 self.stop_process = True
-                self.notify(["STOP"])
+                self.notify(["Lib", ["STOP"]])
             else:
                 self.console_logger.debug("Unrecognized system command")
                 self.my_logger.debug("Unrecognized system command")
@@ -65,14 +65,14 @@ class FacemovieThread(threading.Thread, Observable, Observer):
             #self.console_logger.debug(message)
             self.my_logger.debug(message)
             # notify gui about small updates
-            self.notify(["STATUS", message[0], message[1]])
+            self.notify(["Lib", ["STATUS", message[0], message[1]]])
 
             # checking for fatal error
             if message[0] == "Error":
                 self.console_logger.debug("Fatal Error detected")
                 self.my_logger.debug("Fatal Error detected")
                 self.stop_process = True
-                self.notify(["STOP"])
+                self.notify(["Lib", ["STOP"]])
 
         else:
             self.console_logger.debug("Unrecognized command")
@@ -81,35 +81,34 @@ class FacemovieThread(threading.Thread, Observable, Observer):
             self.my_logger.debug(message)
 
     def run(self):
-
         # FIXME : Quite ugly way of doing. Find better!
         if not self.stop_process:
 
             self.my_logger.debug("Listing pictures")
-            self.notify(["PROGRESS", "Listing pictures", 0.0])
+            self.notify(["Interface", ["PROGRESS", "Listing pictures", 0.0]])
             self.facemovie.list_guys()
 
         if not self.stop_process:
             self.my_logger.debug("Detecting Faces")
-            self.notify(["PROGRESS", "Detecting Faces", 0.2])
+            self.notify(["Interface", ["PROGRESS", "Detecting Faces", 0.2]])
             self.facemovie.prepare_faces()  # I want to search for the faces, and characteristics of the images
 
         if not self.stop_process:
             self.my_logger.debug("Calculating video requirements")
-            self.notify(["PROGRESS", "Calculating video requirements", 0.6])
+            self.notify(["Interface", ["PROGRESS", "Calculating video requirements", 0.6]])
             self.facemovie.find_final_dimensions()  # finds output size for desired mode.
 
         if not self.stop_process:
             self.my_logger.debug("Generating movie")
-            self.notify(["PROGRESS", "Generating movie", 0.8])
+            self.notify(["Interface", ["PROGRESS", "Generating movie", 0.8]])
             self.facemovie.save_movie()
             self.my_logger.debug("Movie saved")
-            self.notify(["PROGRESS", "Movie saved, Finished!", 1.0])
+            self.notify(["Interface", ["PROGRESS", "Movie saved, Finished!", 1.0]])
             # updating status to avoid remanent messages
-            self.notify(["STATUS", " ", 1.0])
+            self.notify(["Interface", ["STATUS", " ", 1.0]])
 
         if not self.stop_process:
             self.my_logger.debug("Thread terminated")
 
         if self.stop_process:
-            self.notify(["PROGRESS", "Process cancelled!", 1.0])
+            self.notify(["Interface", ["PROGRESS", "Process cancelled!", 1.0]])

@@ -1,7 +1,7 @@
 """
 .. module:: Notifier
    :platform: Unix, Windows
-   :synopsis: Implements a simple Observer/Observable pattern for communication between between Facemovie thread and Ivolution GUI 
+   :synopsis: Implements a simple Observer/Observable pattern for communication between between Facemovie thread and Ivolution GUI
 
 .. moduleauthor:: Julien Lengrand-Lambert <jlengrand@gmail.com>
 
@@ -76,10 +76,3 @@ class Observable():
         for observer in self.obs_collection:
             #print "sent %s to %s" %(message, str(observer))
             observer.update(message)
-
-
-    def set_val(self, val=1):
-        """
-        """
-        self.val += val
-        self.notify(str(self.val))

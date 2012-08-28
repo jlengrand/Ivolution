@@ -37,7 +37,7 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
         Overrides init frame IvolutionTemplate
         """
         IvolutionTemplate.__init__(self, parent)
-        Observer.__init__(self, title)
+        Observer.__init__(self, "Interface")
         Observable.__init__(self)
 
         # Sets up logging capability
@@ -108,7 +108,7 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
         """
         self.my_logger.debug("Stop pressed")
         self.console_logger.debug("Stop pressed")
-        self.notify(["STOP"])  # Asking the Facemovie to stop
+        self.notify(["Application", ["STOP"]])  # Asking the Facemovie to stop
         self.process_running = False
 
         #self.on_exit(event) # Finally shuts down the interface
@@ -155,7 +155,7 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
         Called when the IvolutionWindow is closed, or File/Exit is called.
         """
         # Clean up code for saving application state should be added here.
-        self.notify(["STOP"])  # Asking the Facemovie to stop
+        self.notify(["Application", ["STOP"]])  # Asking the Facemovie to stop
         self.process_running = False
         self.Close(True)  # Close the frame.
 

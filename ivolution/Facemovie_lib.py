@@ -40,7 +40,7 @@ class FaceMovie(object, Observable, Observer):
         :type face_param: string
         """
         Observable.__init__(self)  # used to send notifications to process
-        Observer.__init__(self, "Library")  # used to receive notification to stop
+        Observer.__init__(self, "Lib")  # used to receive notification to stop
 
         self.console_logger = logging.getLogger('ConsoleLog')  # Used to send messages to the console
         self.my_logger = logging.getLogger('FileLog')  # Used to save events into a file
@@ -183,9 +183,9 @@ class FaceMovie(object, Observable, Observer):
         # notifying the Observers
         try:
             message = message_root + "  %d / %d" % (num, den)
-            self.notify([message, self.percent(num, den)])
+            self.notify(["Application", [message, self.percent(num, den)]])
         except (ArithmeticError, ZeroDivisionError):
-            self.notify(["Error", 0])
+            self.notify(["Application", ["Error", 0]])
 
     def clean_guys(self):
         """
