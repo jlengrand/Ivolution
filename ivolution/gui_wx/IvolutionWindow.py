@@ -11,6 +11,7 @@
 import wx
 import wx.lib.newevent
 
+import sys
 import os
 import logging
 import webbrowser
@@ -39,37 +40,41 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
         Observer.__init__(self, title)
         Observable.__init__(self)
 
-        self.videospeedlistChoices = [u"slow", u"medium", u"fast"]  # FIXME: Is there a way to do better?
-        self.gaugerange = 100
-
         # Sets up logging capability
         self.my_logger = None
         self.console_logger = None
         self.setup_logger()
 
-        # Sets icon
-        self.SetIcon(wx.Icon('ivolution/data/media/vitruve.ico', wx.BITMAP_TYPE_ICO))
-        # image = wx.Image("ivolution/data/media/vitruve.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        # icon = wx.EmptyIcon()
-        # icon.CopyFromBitmap(image)
-        # self.SetIcon(icon)
-
         # Defines all our parameters neededfor the facemovie
+        self.get_default_parameters()
+
+        self.process_running = False
+        self.facemovie = None
+
+        self.inputtextbox.SetLabel(self.in_fo)  # sets label to default input folder
+        self.SetIcon(wx.Icon('ivolution/data/media/vitruve.ico', wx.BITMAP_TYPE_ICO))  # Sets icon
+
+        self.Show(True)  # Finally show the frame
+
+    def get_default_parameters(self):
+        """
+        """
+        # FIXME: You gotta try on a Mac
+        self.videospeedlistChoices = [u"slow", u"medium", u"fast"]  # FIXME: Is there a way to do better?
+        self.gaugerange = 100
+
         self.root_fo = ""
-        self.in_fo = ""  # Input folder, where images are located
-        #self.out_fo = ""  # Input folder, where the video will be saved
-        self.out_fo = "C:/Users/jll/Videos" #Default folder for Windows
         self.mode = "crop"  # type of video to be created
         self.sort = "name"  # how image files will be chronologically sorted
         self.speed = 1  # Speed of the movie
         self.param = "frontal_face"  # type of face profile to be searched for
 
-        self.in_fo = ""  # Input folder, where images are located
-
-        self.process_running = False
-        self.facemovie = None
-
-        self.Show(True)  # Finally show the frame
+        if "win" in sys.platform:
+            self.out_fo = "C:/Users/jll/Videos/"  # Default folder for Windows
+            self.in_fo = "C:\Users\jll\Pictures/"
+        else:
+            self.out_fo = "C:/Users/jll/Videos/"  # Default folder for Linux
+            self.in_fo = "/home/jll/Pictures/"
 
     # Overriding event handling methods
     def on_settings(self, event):
