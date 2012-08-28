@@ -75,4 +75,5 @@ class Observable():
         """
         for observer in self.obs_collection:
             #print "sent %s to %s" %(message, str(observer))
-            observer.update(message)
+            if message[0] == observer.name:
+                observer.update(message[1])
