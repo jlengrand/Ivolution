@@ -47,6 +47,7 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
         self.console_logger = None
         self.setup_logger()
 
+        self.logo = wx.StaticBitmap(self, wx.ID_ANY, wx.Bitmap(u"ivolution/data/media/vitruve_50.jpg", wx.BITMAP_TYPE_ANY), wx.DefaultPosition, wx.Size(50, 50), 0)  # Sets logo
         # Sets icon
         self.SetIcon(wx.Icon('ivolution/data/media/vitruve.ico', wx.BITMAP_TYPE_ICO))
         # image = wx.Image("ivolution/data/media/vitruve.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
@@ -71,9 +72,6 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
         self.Show(True)  # Finally show the frame
 
     # Overriding event handling methods
-    def on_settings(self, event):
-        print "settings"
-
     def on_start(self, event):
         """
         User asks for starting the algorithm
