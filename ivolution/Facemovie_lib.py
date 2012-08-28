@@ -51,17 +51,10 @@ class FaceMovie(object, Observable, Observer):
 
         out_folder = self.face_params.output_folder
         self.out_path = "./data"
-        self.out_name = "output"
+        self.out_name = "ivolution"
         self.out_format = "avi"
         # updating the out_folder if needed
         self.check_out_name(out_folder)
-
-        self.face_params.output_folder
-        self.out_path = "./data"
-        self.out_name = "output"
-        self.out_format = "avi"
-
-        self.check_out_name(out_folder)  # updating the out_folder if needed
 
         self.sort_method = face_params.sort  # sorting by name or using metadata (n or e)
         self.mode = face_params.mode  # can be crop or conservative.

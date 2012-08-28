@@ -57,7 +57,8 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
         # Defines all our parameters neededfor the facemovie
         self.root_fo = ""
         self.in_fo = ""  # Input folder, where images are located
-        self.out_fo = ""  # Input folder, where the video will be saved
+        #self.out_fo = ""  # Input folder, where the video will be saved
+        self.out_fo = "C:/Users/jll/Videos" #Default folder for Windows
         self.mode = "crop"  # type of video to be created
         self.sort = "name"  # how image files will be chronologically sorted
         self.speed = 1  # Speed of the movie
@@ -178,13 +179,19 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
         """
         Retrieves all parameters needed for the algorithm to run
         """
-        self.in_fo = self.inputtextbox.GetLabel() + "/"
-        self.out_fo = self.outputchoosertext.GetLabel() + "/"
-        self.param = self.typefacelist.GetValue()
-        self.speed = self.videospeedlistChoices.index(self.videospeedlist.GetValue())  # We need and integer between 0 and 2
+        #self.in_fo = self.inputtextbox.GetLabel() + "/"
+        self.in_fo = "C:\Users\jll\perso\Ivolution\ivolution\data\samples" + "/"
+        self.out_fo = "C:\Users\jll\Videos" + "/"
+        #self.out_fo = self.outputchoosertext.GetLabel() + "/"
+        self.param = "frontal_face"
+        #self.param = self.typefacelist.GetValue()
+        #self.speed = self.videospeedlistChoices.index(self.videospeedlist.GetValue())  # We need and integer between 0 and 2
+        self.speed = self.videospeedlistChoices[1]
 
-        self.mode = self.get_current_mode()
-        self.sort = self.get_current_sort()
+        self.mode = "crop"
+        self.sort = "name"
+        #self.mode = self.get_current_mode()
+        #self.sort = self.get_current_sort()
 
         # Instantiating the face_params object that will be needed by the facemovie
         par_fo = os.path.join(self.root_fo, get_data("haarcascades"))
@@ -263,7 +270,7 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
                 # big steps performed
                 wx.MutexGuiEnter()  # to avoid thread problems
                 self.progressgauge.SetValue(self.gaugerange * float(message[2]))
-                self.sb.SetStatusText(message[1], 0)
+                self.statusbar.SetStatusText(message[1], 0)
                 wx.MutexGuiLeave()
 
                 if float(message[2]) >= 1.0:  # 100% of process
@@ -274,13 +281,13 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
             elif message[0] == "STATUS":  # status label
                 if message[1] == "Error":
                     wx.MutexGuiEnter()  # to avoid thread problems
-                    self.sb.SetStatusText("Error detected", 0)
+                    self.statusbar.SetStatusText("Error detected", 0)
                     self.progressgauge.SetValue(0)
                     wx.MutexGuiLeave()
                     self.process_running = False
 
                 wx.MutexGuiEnter()  # to avoid thread problems
-                self.sb.SetStatusText(message[1], 1)
+                self.statusbar.SetStatusText(message[1], 1)
                 wx.MutexGuiLeave()
 
         elif len(message) > 1:  # system commands shall be ignored
