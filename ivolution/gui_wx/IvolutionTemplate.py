@@ -82,9 +82,22 @@ class IvolutionTemplate ( wx.Frame ):
 
 		mainsizer.Add( self.toolbar, 0, wx.EXPAND|wx.TOP, 0 )
 
-		self.inputtextbox = wx.StaticText( self, wx.ID_ANY, u"Chosen Folder : ", wx.DefaultPosition, wx.DefaultSize, 0 )
+		inputfoldergrid = wx.FlexGridSizer( 1, 2, 0, 0 )
+		inputfoldergrid.AddGrowableCol( 1 )
+		inputfoldergrid.SetFlexibleDirection( wx.BOTH )
+		inputfoldergrid.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
+
+		self.inputtextfixed = wx.StaticText( self, wx.ID_ANY, u"Chosen Folder : ", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.inputtextfixed.Wrap( -1 )
+		self.inputtextfixed.SetFont( wx.Font( 8, 74, 90, 92, False, "Tahoma" ) )
+
+		inputfoldergrid.Add( self.inputtextfixed, 0, wx.ALL, 5 )
+
+		self.inputtextbox = wx.StaticText( self, wx.ID_ANY, u"~/Documents", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.inputtextbox.Wrap( -1 )
-		mainsizer.Add( self.inputtextbox, 0, wx.ALL, 5 )
+		inputfoldergrid.Add( self.inputtextbox, 0, wx.ALL, 5 )
+
+		mainsizer.Add( inputfoldergrid, 1, wx.EXPAND, 5 )
 
 		self.filelist = wx.ListCtrl( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_LIST )
 		mainsizer.Add( self.filelist, 0, wx.EXPAND, 5 )
