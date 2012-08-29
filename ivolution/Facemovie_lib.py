@@ -121,6 +121,7 @@ class FaceMovie(object, Observable, Observer):
 
                         # populating guys
                         self.guys.append(a_guy)
+                        self.notify(["Application", ["FILEADD", guy_name]])
                     except:
                         self.console_logger.info("Skipping %s. Not an image file" % (guy_source))
                         self.my_logger.info("Skipping %s. Not an image file" % (guy_source))

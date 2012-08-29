@@ -64,8 +64,12 @@ class FacemovieThread(threading.Thread, Observable, Observer):
 
             #self.console_logger.debug(message)
             self.my_logger.debug(message)
-            # notify gui about small updates
-            self.notify(["Lib", ["STATUS", message[0], message[1]]])
+            if message[0] == "FILEADD":
+                print "got it !"
+                self.notify(["Interface", [message[0], message[1], 0]])
+            else:
+                # notify gui about small updates
+                self.notify(["Interface", ["STATUS", message[0], message[1]]])
 
             # checking for fatal error
             if message[0] == "Error":

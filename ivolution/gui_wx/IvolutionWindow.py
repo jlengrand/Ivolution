@@ -294,6 +294,12 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
                 wx.MutexGuiEnter()  # to avoid thread problems
                 self.statusbar.SetStatusText(message[1], 1)
                 wx.MutexGuiLeave()
+            elif message[0] == "FILEADD":
+                item = wx.ListItem()
+                item.SetText(message[1])
+                wx.MutexGuiEnter()  # to avoid thread problems
+                self.filelist.InsertItem(item)
+                wx.MutexGuiLeave()
 
         elif len(message) > 1:  # system commands shall be ignored
             self.console_logger.debug("Unrecognized command")
