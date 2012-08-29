@@ -154,6 +154,7 @@ class FaceMovie(object, Observable, Observer):
         for a_guy in self.guys:
             ptr += 1
             if self.run:
+                faceres = 0
                 a_guy.search_face(self.face_params)
 
                 # notifying the Observers
@@ -162,9 +163,12 @@ class FaceMovie(object, Observable, Observer):
                 if a_guy.has_face():  # face(s) have been found
                     self.console_logger.info("Face found for %s" % (a_guy.name))
                     self.my_logger.info("Face found for %s" % (a_guy.name))
+                    faceres = 1  # for notifying
                 else:
                     self.console_logger.warning("No face found for %s. Skipped . . ." % (a_guy.name))
                     self.my_logger.warning("No face found for %s. Skipped . . ." % (a_guy.name))
+
+                self.notify(["Application", ["FILEDONE", a_guy.name, faceres]])
 
     def percent(self, num, den):
         """

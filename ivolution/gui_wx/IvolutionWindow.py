@@ -300,6 +300,8 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
                 wx.MutexGuiEnter()  # to avoid thread problems
                 self.filelist.InsertItem(item)
                 wx.MutexGuiLeave()
+            elif message[0] == "FILEDONE":
+                print "Done : %s" % (message[1])
 
         elif len(message) > 1:  # system commands shall be ignored
             self.console_logger.debug("Unrecognized command")
