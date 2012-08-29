@@ -301,7 +301,13 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
                 self.filelist.InsertItem(item)
                 wx.MutexGuiLeave()
             elif message[0] == "FILEDONE":
-                print "Done : %s" % (message[1])
+                for i in range(self.filelist.GetItemCount()):
+                    if message[1] == self.filelist.GetItemText(i):
+                        print "FUCKKKKKK"
+                        wx.MutexGuiEnter()  # to avoid thread problems
+                        #self.filelist.GetItem(i).SetBackgroundColour('green'), 1)
+                        self.filelist.SetItemTextColour(i, "green")
+                        wx.MutexGuiLeave()
 
         elif len(message) > 1:  # system commands shall be ignored
             self.console_logger.debug("Unrecognized command")

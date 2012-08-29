@@ -66,9 +66,6 @@ class FacemovieThread(threading.Thread, Observable, Observer):
             self.my_logger.debug(message)
             if message[0] == "FILEADD":
                 self.notify(["Interface", [message[0], message[1], 0]])
-            elif message[0] == "FILEDONE":
-                print "tointerface"
-                self.notify(["Interface", message])
             else:
                 # notify gui about small updates
                 self.notify(["Interface", ["STATUS", message[0], message[1]]])
@@ -80,6 +77,10 @@ class FacemovieThread(threading.Thread, Observable, Observer):
                 self.stop_process = True
                 self.notify(["Lib", ["STOP"]])
 
+        elif len(message) == 3:  # notifications
+            if message[0] == "FILEDONE":
+                self.notify(["Interface", message])
+
         else:
             self.console_logger.debug("Unrecognized command")
             self.my_logger.debug("Unrecognized command")
@@ -87,7 +88,6 @@ class FacemovieThread(threading.Thread, Observable, Observer):
             self.my_logger.debug(message)
 
     def run(self):
-        # FIXME : Quite ugly way of doing. Find better!
         if not self.stop_process:
 
             self.my_logger.debug("Listing pictures")
