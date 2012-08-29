@@ -303,10 +303,12 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
             elif message[0] == "FILEDONE":
                 for i in range(self.filelist.GetItemCount()):
                     if message[1] == self.filelist.GetItemText(i):
-                        print "FUCKKKKKK"
+                        if message[2] == 1:
+                            color = "green"
+                        else:
+                            color = "red"
                         wx.MutexGuiEnter()  # to avoid thread problems
-                        #self.filelist.GetItem(i).SetBackgroundColour('green'), 1)
-                        self.filelist.SetItemTextColour(i, "green")
+                        self.filelist.SetItemTextColour(i, color)
                         wx.MutexGuiLeave()
 
         elif len(message) > 1:  # system commands shall be ignored
