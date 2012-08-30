@@ -145,13 +145,12 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
         """
         Displays the about box for Ivolution
         """
-        description = """File Hunter is an advanced file manager for
-the Unix operating system. Features include powerful built-in editor,
-advanced search capabilities, powerful batch renaming, file comparison,
-extensive archive handling and more.
+        description = """FaceMovie is a project aiming at helping you
+ create videos of yourself over time. Simply take pictures of yourself, Facemovie does everything else for you.
+FaceMovie may be used for faces, but also profiles (to show women along pregnancy for example) or full body (for people workouting). The only limitation comes from you !
 """
 
-        licence = """File Hunter is free software; you can redistribute
+        licence = """Ivolution is free software; you can redistribute
 it and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
@@ -166,17 +165,17 @@ Suite 330, Boston, MA  02111-1307  USA"""
 
         info = wx.AboutDialogInfo()
 
-        #info.SetIcon(wx.Icon('hunter.png', wx.BITMAP_TYPE_PNG))
-        info.SetName('File Hunter')
-        info.SetVersion('1.0')
+        info.SetIcon(wx.Icon('ivolution/data/media/vitruve.png', wx.BITMAP_TYPE_PNG))
+        info.SetName('Ivolution')
+        info.SetVersion('0.8')
         info.SetDescription(description)
-        info.SetCopyright('(C) 2007 - 2011 Jan Bodnar')
-        info.SetWebSite('http://www.zetcode.com')
+        info.SetCopyright('(C) 2012 Julien Lengrand-Lambert')
+        info.SetWebSite('http://www.lengrand.fr')
         info.SetLicence(licence)
-        info.AddDeveloper('Jan Bodnar')
-        info.AddDocWriter('Jan Bodnar')
-        info.AddArtist('The Tango crew')
-        info.AddTranslator('Jan Bodnar')
+        info.AddDeveloper('Julien Lengrand-Lambert')
+        info.AddDocWriter('Julien Lengrand-Lambert')
+        info.AddArtist('Luc Viatour')
+        info.AddTranslator('Julien Lengrand-Lambert')
 
         wx.AboutBox(info)
 
