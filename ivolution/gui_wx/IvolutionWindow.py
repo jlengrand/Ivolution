@@ -85,7 +85,11 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
         Sets all parameters and start processing
         """
         self.my_logger.debug("start pressed")
+
         if not self.process_running:  # start only if not already running
+            # Empty list on screen
+            self.filelist.DeleteAllItems()
+
             self.set_parameters()
             self.print_parameters()
             # Instantiating the facemovie
