@@ -97,7 +97,6 @@ class FaceMovie(object, Observable, Observer):
         ptr = 0
         for root, _, files in os.walk(self.source):
             for a_file in files:
-                ptr += 1
                 # notifying the Observers
                 self.notify_progress("Processing file", ptr, len(files))
 
@@ -118,6 +117,7 @@ class FaceMovie(object, Observable, Observer):
                             guy_date = ''
 
                         a_guy = Guy.Guy(guy_name, guy_date, guy_source)
+                        ptr += 1  # Adding file only if picture
 
                         # populating guys
                         self.guys.append(a_guy)
@@ -190,6 +190,7 @@ class FaceMovie(object, Observable, Observer):
             message = message_root + "  %d / %d" % (num, den)
             self.notify(["Application", [message, self.percent(num, den)]])
         except (ArithmeticError, ZeroDivisionError):
+            self.my_logger.error("ArithmeticError on %s, %d, %d" % (message_root, num, den))
             self.notify(["Application", ["Error", 0]])
 
     def clean_guys(self):
