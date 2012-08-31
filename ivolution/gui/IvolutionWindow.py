@@ -256,7 +256,7 @@ either expressed or implied, of the FreeBSD Project."""
         Start logging in file here
         """
         personal_dir = os.path.join(self.home_dir, ".ivolution")
-        log_root = 'fm.log'
+        log_root = 'ivolution.log'
         log_file = os.path.join(os.path.expanduser(personal_dir), log_root)
 
         # create logger for  'facemovie'

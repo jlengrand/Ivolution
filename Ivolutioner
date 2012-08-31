@@ -1,7 +1,18 @@
 #!/usr/bin/env python
 
 import wx
+import os
 from ivolution.gui import IvolutionWindow
+
+# Trying to create personal folder if needed
+dir = os.path.join(os.path.expanduser("~"), ".ivolution")
+if not os.path.exists(dir):
+    os.makedirs(dir)
+
+# Trying to create log file if needed
+myfile = os.path.join(dir, 'ivolution.log')
+if not os.path.isfile(myfile):
+    file(myfile, 'w').close()
 
 app = wx.App(False)
 frame = IvolutionWindow.IvolutionWindow(None, "Ivolution Window")
