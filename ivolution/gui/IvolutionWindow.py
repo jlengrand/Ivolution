@@ -180,7 +180,7 @@ either expressed or implied, of the FreeBSD Project."""
 
         info.SetIcon(wx.Icon('ivolution/data/media/vitruve.png', wx.BITMAP_TYPE_PNG))
         info.SetName('Ivolution')
-        info.SetVersion('0.8')
+        info.SetVersion('0.6')
         info.SetDescription(description)
         info.SetCopyright('(C) 2012 Julien Lengrand-Lambert')
         info.SetWebSite('http://www.lengrand.fr')
