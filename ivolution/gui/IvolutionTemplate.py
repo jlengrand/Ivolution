@@ -61,18 +61,18 @@ class IvolutionTemplate ( wx.Frame ):
 		self.toolbar.SetMinSize( wx.Size( -1,30 ) )
 		self.toolbar.SetMaxSize( wx.Size( -1,35 ) )
 
-		self.toolbar.AddTool( inputid, u"Input", wx.Bitmap( u"../Ivolution/ivolution/data/media/icons/folder_add_48.png", wx.BITMAP_TYPE_ANY ), wx.NullBitmap, wx.ITEM_NORMAL, wx.EmptyString, wx.EmptyString, None )
+		self.toolbar.AddTool( inputid, u"Input", wx.Bitmap( u"ivolution/data/media/icons/folder_add_48.png", wx.BITMAP_TYPE_ANY ), wx.NullBitmap, wx.ITEM_NORMAL, wx.EmptyString, wx.EmptyString, None )
 
 
-		self.toolbar.AddTool( settingsid, u"Settings", wx.Bitmap( u"../Ivolution/ivolution/data/media/icons/spanner_48.png", wx.BITMAP_TYPE_ANY ), wx.NullBitmap, wx.ITEM_NORMAL, wx.EmptyString, wx.EmptyString, None )
+		self.toolbar.AddTool( settingsid, u"Settings", wx.Bitmap( u"ivolution/data/media/icons/spanner_48.png", wx.BITMAP_TYPE_ANY ), wx.NullBitmap, wx.ITEM_NORMAL, wx.EmptyString, wx.EmptyString, None )
 
 
 		self.toolbar.AddSeparator()
 
-		self.toolbar.AddTool( startid, u"Go!", wx.Bitmap( u"../Ivolution/ivolution/data/media/icons/accepted_48.png", wx.BITMAP_TYPE_ANY ), wx.NullBitmap, wx.ITEM_NORMAL, wx.EmptyString, wx.EmptyString, None )
+		self.toolbar.AddTool( startid, u"Go!", wx.Bitmap( u"ivolution/data/media/icons/accepted_48.png", wx.BITMAP_TYPE_ANY ), wx.NullBitmap, wx.ITEM_NORMAL, wx.EmptyString, wx.EmptyString, None )
 
 
-		self.toolbar.AddTool( stopid, u"Stop!", wx.Bitmap( u"../Ivolution/ivolution/data/media/icons/cancel_48.png", wx.BITMAP_TYPE_ANY ), wx.NullBitmap, wx.ITEM_NORMAL, wx.EmptyString, wx.EmptyString, None )
+		self.toolbar.AddTool( stopid, u"Stop!", wx.Bitmap( u"ivolution/data/media/icons/cancel_48.png", wx.BITMAP_TYPE_ANY ), wx.NullBitmap, wx.ITEM_NORMAL, wx.EmptyString, wx.EmptyString, None )
 
 
 		self.toolbar.AddSeparator()
