@@ -55,10 +55,11 @@ class IvolutionTemplate ( wx.Frame ):
 		mainsizer.SetFlexibleDirection( wx.BOTH )
 		mainsizer.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_ALL )
 
-		self.toolbar = wx.aui.AuiToolBar( self, wx.ID_ANY, wx.DefaultPosition, wx.Size( -1,25 ), wx.aui.AUI_TB_HORZ_LAYOUT )
+		self.toolbar = wx.aui.AuiToolBar( self, wx.ID_ANY, wx.DefaultPosition, wx.Size( -1,30 ), wx.aui.AUI_TB_HORZ_LAYOUT )
 		self.toolbar.SetToolBitmapSize( wx.Size( 25,25 ) )
-		self.toolbar.SetMinSize( wx.Size( -1,25 ) )
-		self.toolbar.SetMaxSize( wx.Size( -1,25 ) )
+		self.toolbar.SetMargins( wx.Size( 0,0 ) )
+		self.toolbar.SetMinSize( wx.Size( -1,30 ) )
+		self.toolbar.SetMaxSize( wx.Size( -1,35 ) )
 
 		self.toolbar.AddTool( inputid, u"Input", wx.Bitmap( u"../Ivolution/ivolution/data/media/icons/folder_add_48.png", wx.BITMAP_TYPE_ANY ), wx.NullBitmap, wx.ITEM_NORMAL, wx.EmptyString, wx.EmptyString, None )
 
@@ -83,21 +84,20 @@ class IvolutionTemplate ( wx.Frame ):
 		mainsizer.Add( self.toolbar, 0, wx.EXPAND|wx.TOP, 0 )
 
 		inputfoldergrid = wx.FlexGridSizer( 1, 2, 0, 0 )
-		inputfoldergrid.AddGrowableCol( 1 )
-		inputfoldergrid.SetFlexibleDirection( wx.BOTH )
+		inputfoldergrid.SetFlexibleDirection( wx.HORIZONTAL )
 		inputfoldergrid.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 
 		self.inputtextfixed = wx.StaticText( self, wx.ID_ANY, u"Chosen Folder : ", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.inputtextfixed.Wrap( -1 )
 		self.inputtextfixed.SetFont( wx.Font( 8, 74, 90, 92, False, "Tahoma" ) )
 
-		inputfoldergrid.Add( self.inputtextfixed, 0, wx.ALL, 5 )
+		inputfoldergrid.Add( self.inputtextfixed, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
 		self.inputtextbox = wx.StaticText( self, wx.ID_ANY, u"~/Documents", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.inputtextbox.Wrap( -1 )
-		inputfoldergrid.Add( self.inputtextbox, 0, wx.ALL, 5 )
+		inputfoldergrid.Add( self.inputtextbox, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-		mainsizer.Add( inputfoldergrid, 1, wx.EXPAND, 5 )
+		mainsizer.Add( inputfoldergrid, 1, wx.ALIGN_CENTER_VERTICAL, 5 )
 
 		self.filelist = wx.ListCtrl( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_LIST )
 		mainsizer.Add( self.filelist, 0, wx.EXPAND, 5 )
