@@ -260,7 +260,7 @@ either expressed or implied, of the FreeBSD Project."""
         log_file = os.path.join(os.path.expanduser(personal_dir), log_root)
 
         # create logger for  'facemovie'
-        self.my_logger = logging.getLogger('FileLog')
+        self.my_logger = logging.getLogger('IvolutionFile')
 
         self.my_logger.setLevel(logging.DEBUG)
         # create file handler which logs even debug messages

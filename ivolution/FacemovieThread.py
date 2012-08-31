@@ -40,7 +40,7 @@ class FacemovieThread(threading.Thread, Observable, Observer):
         self.facemovie.subscribe(self)  # Subscribing to facemovie reports
         self.subscribe(self.facemovie)  # Used to send request to stop
 
-        self.my_logger = logging.getLogger('FileLog')
+        self.my_logger = logging.getLogger('IvolutionFile.Thread')
         self.console_logger = logging.getLogger('ConsoleLog')
 
     def update(self, message):

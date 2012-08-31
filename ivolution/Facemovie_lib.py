@@ -43,7 +43,7 @@ class FaceMovie(object, Observable, Observer):
         Observer.__init__(self, "Lib")  # used to receive notification to stop
 
         self.console_logger = logging.getLogger('ConsoleLog')  # Used to send messages to the console
-        self.my_logger = logging.getLogger('FileLog')  # Used to save events into a file
+        self.my_logger = logging.getLogger('IvolutionFile.Lib')  # Used to save events into a file
 
         self.source = face_params.input_folder  # Source folder for pictures
         # Retrieving parameters for Face Detection

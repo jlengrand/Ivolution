@@ -85,7 +85,7 @@ class FaceParams(object):
         """
         Log configuration
         """
-        my_logger = logging.getLogger('FileLog')
+        my_logger = logging.getLogger('IvolutionFile.Params')
         params_str =  "---------"
         params_str += "Selected parameters for your Facemovie:"
         params_str += "Input Folder: %s" % (self.input_folder)
