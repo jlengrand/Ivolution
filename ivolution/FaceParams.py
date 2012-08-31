@@ -13,6 +13,7 @@ import logging
 
 import training_types
 
+
 class FaceParams(object):
     '''
     Simple class used to store parameters used for Face detection
@@ -27,35 +28,35 @@ class FaceParams(object):
         :type xml_folder: string
         :param training_type: the type of profile we are going to use
         :type training_type: string
-                                
+
         :param input_folder: the location where images are located
         :type input_folder: string
         :param output_folder: the location where the video will be saved
         :type output_folder: string
         :param speed: the time delay between frames in the video
-        :type speed: int                                             
+        :type speed: int
         :param mode: the creation mode of the video. Defines whether images are cropped, or black borders are added.
         :type mode: string
         :param sort: the method used to sort images chronologically
-        :type sort: string                       
+        :type sort: string
         """
 
         self.input_folder = input_folder
         self.output_folder = output_folder
-        self.speed = 1 # between 0 and 2
-        self.mode = mode # conservative or crop
-        self.sort = sort # name or exif
+        self.speed = speed
+        self.mode = mode  # conservative or crop
+        self.sort = sort  # name or exif
 
         cascade_name = training_types.simple_set[training_type] + ".xml"
         # Setting up some default parameters for Face Detection
         self.face_cascade = cv.Load(os.path.join(xml_folder, cascade_name))
 
         # To be defined more precisely
-        self.min_size = (20,20)
-        self.image_scale = 2 # Image scaling chosen for classification (2) 
-        self.haar_scale = 1.2 # Haar scaling chosen for classification (1.2) 
-        self.min_neighbors = 2 # the Minimum number of neighbors to be defined (2) 
-        self.haar_flags = 0 # the chosen number of haar flags (0)
+        self.min_size = (20, 20)
+        self.image_scale = 2  # Image scaling chosen for classification (2)
+        self.haar_scale = 1.2  # Haar scaling chosen for classification (1.2)
+        self.min_neighbors = 2  # the Minimum number of neighbors to be defined (2)
+        self.haar_flags = 0  # the chosen number of haar flags (0)
 
         self.log()
 
@@ -82,7 +83,7 @@ class FaceParams(object):
 
     def log(self):
         """
-        Log configuration 
+        Log configuration
         """
         my_logger = logging.getLogger('FileLog')
         params_str =  "---------"
@@ -100,6 +101,5 @@ class FaceParams(object):
         params_str += "Haar scaling: %f" % (self.haar_scale)
         params_str += "Number of Haar flags: %d" % (self.haar_flags)
         params_str += "Minimum number of neighbors: %d" % (self.min_neighbors)
-        params_str += "---------"  
+        params_str += "---------"
         my_logger.debug(params_str)
-      

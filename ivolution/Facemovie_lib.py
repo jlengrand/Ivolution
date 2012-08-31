@@ -66,7 +66,7 @@ class FaceMovie(object, Observable, Observer):
         self.depth = 0  # depth of the set of images
 
         self.weight_steps = 5  # number of images to be inserted between each frame to reduce violent switch
-        self.speed = [2, 5, 9]  # this one should be internal. Number of fps for the video
+        self.speed = [3, 6, 9]  # this one should be internal. Number of fps for the video
         self.run = True  # command used to stop the processing if needed
 
     def update(self, message):
@@ -402,8 +402,6 @@ class FaceMovie(object, Observable, Observer):
 
         #frameSize = (652, 498)
         pace = ["slow", "normal", "fast"]
-        self.console_logger.info("Speed is set to %s" % (pace[speedrate]))
-        self.my_logger.info("Speed is set to %s" % (pace[speedrate]))
         my_video = cv.CreateVideoWriter(self.get_out_file(),
                                       fourcc,
                                       self.speed[speedrate],

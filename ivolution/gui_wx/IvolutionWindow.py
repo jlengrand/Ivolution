@@ -240,22 +240,8 @@ either expressed or implied, of the FreeBSD Project."""
         """
         Retrieves all parameters needed for the algorithm to run
         """
-        #self.in_fo = self.inputtextbox.GetLabel() + "/"
-        # self.in_fo = "C:\Users\jll\perso\Ivolution\ivolution\data\samples" + "/"
-        # self.out_fo = "C:\Users\jll\Videos" + "/"
-        # #self.out_fo = self.outputchoosertext.GetLabel() + "/"
-        # self.param = "frontal_face"
-        # #self.param = self.typefacelist.GetValue()
-        # #self.speed = self.videospeedlistChoices.index(self.videospeedlist.GetValue())  # We need and integer between 0 and 2
-        # self.speed = self.videospeedlistChoices[1]
-
-        # self.mode = "crop"
-        # self.sort = "name"
-        #self.mode = self.get_current_mode()
-        #self.sort = self.get_current_sort()
-        self.print_parameters()
-
         # Instantiating the face_params object that will be needed by the facemovie
+        self.out_fo += "/" #FIXME: enhance that
         par_fo = os.path.join(self.root_fo, get_data("haarcascades"))
         self.face_params = FaceParams.FaceParams(par_fo,
                                                  self.in_fo,

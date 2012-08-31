@@ -77,7 +77,7 @@ class SettingsTemplate ( wx.Frame ):
         fgSizer8.SetFlexibleDirection( wx.BOTH )
         fgSizer8.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 
-        self.outputText = wx.TextCtrl( self.basicPage, wx.ID_ANY, u"Ivolution", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.outputText = wx.TextCtrl( self.basicPage, wx.ID_ANY, u"Ivolution", wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
         fgSizer8.Add( self.outputText, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
         self.extentLabel = wx.StaticText( self.basicPage, wx.ID_ANY, u".avi", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -108,7 +108,7 @@ class SettingsTemplate ( wx.Frame ):
         speedSizer.Add( self.speedLabel, 0, wx.ALL, 5 )
 
         speedComboChoices = [ u"Slow", u"Medium", u"Fast" ]
-        self.speedCombo = wx.ComboBox( self.advancedPage, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, speedComboChoices, 0 )
+        self.speedCombo = wx.ComboBox( self.advancedPage, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, speedComboChoices, wx.CB_READONLY )
         speedSizer.Add( self.speedCombo, 0, wx.ALL|wx.EXPAND, 5 )
 
         fgSizer11.Add( speedSizer, 1, wx.EXPAND, 10 )
@@ -151,7 +151,7 @@ class SettingsTemplate ( wx.Frame ):
         typeSizer.Add( self.typeLabel, 0, wx.ALL, 5 )
 
         typeComboChoices = [ u"frontal_face", u"profile_face" ]
-        self.typeCombo = wx.ComboBox( self.advancedPage, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, typeComboChoices, 0 )
+        self.typeCombo = wx.ComboBox( self.advancedPage, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, typeComboChoices, wx.CB_READONLY )
         typeSizer.Add( self.typeCombo, 0, wx.ALL, 5 )
 
         fgSizer11.Add( typeSizer, 1, wx.EXPAND, 5 )
