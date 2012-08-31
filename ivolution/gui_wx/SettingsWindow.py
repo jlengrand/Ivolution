@@ -33,8 +33,16 @@ class SettingsWindow(SettingsTemplate):
         # TODO : Set icon
         #self.SetIcon(wx.Icon('ivolution/data/media/icons/spanner_48.ico', wx.BITMAP_TYPE_ICO))  # Sets icon
 
+
+        # Defining settings value
         self.output_folder = parent.out_fo
-        self.outputLocationLabel.SetLabel(self.output_folder)
+        self.file_name = "Ivolution"
+
+
+
+
+
+        self.outputLocationLabel.SetLabel(self.output_folder) # setting default value from main window
 
     # Virtual event handlers, overide them in your derived class
     def on_output( self, event ):
@@ -47,7 +55,7 @@ class SettingsWindow(SettingsTemplate):
         # self.inputdialog.Destroy()
 
     def on_cancel( self, event ):
-        event.Skip()
+        self.Close(True)  # Close the frame.
 
     def on_save( self, event ):
         event.Skip()
