@@ -25,6 +25,7 @@ from ..util.Notifier import Observer
 from ..util.Notifier import Observable
 
 from IvolutionTemplate import IvolutionTemplate
+from SettingsWindow import SettingsWindow
 
 
 class IvolutionWindow(IvolutionTemplate, Observer, Observable):
@@ -58,7 +59,7 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
     def get_default_parameters(self):
         """
         """
-        # FIXME: You gotta try on a Mac
+        # FIXME: Put really general stuff here !
         self.videospeedlistChoices = [u"slow", u"medium", u"fast"]
         self.gaugerange = 100
 
@@ -72,12 +73,13 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
             self.out_fo = "C:/Users/jll/Videos/"  # Default folder for Windows
             self.in_fo = "C:\Users\jll\Pictures/"
         else:
-            self.out_fo = "C:/Users/jll/Videos/"  # Default folder for Linux
+            self.out_fo = "/home/jll/Videos/"  # Default folder for Linux
             self.in_fo = "/home/jll/Pictures/"
 
     # Overriding event handling methods
     def on_settings(self, event):
-        print "settings"
+        settings = SettingsWindow(self)
+        settings.Show(True)  # Finally show the frame
 
     def on_start(self, event):
         """
