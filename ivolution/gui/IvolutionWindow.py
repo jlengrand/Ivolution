@@ -199,7 +199,8 @@ either expressed or implied, of the FreeBSD Project."""
         # Clean up code for saving application state should be added here.
         self.notify(["Application", ["STOP"]])  # Asking the Facemovie to stop
         self.process_running = False
-        self.Close(True)  # Close the frame.
+        #self.Close(True)  # Close the frame.
+        sys.exit(0)
 
     # system methods
     def get_current_mode(self):

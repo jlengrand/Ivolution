@@ -111,6 +111,7 @@ class IvolutionTemplate ( wx.Frame ):
 		self.Centre( wx.BOTH )
 
 		# Connect Events
+		self.Bind( wx.EVT_CLOSE, self.on_exit )
 		self.Bind( wx.EVT_MENU, self.on_exit, id = self.exititem.GetId() )
 		self.Bind( wx.EVT_MENU, self.on_help, id = self.helpitem.GetId() )
 		self.Bind( wx.EVT_MENU, self.on_about, id = self.aboutitem.GetId() )
@@ -127,6 +128,7 @@ class IvolutionTemplate ( wx.Frame ):
 	# Virtual event handlers, overide them in your derived class
 	def on_exit( self, event ):
 		event.Skip()
+
 
 	def on_help( self, event ):
 		event.Skip()
