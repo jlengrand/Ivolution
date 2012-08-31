@@ -1,108 +1,97 @@
 #!/usr/bin/env python
+"""
+.. module:: IvolutionWindow
+   :platform: Unix, Windows, Mac
+   :synopsis: Main Window of the Ivolution GUI designed to be supported by all platforms.
 
+.. moduleauthor:: Julien Lengrand-Lambert <jlengrand@gmail.com>
+
+"""
+
+import wx
+import wx.lib.newevent
+
+import sys
 import os
-import webbrowser
 import logging
+import webbrowser
 
-from gi.repository import Gtk, GLib
-from AboutDialog import AboutDialog
-
-from .. import get_data
-
-# import os
-# parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# os.sys.path.insert(0,parentdir) # import parent folder
+from .. import get_data # used to load images and files
 
 from .. import FaceParams
 from .. import FacemovieThread
+
 from ..util.Notifier import Observer
 from ..util.Notifier import Observable
 
+from IvolutionTemplate import IvolutionTemplate
+from SettingsWindow import SettingsWindow
 
-class IvolutionWindow(Observer, Observable):
-    def __init__(self, name):
-        Observer.__init__(self, name)
+
+class IvolutionWindow(IvolutionTemplate, Observer, Observable):
+    """
+    Main Window of the Ivolution application
+    """
+    def __init__(self, parent, title):
+        """
+        Overrides init frame IvolutionTemplate
+        """
+        IvolutionTemplate.__init__(self, parent)
+        Observer.__init__(self, "Interface")
         Observable.__init__(self)
 
+        # Sets up logging capability
         self.my_logger = None
         self.console_logger = None
+        self.setup_logger()
 
-        self.builder = Gtk.Builder()
-        self.builder.add_from_file(get_data('ui/IvolutionWindow.glade'))
-        #self.builder.add_from_file("ivolution/data/ui/IvolutionWindow.glade")
-        #self.builder.connect_signals({ "on_ivolutionwindow_destroy" : Gtk.main_quit })
-        self.window = self.builder.get_object("ivolution_window")
-        self.window.show()
-        self.builder.connect_signals(self)
+        # Defines all our parameters neededfor the facemovie
+        self.get_default_parameters()
 
-        ## Defines parameters needed to run the FaceMovie
+        self.process_running = False
+        self.facemovie = None
+
+        self.inputtextbox.SetLabel(self.in_fo)  # sets label to default input folder
+        self.SetIcon(wx.Icon('ivolution/data/media/vitruve.ico', wx.BITMAP_TYPE_ICO))  # Sets icon
+
+        self.Show(True)  # Finally show the frame
+
+    def get_default_parameters(self):
+        """
+        """
+        # FIXME: Put really general stuff here !
+        self.videospeedlistChoices = [u"slow", u"medium", u"fast"]
+        self.gaugerange = 100
+
         self.root_fo = ""
-        self.in_fo = ""  # Input folder, where images are located
-        self.out_fo = ""  # Input folder, where the video will be saved
         self.mode = "crop"  # type of video to be created
         self.sort = "name"  # how image files will be chronologically sorted
         self.speed = 1  # Speed of the movie
         self.param = "frontal_face"  # type of face profile to be searched for
 
-        self.in_fo = ""  # Input folder, where images are located
-
-        self.process_running = False
-
-        self.facemovie = None
-
-        self.AboutDialog = None  # class
-
-        self.setup()
-        self.setup_logger()
-
-    def setup(self):
-        """
-        Sets up all the default paramters and retrieve the element of the GUI we want to follow
-        """
-        self.AboutDialog = AboutDialog  # FIXME : Still not working
-
-        self.startbutton = self.builder.get_object("startbutton")
-
-        self.filechooserinput = self.builder.get_object("filechooserinput")
-        self.filechooseroutput = self.builder.get_object("filechooseroutput")
-
-        self.typecombobox = self.builder.get_object("typecombobox")
-        self.typecombobox.set_active(0)
-
-        self.speedcombobox = self.builder.get_object("speedcombobox")
-        self.speedcombobox.set_active(0)
-
-        self.cropradiobutton = self.builder.get_object("cropradiobutton")
-        self.namesortradiobutton = self.builder.get_object("namesortradiobutton")
-
-        self.progressbar = self.builder.get_object("progressbar")
-        self.statuslabel = self.builder.get_object("statuslabel")
-
-    # Signal handling related stuff
-    def on_cropradiobutton_toggled(self, widget):
-        """
-        We need to take care only of this one as both are grouped
-        """
-        if widget.get_active():  # means crop is activated
-            self.mode = "crop"
+        if "win" in sys.platform:
+            self.out_fo = "C:/Users/jll/Videos/"  # Default folder for Windows
+            self.in_fo = "C:\Users\jll\Pictures/"
         else:
-            self.mode = "conservative"
+            self.out_fo = "/home/jll/Videos/"  # Default folder for Linux
+            self.in_fo = "/home/jll/Pictures/"
 
-    def on_namesortradiobutton_toggled(self, widget):
-        """
-        We need to take care only of this one as both are grouped
-        """
-        if widget.get_active():  # means name is activated
-            self.sort = "name"
-        else:
-            self.sort = "exif"
+    # Overriding event handling methods
+    def on_settings(self, event):
+        settings = SettingsWindow(self)
+        settings.Show(True)  # Finally show the frame
 
-    def on_startbutton_pressed(self, widget):
+    def on_start(self, event):
         """
+        User asks for starting the algorithm
         Sets all parameters and start processing
         """
         self.my_logger.debug("start pressed")
+
         if not self.process_running:  # start only if not already running
+            # Empty list on screen
+            self.filelist.DeleteAllItems()
+
             self.set_parameters()
             self.print_parameters()
             # Instantiating the facemovie
@@ -117,59 +106,150 @@ class IvolutionWindow(Observer, Observable):
             self.console_logger.error("Cannot start, process already running !")
             self.my_logger.error("Cannot start, process already running !")
 
-    def on_stopbutton_pressed(self, widget):
+    def on_stop(self, event):
         """
-        Asks the Facemovie thread to terminate
+        User asks for stopping the algorithm
+        Asks the FacemovieThread to terminate
         """
         self.my_logger.debug("Stop pressed")
         self.console_logger.debug("Stop pressed")
-        self.notify(["STOP"])  # Asking the Facemovie to stop
+        self.notify(["Application", ["STOP"]])  # Asking the Facemovie to stop
         self.process_running = False
 
-    def on_destroy(self, widget, data=None):
-        """Called when the IvolutionWindow is closed."""
-        # Clean up code for saving application state should be added here.
-        self.notify(["STOP"])  # Asking the Facemovie to stop
-        self.process_running = False
+        #self.on_exit(event) # Finally shuts down the interface
 
-        Gtk.main_quit()
-        print "Gtk Exited"
-
-    def on_menu_about_activate(self, widget, data=None):
+    def on_input(self, event):
         """
-        Displays the about box for Ivolution
-        # FIXME : Can start several about Dialogs at the same time
+        Activated when a user clicks to choose its input location
         """
-        if self.AboutDialog is not None:
-            about = self.AboutDialog()
+        self.inputdialog = wx.DirDialog(self, "Please choose your input directory", style=1, defaultPath=self.in_fo)
 
-    def on_menu_help_activate(self, widget, data=None):
+        if self.inputdialog.ShowModal() == wx.ID_OK:
+            self.in_fo = self.inputdialog.GetPath()
+            self.inputtextbox.SetLabel(self.in_fo)
+        self.inputdialog.Destroy()
+
+    def on_output(self, event):
+        """
+        Activated when a user clicks to choose its output location
+        """
+        default_dir = "~/Videos"
+        self.outputdialog = wx.DirDialog(self, "Please choose your output directory", style=1, defaultPath=default_dir)
+
+        if self.outputdialog.ShowModal() == wx.ID_OK:
+            self.outputchoosertext.SetLabel(self.outputdialog.GetPath())
+        self.outputdialog.Destroy()
+
+    def on_help(self, event):
         """
         Opens a browser and points to online help.
         """
         url = "http://jlengrand.github.com/FaceMovie/"
         webbrowser.open(url, new=2)  # in new tab if possible
-        #print "Should open help"
 
-    #Methods processing data
+    def on_about(self, event):
+        """
+        Displays the about box for Ivolution
+        """
+        description ="""    Ivolution is a project aiming at helping you
+create videos of yourself over time.
+    Simply take pictures of yourself, Ivolution does
+everything else for you.
+
+    Ivolution may be used for faces, but also profiles
+(to show women along pregnancy for example)
+or full body (for people workouting).
+
+    The only limitation comes from you !
+"""
+
+        licence = """Copyright (c) <2012>, <Julien Lengrand-Lambert>
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+The views and conclusions contained in the software and documentation are those
+of the authors and should not be interpreted as representing official policies,
+either expressed or implied, of the FreeBSD Project."""
+
+        info = wx.AboutDialogInfo()
+
+        info.SetIcon(wx.Icon('ivolution/data/media/vitruve.png', wx.BITMAP_TYPE_PNG))
+        info.SetName('Ivolution')
+        info.SetVersion('0.8')
+        info.SetDescription(description)
+        info.SetCopyright('(C) 2012 Julien Lengrand-Lambert')
+        info.SetWebSite('http://www.lengrand.fr')
+        info.SetLicence(licence)
+        info.AddDeveloper('Julien Lengrand-Lambert')
+        info.AddDocWriter('Julien Lengrand-Lambert')
+        info.AddArtist('Luc Viatour')
+        info.AddTranslator('Julien Lengrand-Lambert')
+
+        wx.AboutBox(info)
+
+    def on_exit(self, event):
+        """
+        Called when the IvolutionWindow is closed, or File/Exit is called.
+        """
+        # Clean up code for saving application state should be added here.
+        self.notify(["Application", ["STOP"]])  # Asking the Facemovie to stop
+        self.process_running = False
+        self.Close(True)  # Close the frame.
+
+    # system methods
+    def get_current_mode(self):
+        """
+        """
+        if self.cropmode.GetValue():
+            mode = "crop"
+        else:
+            mode = "conservative"
+
+        return mode
+
+    def get_current_sort(self):
+        """
+        """
+        if self.namemode.GetValue():
+            sort = "name"
+        else:
+            sort = "exif"
+
+        return sort
+
     def set_parameters(self):
         """
-        Sets all needed parameters for create the movie.
+        Retrieves all parameters needed for the algorithm to run
         """
-        self.in_fo = self.filechooserinput.get_current_folder() + "/"  # TODO : Find correct fix
-        self.out_fo = self.filechooseroutput.get_current_folder() + "/"  # TODO : Find correct fix
-        self.param = self.typecombobox.get_active_text()
-        self.speed = self.speedcombobox.get_active()  # We need and integer between 0 and 2
-
         # Instantiating the face_params object that will be needed by the facemovie
+        self.out_fo += "/" #FIXME: enhance that
         par_fo = os.path.join(self.root_fo, get_data("haarcascades"))
         self.face_params = FaceParams.FaceParams(par_fo,
-                                                self.in_fo,
-                                                self.out_fo,
-                                                self.param,
-                                                self.sort,
-                                                self.mode,
-                                                self.speed)
+                                                 self.in_fo,
+                                                 self.out_fo,
+                                                 self.param,
+                                                 self.sort,
+                                                 self.mode,
+                                                 self.speed)
 
     def print_parameters(self):
         print "#########"
@@ -234,10 +314,10 @@ class IvolutionWindow(Observer, Observable):
 
             if message[0] == "PROGRESS":  # progress bar
                 # big steps performed
-
-                # Uses GLib to run Thread safe operations on GUI
-                GLib.idle_add(self.progressbar.set_fraction, float(message[2]))
-                GLib.idle_add(self.progressbar.set_text, message[1])
+                wx.MutexGuiEnter()  # to avoid thread problems
+                self.progressgauge.SetValue(self.gaugerange * float(message[2]))
+                self.statusbar.SetStatusText(message[1], 0)
+                wx.MutexGuiLeave()
 
                 if float(message[2]) >= 1.0:  # 100% of process
                     self.my_logger.debug("Reached end of facemovie process")
@@ -245,16 +325,35 @@ class IvolutionWindow(Observer, Observable):
                     self.process_running = False
 
             elif message[0] == "STATUS":  # status label
-                # intermediate results
-                GLib.idle_add(self.statuslabel.set_text, message[1])
-                #pass
+                if message[1] == "Error":
+                    wx.MutexGuiEnter()  # to avoid thread problems
+                    self.statusbar.SetStatusText("Error detected", 0)
+                    self.progressgauge.SetValue(0)
+                    wx.MutexGuiLeave()
+                    self.process_running = False
+
+                wx.MutexGuiEnter()  # to avoid thread problems
+                self.statusbar.SetStatusText(message[1], 1)
+                wx.MutexGuiLeave()
+            elif message[0] == "FILEADD":
+                item = wx.ListItem()
+                item.SetText(message[1])
+                wx.MutexGuiEnter()  # to avoid thread problems
+                self.filelist.InsertItem(item)
+                wx.MutexGuiLeave()
+            elif message[0] == "FILEDONE":
+                for i in range(self.filelist.GetItemCount()):
+                    if message[1] == self.filelist.GetItemText(i):
+                        if message[2] == 1:
+                            color = "green"
+                        else:
+                            color = "red"
+                        wx.MutexGuiEnter()  # to avoid thread problems
+                        self.filelist.SetItemTextColour(i, color)
+                        wx.MutexGuiLeave()
 
         elif len(message) > 1:  # system commands shall be ignored
             self.console_logger.debug("Unrecognized command")
             self.my_logger.debug("Unrecognized command")
             self.console_logger.debug(message)
             self.my_logger.debug(message)
-
-if __name__ == "__main__":
-    app = IvolutionWindow()
-    Gtk.main()

@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 
-from gi.repository import Gtk, GObject
+import wx
 from ivolution.gui import IvolutionWindow
 
-
-import os
-my_app = IvolutionWindow.IvolutionWindow("Ivolution")
-GObject.threads_init()
-Gtk.main()
+app = wx.App(False)
+frame = IvolutionWindow.IvolutionWindow(None, "Ivolution Window")
+app.MainLoop()  # Runs application
