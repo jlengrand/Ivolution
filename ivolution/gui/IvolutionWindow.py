@@ -27,7 +27,7 @@ from ..util.Notifier import Observable
 from IvolutionTemplate import IvolutionTemplate
 from SettingsWindow import SettingsWindow
 
-
+#from os.path import expanduser # for real home directory
 class IvolutionWindow(IvolutionTemplate, Observer, Observable):
     """
     Main Window of the Ivolution application
@@ -39,6 +39,8 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
         IvolutionTemplate.__init__(self, parent)
         Observer.__init__(self, "Interface")
         Observable.__init__(self)
+
+        self.home_dir = os.path.expanduser("~")  # Defines home directory
 
         # Sets up logging capability
         self.my_logger = None
@@ -59,7 +61,6 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
     def get_default_parameters(self):
         """
         """
-        # FIXME: Put really general stuff here !
         self.videospeedlistChoices = [u"slow", u"medium", u"fast"]
         self.gaugerange = 100
 
@@ -69,12 +70,8 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
         self.speed = 1  # Speed of the movie
         self.param = "frontal_face"  # type of face profile to be searched for
 
-        if "win" in sys.platform:
-            self.out_fo = "C:/Users/jll/Videos/"  # Default folder for Windows
-            self.in_fo = "C:\Users\jll\Pictures/"
-        else:
-            self.out_fo = "/home/jll/Videos/"  # Default folder for Linux
-            self.in_fo = "/home/jll/Pictures/"
+        self.out_fo = os.path.join(self.home_dir, "Videos/")  # default output folder
+        self.in_fo = os.path.join(self.home_dir, "Pictures/")  # default input folder
 
     # Overriding event handling methods
     def on_settings(self, event):
@@ -129,17 +126,6 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
             self.inputtextbox.SetLabel(self.in_fo)
         self.inputdialog.Destroy()
 
-    def on_output(self, event):
-        """
-        Activated when a user clicks to choose its output location
-        """
-        default_dir = "~/Videos"
-        self.outputdialog = wx.DirDialog(self, "Please choose your output directory", style=1, defaultPath=default_dir)
-
-        if self.outputdialog.ShowModal() == wx.ID_OK:
-            self.outputchoosertext.SetLabel(self.outputdialog.GetPath())
-        self.outputdialog.Destroy()
-
     def on_help(self, event):
         """
         Opens a browser and points to online help.
@@ -151,7 +137,7 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
         """
         Displays the about box for Ivolution
         """
-        description ="""    Ivolution is a project aiming at helping you
+        description = """    Ivolution is a project aiming at helping you
 create videos of yourself over time.
     Simply take pictures of yourself, Ivolution does
 everything else for you.
@@ -241,7 +227,7 @@ either expressed or implied, of the FreeBSD Project."""
         Retrieves all parameters needed for the algorithm to run
         """
         # Instantiating the face_params object that will be needed by the facemovie
-        self.out_fo += "/" #FIXME: enhance that
+        self.out_fo += "/"
         par_fo = os.path.join(self.root_fo, get_data("haarcascades"))
         self.face_params = FaceParams.FaceParams(par_fo,
                                                  self.in_fo,
@@ -269,7 +255,7 @@ either expressed or implied, of the FreeBSD Project."""
         Configures our logger to save error messages
         Start logging in file here
         """
-        personal_dir = "~/.ivolution"
+        personal_dir = os.path.join(self.home_dir, ".ivolution")
         log_root = 'fm.log'
         log_file = os.path.join(os.path.expanduser(personal_dir), log_root)
 
