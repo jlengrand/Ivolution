@@ -91,7 +91,7 @@ class SettingsTemplate ( wx.Frame ):
         self.basicPage.SetSizer( fgSizer5 )
         self.basicPage.Layout()
         fgSizer5.Fit( self.basicPage )
-        self.m_notebook4.AddPage( self.basicPage, u"Basic", True )
+        self.m_notebook4.AddPage( self.basicPage, u"Basic", False )
         self.advancedPage = wx.Panel( self.m_notebook4, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
         fgSizer11 = wx.FlexGridSizer( 4, 1, 0, 0 )
         fgSizer11.SetFlexibleDirection( wx.BOTH )
@@ -108,7 +108,7 @@ class SettingsTemplate ( wx.Frame ):
         speedSizer.Add( self.speedLabel, 0, wx.ALL, 5 )
 
         speedComboChoices = [ u"Slow", u"Medium", u"Fast" ]
-        self.speedCombo = wx.ComboBox( self.advancedPage, wx.ID_ANY, u"Medium", wx.DefaultPosition, wx.DefaultSize, speedComboChoices, 0 )
+        self.speedCombo = wx.ComboBox( self.advancedPage, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, speedComboChoices, 0 )
         speedSizer.Add( self.speedCombo, 0, wx.ALL|wx.EXPAND, 5 )
 
         fgSizer11.Add( speedSizer, 1, wx.EXPAND, 10 )
@@ -151,7 +151,7 @@ class SettingsTemplate ( wx.Frame ):
         typeSizer.Add( self.typeLabel, 0, wx.ALL, 5 )
 
         typeComboChoices = [ u"frontal_face", u"profile_face" ]
-        self.typeCombo = wx.ComboBox( self.advancedPage, wx.ID_ANY, u"frontal_face", wx.DefaultPosition, wx.DefaultSize, typeComboChoices, 0 )
+        self.typeCombo = wx.ComboBox( self.advancedPage, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, typeComboChoices, 0 )
         typeSizer.Add( self.typeCombo, 0, wx.ALL, 5 )
 
         fgSizer11.Add( typeSizer, 1, wx.EXPAND, 5 )
@@ -179,7 +179,7 @@ class SettingsTemplate ( wx.Frame ):
         self.advancedPage.SetSizer( fgSizer11 )
         self.advancedPage.Layout()
         fgSizer11.Fit( self.advancedPage )
-        self.m_notebook4.AddPage( self.advancedPage, u"Advanced", False )
+        self.m_notebook4.AddPage( self.advancedPage, u"Advanced", True )
 
         fgSizer4.Add( self.m_notebook4, 1, wx.ALL|wx.EXPAND, 5 )
 
@@ -216,4 +216,5 @@ class SettingsTemplate ( wx.Frame ):
 
     def on_save( self, event ):
         event.Skip()
+
 

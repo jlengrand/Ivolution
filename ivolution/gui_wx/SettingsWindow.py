@@ -30,6 +30,8 @@ class SettingsWindow(SettingsTemplate):
         #self.SetIcon(wx.Icon('ivolution/data/media/icons/spanner_48.ico',
         #            wx.BITMAP_TYPE_ICO))
 
+        self.parent = parent
+
         # Defining settings value
         self.output_folder = parent.out_fo
         self.video_name = "Ivolution"
@@ -40,6 +42,8 @@ class SettingsWindow(SettingsTemplate):
 
         # setting default value from main window
         self.outputLocationLabel.SetLabel(self.output_folder)
+        self.typeCombo.SetSelection(0)
+        self.speedCombo.SetSelection(1)
 
     # Virtual event handlers, overide them in your derived class
     def on_output(self, event):
@@ -57,4 +61,38 @@ class SettingsWindow(SettingsTemplate):
         self.Close(True)  # Close the frame.
 
     def on_save(self, event):
-        event.Skip()
+        # output_folder is already set
+        self.video_name = self.outputText.GetValue()
+        self.type = self.typeCombo.GetSelection()
+        self.mode = self.modeRadioBox.GetSelection()
+        self.speed = self.speedCombo.GetSelection()
+        self.sort = self.sortRadioBox.GetSelection()
+
+        #self.print_parameters()
+        self.setParentParams()
+        self.Close(True)  # Close the frame.
+
+    def setParentParams(self):
+        modeChoices = [u"conservative", u"crop"]
+        paramChoices = [u"frontal_face", u"profile_face"]
+        sortChoices = [u"name", u"exif"]
+
+        #self.video_name
+        self.parent.out_fo = self.output_folder
+        self.parent.param = paramChoices[self.type]
+        self.parent.mode = modeChoices[self.mode]
+        self.parent.speed = self.speed
+        self.parent.sort = sortChoices[self.sort]
+
+    def print_parameters(self):
+        print "#########"
+        print "Settings:"
+        print "file name :   %s" % (self.video_name)
+        print "output folder :   %s" % (self.output_folder)
+
+        print "Face Type :   %s" % (self.type)
+        print "Speed chosen :   %s" % (self.speed)
+        print "Mode chosen :   %s" % (self.mode)
+        print "Sort method :   %s" % (self.sort)
+
+        print "#########"

@@ -122,11 +122,11 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
         """
         Activated when a user clicks to choose its input location
         """
-        default_dir = "~/Pictures"
-        self.inputdialog = wx.DirDialog(self, "Please choose your input directory", style=1, defaultPath=default_dir)
+        self.inputdialog = wx.DirDialog(self, "Please choose your input directory", style=1, defaultPath=self.in_fo)
 
         if self.inputdialog.ShowModal() == wx.ID_OK:
-            self.inputtextbox.SetLabel(self.inputdialog.GetPath())
+            self.in_fo = self.inputdialog.GetPath()
+            self.inputtextbox.SetLabel(self.in_fo)
         self.inputdialog.Destroy()
 
     def on_output(self, event):
@@ -241,18 +241,19 @@ either expressed or implied, of the FreeBSD Project."""
         Retrieves all parameters needed for the algorithm to run
         """
         #self.in_fo = self.inputtextbox.GetLabel() + "/"
-        self.in_fo = "C:\Users\jll\perso\Ivolution\ivolution\data\samples" + "/"
-        self.out_fo = "C:\Users\jll\Videos" + "/"
-        #self.out_fo = self.outputchoosertext.GetLabel() + "/"
-        self.param = "frontal_face"
-        #self.param = self.typefacelist.GetValue()
-        #self.speed = self.videospeedlistChoices.index(self.videospeedlist.GetValue())  # We need and integer between 0 and 2
-        self.speed = self.videospeedlistChoices[1]
+        # self.in_fo = "C:\Users\jll\perso\Ivolution\ivolution\data\samples" + "/"
+        # self.out_fo = "C:\Users\jll\Videos" + "/"
+        # #self.out_fo = self.outputchoosertext.GetLabel() + "/"
+        # self.param = "frontal_face"
+        # #self.param = self.typefacelist.GetValue()
+        # #self.speed = self.videospeedlistChoices.index(self.videospeedlist.GetValue())  # We need and integer between 0 and 2
+        # self.speed = self.videospeedlistChoices[1]
 
-        self.mode = "crop"
-        self.sort = "name"
+        # self.mode = "crop"
+        # self.sort = "name"
         #self.mode = self.get_current_mode()
         #self.sort = self.get_current_sort()
+        self.print_parameters()
 
         # Instantiating the face_params object that will be needed by the facemovie
         par_fo = os.path.join(self.root_fo, get_data("haarcascades"))
@@ -263,8 +264,6 @@ either expressed or implied, of the FreeBSD Project."""
                                                  self.sort,
                                                  self.mode,
                                                  self.speed)
-
-        self.print_parameters()
 
     def print_parameters(self):
         print "#########"
