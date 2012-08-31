@@ -44,6 +44,7 @@ class SettingsWindow(SettingsTemplate):
         self.outputLocationLabel.SetLabel(self.output_folder)
         self.typeCombo.SetSelection(0)
         self.speedCombo.SetSelection(1)
+        self.m_notebook4.SetSelection(0) # I want to see basic first
 
     # Virtual event handlers, overide them in your derived class
     def on_output(self, event):
