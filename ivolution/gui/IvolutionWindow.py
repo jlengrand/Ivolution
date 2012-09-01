@@ -27,7 +27,7 @@ from ..util.Notifier import Observable
 from IvolutionTemplate import IvolutionTemplate
 from SettingsWindow import SettingsWindow
 
-#from os.path import expanduser # for real home directory
+
 class IvolutionWindow(IvolutionTemplate, Observer, Observable):
     """
     Main Window of the Ivolution application
@@ -53,10 +53,12 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
         self.process_running = False
         self.facemovie = None
 
-        self.inputtextbox.SetLabel(self.in_fo)  # sets label to default input folder
-        self.SetIcon(wx.Icon('ivolution/data/media/vitruve.ico', wx.BITMAP_TYPE_ICO))  # Sets icon
+        img_fo = os.path.join(self.root_fo, get_data("media"))
 
-        self.Show(True)  # Finally show the frame
+        self.inputtextbox.SetLabel(self.in_fo)  # sets label to default input folder
+        self.SetIcon(wx.Icon(os.path.join(img_fo, 'vitruve.ico'), wx.BITMAP_TYPE_ICO))  # Sets icon
+
+        self.Show(True)  # Finally shows the frame
 
     def get_default_parameters(self):
         """
@@ -70,8 +72,8 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
         self.speed = 1  # Speed of the movie
         self.param = "frontal_face"  # type of face profile to be searched for
 
-        self.out_fo = os.path.join(self.home_dir, "Videos/")  # default output folder
-        self.in_fo = os.path.join(self.home_dir, "Pictures/")  # default input folder
+        self.out_fo = os.path.join(self.home_dir, "Videos")  # default output folder
+        self.in_fo = os.path.join(self.home_dir, "Pictures")  # default input folder
 
     # Overriding event handling methods
     def on_settings(self, event):

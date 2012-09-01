@@ -1,4 +1,3 @@
-recursive-include log *
 recursive-include doc/build *
 include LICENSE
 include README*
@@ -6,5 +5,4 @@ include AUTHORS
 include CHANGES
 recursive-include ivolution/data/haarcascades *
 recursive-include ivolution/data/samples *
-recursive-include ivolution/data/ui *
 recursive-include ivolution/data/media *

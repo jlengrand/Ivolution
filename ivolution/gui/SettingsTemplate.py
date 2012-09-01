@@ -130,7 +130,7 @@ class SettingsTemplate ( wx.Frame ):
 
         modeRadioBoxChoices = [ u"Conservative", u"Crop" ]
         self.modeRadioBox = wx.RadioBox( self.advancedPage, wx.ID_ANY, u"Available modes", wx.DefaultPosition, wx.DefaultSize, modeRadioBoxChoices, 1, wx.RA_SPECIFY_ROWS )
-        self.modeRadioBox.SetSelection( 0 )
+        self.modeRadioBox.SetSelection( 1 )
         gSizer7.Add( self.modeRadioBox, 0, wx.ALL, 5 )
 
         modeSizer.Add( gSizer7, 1, wx.EXPAND, 5 )

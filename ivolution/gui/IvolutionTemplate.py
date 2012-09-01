@@ -10,6 +10,8 @@
 import wx
 import wx.xrc
 import wx.aui
+import os
+from .. import get_data # used to load images and files
 
 inputid = 1000
 settingsid = 1001
@@ -25,6 +27,7 @@ class IvolutionTemplate ( wx.Frame ):
 
 	def __init__( self, parent ):
 		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( 416,471 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		img_fo = os.path.join("", get_data("media"))
 
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 
@@ -61,18 +64,18 @@ class IvolutionTemplate ( wx.Frame ):
 		self.toolbar.SetMinSize( wx.Size( -1,30 ) )
 		self.toolbar.SetMaxSize( wx.Size( -1,35 ) )
 
-		self.toolbar.AddTool( inputid, u"Input", wx.Bitmap( u"ivolution/data/media/folder_add_48.png", wx.BITMAP_TYPE_ANY ), wx.NullBitmap, wx.ITEM_NORMAL, wx.EmptyString, wx.EmptyString, None )
+		self.toolbar.AddTool( inputid, u"Input", wx.Bitmap( os.path.join(img_fo, 'folder_add_48.png'), wx.BITMAP_TYPE_ANY ), wx.NullBitmap, wx.ITEM_NORMAL, wx.EmptyString, wx.EmptyString, None )
 
 
-		self.toolbar.AddTool( settingsid, u"Settings", wx.Bitmap( u"ivolution/data/media/spanner_48.png", wx.BITMAP_TYPE_ANY ), wx.NullBitmap, wx.ITEM_NORMAL, wx.EmptyString, wx.EmptyString, None )
+		self.toolbar.AddTool( settingsid, u"Settings", wx.Bitmap( os.path.join(img_fo, 'spanner_48.png'), wx.BITMAP_TYPE_ANY ), wx.NullBitmap, wx.ITEM_NORMAL, wx.EmptyString, wx.EmptyString, None )
 
 
 		self.toolbar.AddSeparator()
 
-		self.toolbar.AddTool( startid, u"Go!", wx.Bitmap( u"ivolution/data/media/accepted_48.png", wx.BITMAP_TYPE_ANY ), wx.NullBitmap, wx.ITEM_NORMAL, wx.EmptyString, wx.EmptyString, None )
+		self.toolbar.AddTool( startid, u"Go!", wx.Bitmap( os.path.join(img_fo, 'accepted_48.png'), wx.BITMAP_TYPE_ANY ), wx.NullBitmap, wx.ITEM_NORMAL, wx.EmptyString, wx.EmptyString, None )
 
 
-		self.toolbar.AddTool( stopid, u"Stop!", wx.Bitmap( u"ivolution/data/media/cancel_48.png", wx.BITMAP_TYPE_ANY ), wx.NullBitmap, wx.ITEM_NORMAL, wx.EmptyString, wx.EmptyString, None )
+		self.toolbar.AddTool( stopid, u"Stop!", wx.Bitmap( os.path.join(img_fo, 'cancel_48.png'), wx.BITMAP_TYPE_ANY ), wx.NullBitmap, wx.ITEM_NORMAL, wx.EmptyString, wx.EmptyString, None )
 
 
 		self.toolbar.AddSeparator()
