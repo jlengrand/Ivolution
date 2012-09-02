@@ -199,6 +199,8 @@ either expressed or implied, of the FreeBSD Project."""
         Called when the IvolutionWindow is closed, or File/Exit is called.
         """
         # Clean up code for saving application state should be added here.
+        self.my_logger.debug("Exit pressed")
+        self.console_logger.debug("Exit pressed")
         self.notify(["Application", ["STOP"]])  # Asking the Facemovie to stop
         self.process_running = False
         #self.Close(True)  # Close the frame.
