@@ -200,11 +200,16 @@ either expressed or implied, of the FreeBSD Project."""
         """
         # Clean up code for saving application state should be added here.
         self.my_logger.debug("Exit pressed")
-        self.console_logger.debug("Exit pressed")
-        self.notify(["Application", ["STOP"]])  # Asking the Facemovie to stop
-        self.process_running = False
-        #self.Close(True)  # Close the frame.
-        sys.exit(0)
+
+        if self.process_running == False:
+            sys.exit(0)
+        else:
+            # shows dialog asking to stop first.
+            dial = wx.MessageDialog(None, 'Cannot exit while processing! \n \
+                Please press stop first.',
+                'Exclamation',
+                wx.OK | wx.ICON_EXCLAMATION)
+            dial.ShowModal()
 
     # system methods
     def get_current_mode(self):
