@@ -65,8 +65,8 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
         """
         self.videospeedlistChoices = [u"slow", u"medium", u"fast"]
         self.gaugerange = 100
-
         self.root_fo = ""
+
         self.mode = "crop"  # type of video to be created
         self.sort = "name"  # how image files will be chronologically sorted
         self.speed = 1  # Speed of the movie

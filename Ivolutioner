@@ -2,6 +2,7 @@
 
 import wx
 import os
+import sys
 from ivolution.gui import IvolutionWindow
 
 # Trying to create personal folder if needed
