@@ -92,7 +92,7 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
             self.filelist.DeleteAllItems()
 
             self.set_parameters()
-            self.print_parameters()
+            self.log_parameters()
             # Instantiating the facemovie
             self.facemovie = FacemovieThread.FacemovieThread(self.face_params)
             self.facemovie.subscribe(self)  # I want new information ! Subscribes to facemovie reports
@@ -247,18 +247,17 @@ either expressed or implied, of the FreeBSD Project."""
                                                  self.mode,
                                                  self.speed)
 
-    def print_parameters(self):
-        print "#########"
-        print "Settings:"
-        print "input folder :   %s" % (self.in_fo)
-        print "output folder :   %s" % (self.out_fo)
+    def log_parameters(self):
+        self.my_logger.debug("#########")
+        self.my_logger.debug("Settings:")
+        self.my_logger.debug("input folder :   %s" % (self.in_fo))
+        self.my_logger.debug("output folder :   %s" % (self.out_fo))
 
-        print "Face Type :   %s" % (self.param)
-        print "Speed chosen :   %s" % (self.speed)
-        print "Mode chosen :   %s" % (self.mode)
-        print "Sort method :   %s" % (self.sort)
-
-        print "#########"
+        self.my_logger.debug("Face Type :   %s" % (self.param))
+        self.my_logger.debug("Speed chosen :   %s" % (self.speed))
+        self.my_logger.debug("Mode chosen :   %s" % (self.mode))
+        self.my_logger.debug("Sort method :   %s" % (self.sort))
+        self.my_logger.debug("#########")
 
     def setup_logger(self):
         """
