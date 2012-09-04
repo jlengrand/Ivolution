@@ -1129,7 +1129,7 @@ SectionEnd
 Section -AdditionalIcons
   SetOutPath $INSTDIR
   WriteIniStr "$INSTDIR\${PRODUCT_NAME}.url" "InternetShortcut" "URL" "${PRODUCT_WEB_SITE}"
-  CreateShortCut "$SMPROGRAMS\Ivolution\Website.lnk" "$INSTDIR\${PRODUCT_NAME}.url"
+  CreateShortCut "$SMPROGRAMS\Ivolution\Website.lnk" "$INSTDIR\${PRODUCT_NAME}.url"  "" "$INSTDIR\data\media\vitruve.ico"
   CreateShortCut "$SMPROGRAMS\Ivolution\Uninstall.lnk" "$INSTDIR\uninst.exe"
 SectionEnd
 
@@ -2169,6 +2169,8 @@ Section Uninstall
   Delete "$SMPROGRAMS\Ivolution\Uninstall.lnk"
   Delete "$SMPROGRAMS\Ivolution\Website.lnk"
   Delete "$SMPROGRAMS\Ivolution\Ivolution.lnk"
+  Delete "$DESKTOP\Ivolution.lnk"
+  RMDir "$SMPROGRAMS\Ivolution"
 
   RMDir "$SMPROGRAMS\Ivolution"
   RMDir "$INSTDIR\tcl\tk8.5\ttk"
