@@ -92,7 +92,15 @@ class FacemovieThread(threading.Thread, Observable, Observer):
 
             self.my_logger.debug("Listing pictures")
             self.notify(["Interface", ["PROGRESS", "Listing pictures", 0.0]])
-            self.facemovie.list_guys()
+            num_guys = self.facemovie.list_guys()
+
+            # FIXME: Later to be done in Lib
+            if num_guys < 0:
+                self.notify(["Interface", ["STATUS", "Source folder not found", 0.0]])
+                self.stop_process = True
+            elif num_guys == 0:
+                self.notify(["Interface", ["STATUS", "No image found in source folder", 0.0]])
+                self.stop_process = True
 
         if not self.stop_process:
             self.my_logger.debug("Detecting Faces")

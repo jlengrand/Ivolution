@@ -275,7 +275,7 @@ either expressed or implied, of the FreeBSD Project."""
         self.my_logger.setLevel(logging.DEBUG)
         # create file handler which logs even debug messages
 
-        #fh = logging.StreamHandler()
+        #fh = logging.StreamHandler() #  uncomment here for console output
         fh = logging.FileHandler(log_file)
 
         fh.setLevel(logging.DEBUG)
@@ -283,7 +283,7 @@ either expressed or implied, of the FreeBSD Project."""
         #self.console_logger = logging.getLogger('ConsoleLog')
         #self.console_logger.setLevel(logging.DEBUG)  # not needed
 
-        ch = logging.StreamHandler()
+        #ch = logging.StreamHandler()
         #ch.setLevel(logging.DEBUG) # not needed
 
         # add the handlers to the logger

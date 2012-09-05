@@ -91,7 +91,10 @@ class FaceMovie(object, Observable, Observer):
         except:  # find precise exception
             #self.console_logger.critical("Source folder not found ! Exiting. . .")
             self.my_logger.critical("Source folder not found ! Exiting. . .")
-            sys.exit(0)
+
+            self.run = False
+            #sys.exit(0)
+            return -1
 
         # loading images, create Guys and store it into guys
         ptr = 0
@@ -126,9 +129,13 @@ class FaceMovie(object, Observable, Observer):
                         #self.console_logger.info("Skipping %s. Not an image file" % (guy_source))
                         self.my_logger.info("Skipping %s. Not an image file" % (guy_source))
 
-        self.sort_guys()
-        ##self.console_logger.info("%d guys found in source folder." % (self.number_guys()))
-        self.my_logger.info("%d guys found in source folder." % (self.number_guys()))
+        # Checking if we have at least one image
+        if self.number_guys > 0:
+            self.sort_guys()
+            ##self.console_logger.info("%d guys found in source folder." % (self.number_guys()))
+            self.my_logger.info("%d guys found in source folder." % (self.number_guys()))
+
+        return self.number_guys()
 
     def sort_guys(self):
         """
