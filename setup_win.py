@@ -14,5 +14,6 @@ sys.path.append("C:\\Program Files\\Microsoft Visual Studio 9.0\\VC\\redist\\x86
 setup(
     options = {'py2exe': {'bundle_files': 1, 'includes': ['numpy', 'wx'] } },
     windows=['Ivolutioner'],
+    #console=['Ivolutioner'],
     zipfile = None,
 )

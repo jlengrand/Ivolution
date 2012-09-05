@@ -44,7 +44,7 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
 
         # Sets up logging capability
         self.my_logger = None
-        self.console_logger = None
+        #self.console_logger = None
         self.setup_logger()
 
         # Defines all our parameters neededfor the facemovie
@@ -102,7 +102,7 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
 
             self.process_running = True
         else:
-            self.console_logger.error("Cannot start, process already running !")
+            #self.console_logger.error("Cannot start, process already running !")
             self.my_logger.error("Cannot start, process already running !")
 
     def on_stop(self, event):
@@ -111,7 +111,7 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
         Asks the FacemovieThread to terminate
         """
         self.my_logger.debug("Stop pressed")
-        self.console_logger.debug("Stop pressed")
+        #self.console_logger.debug("Stop pressed")
         self.notify(["Application", ["STOP"]])  # Asking the Facemovie to stop
         self.process_running = False
 
@@ -280,8 +280,8 @@ either expressed or implied, of the FreeBSD Project."""
 
         fh.setLevel(logging.DEBUG)
         # create console handler with a higher log level
-        self.console_logger = logging.getLogger('ConsoleLog')
-        self.console_logger.setLevel(logging.DEBUG)  # not needed
+        #self.console_logger = logging.getLogger('ConsoleLog')
+        #self.console_logger.setLevel(logging.DEBUG)  # not needed
 
         ch = logging.StreamHandler()
         #ch.setLevel(logging.DEBUG) # not needed
@@ -296,7 +296,7 @@ either expressed or implied, of the FreeBSD Project."""
         fh.setFormatter(formatter)
         #ch.setFormatter(formatter)
 
-        self.console_logger.addHandler(ch)
+        #self.console_logger.addHandler(ch)
 
     def update(self, message):
         """
@@ -305,7 +305,7 @@ either expressed or implied, of the FreeBSD Project."""
         """
         if len(message) == 3:
             # notifications
-            #self.console_logger.debug(message)
+            ##self.console_logger.debug(message)
             self.my_logger.debug(message)
 
             if message[0] == "PROGRESS":  # progress bar
@@ -317,7 +317,7 @@ either expressed or implied, of the FreeBSD Project."""
 
                 if float(message[2]) >= 1.0:  # 100% of process
                     self.my_logger.debug("Reached end of facemovie process")
-                    #self.console_logger.debug("Reached end of facemovie process")
+                    ##self.console_logger.debug("Reached end of facemovie process")
                     self.process_running = False
 
             elif message[0] == "STATUS":  # status label
@@ -349,7 +349,7 @@ either expressed or implied, of the FreeBSD Project."""
                         wx.MutexGuiLeave()
 
         elif len(message) > 1:  # system commands shall be ignored
-            self.console_logger.debug("Unrecognized command")
+            #self.console_logger.debug("Unrecognized command")
             self.my_logger.debug("Unrecognized command")
-            self.console_logger.debug(message)
+            #self.console_logger.debug(message)
             self.my_logger.debug(message)

@@ -41,7 +41,7 @@ class FacemovieThread(threading.Thread, Observable, Observer):
         self.subscribe(self.facemovie)  # Used to send request to stop
 
         self.my_logger = logging.getLogger('IvolutionFile.Thread')
-        self.console_logger = logging.getLogger('ConsoleLog')
+        #self.console_logger = logging.getLogger('ConsoleLog')
 
     def update(self, message):
         """
@@ -50,19 +50,19 @@ class FacemovieThread(threading.Thread, Observable, Observer):
         """
         if len(message) == 1:  # system commands
             if message[0] == "STOP":
-                self.console_logger.debug("Facemovie is going to stop")
+                #self.console_logger.debug("Facemovie is going to stop")
                 self.my_logger.debug("Facemovie is going to stop")
 
                 self.stop_process = True
                 self.notify(["Lib", ["STOP"]])
             else:
-                self.console_logger.debug("Unrecognized system command")
+                #self.console_logger.debug("Unrecognized system command")
                 self.my_logger.debug("Unrecognized system command")
-                #self.console_logger.debug(message)
+                ##self.console_logger.debug(message)
                 self.my_logger.debug(message)
         elif len(message) == 2:  # notifications
 
-            #self.console_logger.debug(message)
+            ##self.console_logger.debug(message)
             self.my_logger.debug(message)
             if message[0] == "FILEADD":
                 self.notify(["Interface", [message[0], message[1], 0]])
@@ -72,7 +72,7 @@ class FacemovieThread(threading.Thread, Observable, Observer):
 
             # checking for fatal error
             if message[0] == "Error":
-                self.console_logger.debug("Fatal Error detected")
+                #self.console_logger.debug("Fatal Error detected")
                 self.my_logger.debug("Fatal Error detected")
                 self.stop_process = True
                 self.notify(["Lib", ["STOP"]])
@@ -82,9 +82,9 @@ class FacemovieThread(threading.Thread, Observable, Observer):
                 self.notify(["Interface", message])
 
         else:
-            self.console_logger.debug("Unrecognized command")
+            #self.console_logger.debug("Unrecognized command")
             self.my_logger.debug("Unrecognized command")
-            self.console_logger.debug(message)
+            #self.console_logger.debug(message)
             self.my_logger.debug(message)
 
     def run(self):

@@ -42,7 +42,7 @@ class FaceMovie(object, Observable, Observer):
         Observable.__init__(self)  # used to send notifications to process
         Observer.__init__(self, "Lib")  # used to receive notification to stop
 
-        self.console_logger = logging.getLogger('ConsoleLog')  # Used to send messages to the console
+        #self.console_logger = logging.getLogger('ConsoleLog')  # Used to send messages to the console
         self.my_logger = logging.getLogger('IvolutionFile.Lib')  # Used to save events into a file
 
         self.source = face_params.input_folder  # Source folder for pictures
@@ -89,7 +89,7 @@ class FaceMovie(object, Observable, Observer):
             os.path.exists(self.source)
             os.path.isdir(self.source)  # checking if folder exists
         except:  # find precise exception
-            self.console_logger.critical("Source folder not found ! Exiting. . .")
+            #self.console_logger.critical("Source folder not found ! Exiting. . .")
             self.my_logger.critical("Source folder not found ! Exiting. . .")
             sys.exit(0)
 
@@ -111,8 +111,8 @@ class FaceMovie(object, Observable, Observer):
                             guy_date = exif.parse(guy_source)['DateTime']
                         except Exception:
                             self.my_logger.warning("No metadata found for %s" % (guy_name))
-                            if self.sort_method == "exif":
-                                self.console_logger.warning(" No metadata found for %s" % (guy_name))
+                            #if self.sort_method == "exif":
+                                #self.console_logger.warning(" No metadata found for %s" % (guy_name))
 
                             guy_date = ''
 
@@ -123,11 +123,11 @@ class FaceMovie(object, Observable, Observer):
                         self.guys.append(a_guy)
                         self.notify(["Application", ["FILEADD", guy_name]])
                     except:
-                        self.console_logger.info("Skipping %s. Not an image file" % (guy_source))
+                        #self.console_logger.info("Skipping %s. Not an image file" % (guy_source))
                         self.my_logger.info("Skipping %s. Not an image file" % (guy_source))
 
         self.sort_guys()
-        self.console_logger.info("%d guys found in source folder." % (self.number_guys()))
+        ##self.console_logger.info("%d guys found in source folder." % (self.number_guys()))
         self.my_logger.info("%d guys found in source folder." % (self.number_guys()))
 
     def sort_guys(self):
@@ -161,11 +161,11 @@ class FaceMovie(object, Observable, Observer):
                 self.notify_progress("Processing picture", ptr, self.number_guys())
 
                 if a_guy.has_face():  # face(s) have been found
-                    self.console_logger.info("Face found for %s" % (a_guy.name))
+                    #self.console_logger.info("Face found for %s" % (a_guy.name))
                     self.my_logger.info("Face found for %s" % (a_guy.name))
                     faceres = 1  # for notifying
                 else:
-                    self.console_logger.warning("No face found for %s. Skipped . . ." % (a_guy.name))
+                    #self.console_logger.warning("No face found for %s. Skipped . . ." % (a_guy.name))
                     self.my_logger.warning("No face found for %s. Skipped . . ." % (a_guy.name))
 
                 self.notify(["Application", ["FILEDONE", a_guy.name, faceres]])
@@ -217,7 +217,7 @@ class FaceMovie(object, Observable, Observer):
         self.check_depth()
 
         if self.number_guys() == 0:
-            self.console_logger.error("No face has been found in the whole repository! Exiting. . . ")
+            #self.console_logger.error("No face has been found in the whole repository! Exiting. . . ")
             self.my_logger.error("No face has been found in the whole repository! Exiting. . . ")
             self.notify(["Error", 0])
             sys.exit(0)
@@ -237,7 +237,7 @@ class FaceMovie(object, Observable, Observer):
         my_depth = list(set(my_depth))  # remove duplicates
         if len(my_depth) != 1:
             # We do not have a unique number of channels for all images
-            self.console_logger.error("All images must have the same depth")
+            #self.console_logger.error("All images must have the same depth")
             self.my_logger.error("All images must have the same depth")
         else:
             self.depth = my_depth[0]
@@ -254,7 +254,7 @@ class FaceMovie(object, Observable, Observer):
         my_chans = list(set(my_chans))  # remove duplicates
         if len(my_chans) != 1:
             # We do not have a unique number of channels for all images
-            self.console_logger.error("All images must have the same number of channels")
+            #self.console_logger.error("All images must have the same number of channels")
             self.my_logger.error("All images must have the same number of channels")
         else:
             self.nChannels = my_chans[0]
@@ -295,7 +295,7 @@ class FaceMovie(object, Observable, Observer):
             self.find_crop_dims()
         elif self.mode == "custom crop":
             # TODO : implement
-            self.console_logger.critical("custom crop is not yet implemented")
+            #self.console_logger.critical("custom crop is not yet implemented")
             self.my_logger.critical("custom crop is not yet implemented")
             raise Exception
 
@@ -414,7 +414,7 @@ class FaceMovie(object, Observable, Observer):
                 ii += 1
                 self.notify_progress("Saving frame", ii, self.number_guys())
 
-                self.console_logger.info("Saving frame %d / %d" % (ii, self.number_guys()))
+                #self.console_logger.info("Saving frame %d / %d" % (ii, self.number_guys()))
                 self.my_logger.info("Saving frame %d / %d" % (ii, self.number_guys()))
                 out_im = self.prepare_image(a_guy)
 
@@ -529,7 +529,7 @@ class FaceMovie(object, Observable, Observer):
         file_name = name + "." + ext
         out_name = os.path.join(self.out_path, file_name)
         self.my_logger.info("Saving %s" % (out_name))
-        self.console_logger.info("Saving %s" % (out_name))
+        #self.console_logger.info("Saving %s" % (out_name))
 
         cv.SaveImage(out_name, im)
 
