@@ -78,7 +78,7 @@
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "Ivolution"
 !define PRODUCT_VERSION "0.6.1"
-!define PRODUCT_PUBLISHER "JLL"
+!define PRODUCT_PUBLISHER "Julien Lengrand-Lambert"
 !define PRODUCT_WEB_SITE "http://www.lengrand.fr"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\w9xpopen.exe"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
@@ -125,11 +125,14 @@ InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
 ShowUnInstDetails show
 
+RequestExecutionLevel admin #NOTE: You still need to check user rights with UserInfo!
+
 Function .onInit
   !insertmacro MUI_LANGDLL_DISPLAY
 FunctionEnd
 
 Section "IvolutionSection" SEC01
+  SetShellVarContext all
   SetOutPath "$INSTDIR"
   SetOverwrite ifnewer
   File "dist\w9xpopen.exe"
@@ -1205,6 +1208,8 @@ Section "IvolutionSection" SEC01
 SectionEnd
 
 Section -AdditionalIcons
+  SetShellVarContext all
+
   SetOutPath $INSTDIR
   WriteIniStr "$INSTDIR\${PRODUCT_NAME}.url" "InternetShortcut" "URL" "${PRODUCT_WEB_SITE}"
   CreateShortCut "$SMPROGRAMS\Ivolution\Website.lnk" "$INSTDIR\${PRODUCT_NAME}.url"  "" "$INSTDIR\data\media\vitruve.ico"
@@ -1213,6 +1218,8 @@ Section -AdditionalIcons
 SectionEnd
 
 Section -Post
+  SetShellVarContext all
+
   WriteUninstaller "$INSTDIR\uninst.exe"
   WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" "" "$INSTDIR\Ivolutioner.exe"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayName" "${PRODUCT_NAME}"
@@ -1236,6 +1243,8 @@ Function un.onInit
 FunctionEnd
 
 Section Uninstall
+  SetShellVarContext all
+
   Delete "$INSTDIR\${PRODUCT_NAME}.url"
   Delete "$INSTDIR\uninst.exe"
   Delete "$INSTDIR\tcl\tk8.5\xmfbox.tcl"
@@ -2248,6 +2257,9 @@ Section Uninstall
   Delete "$SMPROGRAMS\Ivolution\Uninstall.lnk"
   Delete "$SMPROGRAMS\Ivolution\Website.lnk"
   Delete "$SMPROGRAMS\Ivolution\Ivolution.lnk"
+  Delete "$APPDATA\Ivolution\Uninstall.lnk"
+  Delete "$APPDATA\Ivolution\Website.lnk"
+  Delete "$APPDATA\Ivolution\Ivolution.lnk"
   Delete "$DESKTOP\Ivolution.lnk"
   RMDir /r "$APPDATA\Ivolution"
   RMDir /r "$SMPROGRAMS\Ivolution"
