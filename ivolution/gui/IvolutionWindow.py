@@ -139,16 +139,16 @@ class IvolutionWindow(IvolutionTemplate, Observer, Observable):
         """
         Displays the about box for Ivolution
         """
-        description = """    Ivolution is a project aiming at helping you
-create videos of yourself over time.
-    Simply take pictures of yourself, Ivolution does
-everything else for you.
+        description = """    Ivolution is a project aiming at helping you create videos of yourself over time.
+Simply take pictures of yourself, Ivolution does everything else for you.
 
-    Ivolution may be used for faces, but also profiles
-(to show women along pregnancy for example)
+    Ivolution may be used for faces, but also profiles (to show women along pregnancy)
 or full body (for people workouting).
 
     The only limitation comes from you !
+
+Please not that Ivolution is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY.
 """
 
         licence = """Copyright (c) <2012>, <Julien Lengrand-Lambert>
@@ -206,8 +206,7 @@ either expressed or implied, of the FreeBSD Project."""
             sys.exit(0)
         else:
             # shows dialog asking to stop first.
-            dial = wx.MessageDialog(None, 'Cannot exit while processing! \n \
-                Please press stop first.',
+            dial = wx.MessageDialog(None, """Cannot exit while processing! Please press stop first.""",
                 'Exclamation',
                 wx.OK | wx.ICON_EXCLAMATION)
             dial.ShowModal()
