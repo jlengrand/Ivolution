@@ -179,9 +179,9 @@ of the authors and should not be interpreted as representing official policies,
 either expressed or implied, of the FreeBSD Project."""
 
         info = wx.AboutDialogInfo()
-        img_fo = os.path.join("", get_data("media"))
 
-        info.SetIcon(wx.Icon(os.path.join(img_fo, 'vitruve_64.png'), wx.BITMAP_TYPE_PNG))
+        img_fo = os.path.join("", get_data("media"))
+        info.SetIcon(wx.Icon(os.path.join(img_fo, '441px-Da_Vinci_Vitruve_Luc_Viatour.jpg'), wx.BITMAP_TYPE_JPEG))
         info.SetName('Ivolution')
         info.SetVersion('0.6')
         info.SetDescription(description)
