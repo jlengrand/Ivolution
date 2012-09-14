@@ -31,7 +31,7 @@ def create_personal():
 
 setup(
     name="Ivolution",
-    version="0.6",
+    version="0.6.2",
     author="Julien Lengrand-Lambert",
     author_email="julien@lengrand.fr",
     description=("Timelapse creation using Face Recognition"),
