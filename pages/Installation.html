@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Ivolution</title>
+	<meta name="description" content="">
+	<meta name="author" content="Julien Lengrand-Lambert">
+
+	<!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+	<!--[if lt IE 9]>
+		<script src=".././theme/html5.js"></script>
+	<![endif]-->
+
+	<!-- Le styles -->
+	<link href=".././theme/bootstrap.min.css" rel="stylesheet">
+	<link href=".././theme/local.css" rel="stylesheet">
+	<link href=".././theme/pygments.css" rel="stylesheet">
+	
+	
+</head>
+<body>
+	
+	
+	<div class="topbar">
+	  <div class="topbar-inner">
+		<div class="container-fluid">
+		  <a class="brand" href=".././index.html">Ivolution</a>
+			<ul class="nav">
+				
+				<a href="https://github.com/jlengrand/FaceMovie">Take one picture of yourself a day, automatically generate a movie!</a>
+			</ul>
+			<p class="pull-right"><b><a href="https://github.com/jlengrand/Ivolution">[Fork me on GitHub]</a></b></p>
+		</div>
+	  </div>
+	</div>
+
+	<div class="container-fluid">
+	  <div class="sidebar">
+		<div class="well">
+			<h3>Contents</h3>
+			<ul>
+				
+				<li><a href=".././pages/Ivolution.html">Ivolution Project</a></li>
+				
+				<li><a href=".././pages/OneMinuteTutorial.html">One minute tutorial</a></li>
+				
+				<li><a href=".././pages/Downloads.html">Downloads</a></li>
+				
+				<li><a href=".././pages/Installation.html">Installation</a></li>
+				
+				<li><a href=".././pages/MainInterface.html">Main Interface</a></li>
+				
+				<li><a href=".././pages/Settings.html">Settings</a></li>
+				
+				<li><a href=".././pages/FutureDevelopments.html">Future Developments</a></li>
+				
+				<li><a href=".././pages/About.html">About</a></li>
+				
+			</ul>
+			<h3>Other Links</h3>
+			<ul>
+				
+				<li><a href="http://python.org">Python.org</a></li>
+				
+				<li><a href="http://opencv.willowgarage.com/wiki/">OpenCV</a></li>
+				
+				<li><a href="http://wxpython.org/">WxPython</a></li>
+				
+			</ul>
+			<div class="social">
+			<h3>Social</h3>
+			<ul>
+				
+				<li><a href="http://lengrand.fr">My website</a></li>
+				
+				<li><a href="https://twitter.com/jlengrand">twitter</a></li>
+				
+				<li><a href="https://plus.google.com/u/0/107343304730454368817/posts">Google+</a></li>
+				
+				<li><a href="https://github.com/jlengrand">Github</a></li>
+				
+				<li><a href="http://stackoverflow.com/users/282677/jlengrand">Stack Overflow</a></li>
+				
+				<li><a href="http://nl.linkedin.com/pub/julien-lengrand-lambert/14/660/551/en">linkedin</a></li>
+				
+			</ul>
+			</div>
+		</div>
+	  </div>
+	  <div class="content">
+			
+			
+	<div class='page'>
+		<div class="page-header"><h1>Installation</h1></div>
+		<div class="page-content"><p><strong>Ivolution should run on most of Windows, Linux and Mac operating systems.</strong>
+It was successfully tested on Windows 7, Windows XP and Ubuntu 12.04.</p>
+<p>Depending on your operating system though (understand Linux users :), the installation step may require a bit more work.
+Please choose below the chapter corresponding to your operating system</p>
+<h2>Windows (XP, Vista, Seven)</h2>
+<p><a href="http://sourceforge.net/projects/ivolutioner/files/current/Ivolution_0.6.1.exe/download">Simply download and run the executable</a>(x86).</p>
+<p>Once installed, you should be able to run Ivolution through the icon on the Desktop.
+Everything should work out of the box without issue.
+The software has not been tested (yet) on Windows 8, but there should not be major problems to get it running.</p>
+<h2>Ubuntu 12.04</h2>
+<p>Ivolution is available for Ubuntu in only a few simple steps.
+First of all, install Ivolution's dependencies. You can simply do this by running the following line in a terminal :</p>
+<div class="codehilite"><pre><span class="err">$</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="n">opencv</span> <span class="n">python</span><span class="o">-</span><span class="n">gi</span> <span class="n">python</span><span class="o">-</span><span class="n">numpy</span> <span class="n">python</span><span class="o">-</span><span class="n">wxgtk2</span><span class="o">.</span><span class="mi">8</span> <span class="n">python</span><span class="o">-</span><span class="n">wxtools</span> <span class="n">python</span><span class="o">-</span><span class="n">wxversion</span>
+</pre></div>
+
+
+<p><em><strong>Note</strong> : You'll need administrator's rights to install the packages (usually means using <strong>sudo</strong>).</em></p>
+<p>Then, <strong><a href="http://sourceforge.net/projects/ivolutioner/files/current/Ivolution-0.6.zip/download">download the last stable package</a></strong> and extract here where you want.</p>
+<p>Finally, move to the extracted folder in command line and install the package</p>
+<div class="codehilite"><pre><span class="err">$</span> <span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span> <span class="o">--</span><span class="n">record</span> <span class="n">ivolution_files</span>
+</pre></div>
+
+
+<p><em>This time again, you will need administrator's right.</em></p>
+<p><strong>Done !</strong> You can now start using Ivolution by running the following command in a terminal :</p>
+<div class="codehilite"><pre><span class="err">$</span> <span class="n">Ivolutioner</span>
+</pre></div>
+
+
+<h3>Uninstalling the software</h3>
+<p><em><strong>Note:</strong></em>
+<em>The <strong>--record</strong> option during the install is used to create a list of all the files generated into your system.</em>
+<em>By default, there is no uninstall solution for python packages and the only solution is to remove all the files one by one.</em></p>
+<p>You can do this by running the following command in a terminal, where <em>ivolution_file</em> is your record file.</p>
+<div class="codehilite"><pre><span class="err">$</span> <span class="n">cat</span> <span class="n">files</span><span class="o">.</span><span class="n">txt</span> <span class="o">|</span> <span class="n">xargs</span> <span class="n">rm</span> <span class="o">-</span><span class="n">rf</span>
+</pre></div>
+
+
+<p><strong>WARNING: This command, if not run correctly, may cause damages! Check the record file first.</strong></p>
+<h2>Other Linux Distributions</h2>
+<p>For most of all the other Linux distributions, the installation process is similar as the Ubuntu solution <strong>but for the first step</strong>.</p>
+<p>You will have to find the name of the packages for your own distribution, or compile them from source if they don't exist.
+Here is a list of all the elements you'll need in your system to run Ivolution:</p>
+<ul>
+<li><a href="http://www.python.org/getit/releases/2.7/">python 2.7</a> or more (2.xx)</li>
+<li><a href="http://opencv.org/">opencv 2.4</a> (or more), and all of its dependencies</li>
+<li><a href="http://wxpython.org/">wxpython</a> and the related <a href="http://www.wxwidgets.org/">wxwidgets</a></li>
+</ul>
+<p>Once all the dependencies are satisfied, you can simply <a href="http://sourceforge.net/projects/ivolutioner/files/current/Ivolution-0.6.zip/download">download</a> and install the package using the directions <strong>from the Ubuntu chapter</strong>.</p>
+<h2>Mac OS</h2>
+<p>Up to now, I was not able to create application installer as for Windows.
+<strong>Mac users should for now follow the Linux guide to install Ivolution.</strong></p>
+<p>An installer may be provided in the future.
+You can also try to create it by yourself, using <a href="http://svn.pythonmac.org/py2app/py2app/trunk/doc/index.html">py2app</a> (<strong>and in this case, let me know !</strong>)</p></div>
+	</div>
+
+		<footer>
+		  <p> Website proudly powered by <a href="http://pelican.notmyidea.org/en/3.0/index.html">Pelican</a>. Theme by <a href="http://santini.di.unimi.it/">Massimo Santini</a>.</p>
+		  <p>&copy; Julien Lengrand-Lambert 2012</p>
+		</footer>
+	  </div>
+
+	</div>
+</body>
+</html>

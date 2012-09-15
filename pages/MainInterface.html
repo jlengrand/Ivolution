@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Ivolution</title>
+	<meta name="description" content="">
+	<meta name="author" content="Julien Lengrand-Lambert">
+
+	<!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+	<!--[if lt IE 9]>
+		<script src=".././theme/html5.js"></script>
+	<![endif]-->
+
+	<!-- Le styles -->
+	<link href=".././theme/bootstrap.min.css" rel="stylesheet">
+	<link href=".././theme/local.css" rel="stylesheet">
+	<link href=".././theme/pygments.css" rel="stylesheet">
+	
+	
+</head>
+<body>
+	
+	
+	<div class="topbar">
+	  <div class="topbar-inner">
+		<div class="container-fluid">
+		  <a class="brand" href=".././index.html">Ivolution</a>
+			<ul class="nav">
+				
+				<a href="https://github.com/jlengrand/FaceMovie">Take one picture of yourself a day, automatically generate a movie!</a>
+			</ul>
+			<p class="pull-right"><b><a href="https://github.com/jlengrand/Ivolution">[Fork me on GitHub]</a></b></p>
+		</div>
+	  </div>
+	</div>
+
+	<div class="container-fluid">
+	  <div class="sidebar">
+		<div class="well">
+			<h3>Contents</h3>
+			<ul>
+				
+				<li><a href=".././pages/Ivolution.html">Ivolution Project</a></li>
+				
+				<li><a href=".././pages/OneMinuteTutorial.html">One minute tutorial</a></li>
+				
+				<li><a href=".././pages/Downloads.html">Downloads</a></li>
+				
+				<li><a href=".././pages/Installation.html">Installation</a></li>
+				
+				<li><a href=".././pages/MainInterface.html">Main Interface</a></li>
+				
+				<li><a href=".././pages/Settings.html">Settings</a></li>
+				
+				<li><a href=".././pages/FutureDevelopments.html">Future Developments</a></li>
+				
+				<li><a href=".././pages/About.html">About</a></li>
+				
+			</ul>
+			<h3>Other Links</h3>
+			<ul>
+				
+				<li><a href="http://python.org">Python.org</a></li>
+				
+				<li><a href="http://opencv.willowgarage.com/wiki/">OpenCV</a></li>
+				
+				<li><a href="http://wxpython.org/">WxPython</a></li>
+				
+			</ul>
+			<div class="social">
+			<h3>Social</h3>
+			<ul>
+				
+				<li><a href="http://lengrand.fr">My website</a></li>
+				
+				<li><a href="https://twitter.com/jlengrand">twitter</a></li>
+				
+				<li><a href="https://plus.google.com/u/0/107343304730454368817/posts">Google+</a></li>
+				
+				<li><a href="https://github.com/jlengrand">Github</a></li>
+				
+				<li><a href="http://stackoverflow.com/users/282677/jlengrand">Stack Overflow</a></li>
+				
+				<li><a href="http://nl.linkedin.com/pub/julien-lengrand-lambert/14/660/551/en">linkedin</a></li>
+				
+			</ul>
+			</div>
+		</div>
+	  </div>
+	  <div class="content">
+			
+			
+	<div class='page'>
+		<div class="page-header"><h1>Main Interface.</h1></div>
+		<div class="page-content"><h2>Basic interface</h2>
+<p>The following picture shows what you should see when launching the Ivolution application.</p>
+<p><center>
+    <p><img alt="Main interface" src="../theme/images/blog/mi1.png" /></p>
+</center></p>
+<p>The main frame is composed of three different parts :</p>
+<ul>
+<li>The <strong>Menubar</strong>, used to exit the application, have access to this help or see more information about the application.</li>
+<li>The <strong>Toolbar</strong>, containing all the elements you can use to create your timelapse, such as the start or the stop buttons</li>
+<li>The <strong>Main Frame</strong>, aiming at presenting all the information and status of the application in real time.</li>
+</ul>
+<h3>MenuBar</h3>
+<p>I am quite sure everyone having a computer is used to it, but let's present it anyway !</p>
+<p>The elements of the menubar are quite straight speaking :</p>
+<ul>
+<li>The <strong>Exit</strong> menu will exit the application</li>
+<li>The <strong>Help</strong> menu will browse the web for the documentation of the application.</li>
+<li>Finally, the <strong>About</strong> menu will present you more information about the software, such as the main developer (hint : me :)) or the license file.</li>
+</ul>
+<h3>ToolBar</h3>
+<p>The toolbar contains several icons, each of them having a precise purpose:</p>
+<ul>
+<li>The first folder button shall be used to define the input folder that will be searched for images. All the images of the folder (and its subfolders) will be used in the timlapse generation</li>
+<li>The second icon opens the settings window. You can learn more about it in the next chapter. For a basic usage, you can just let the default options.</li>
+<li>Then come the start and stop buttons. Once you input folder is chosen, you can start the application by pressing the green button. Pressing the red button wile processing will stop it.</li>
+<li>Finally, a quick link to the online help is here in case you need it.</li>
+</ul>
+<p><em><strong>Notes:</strong></em></p>
+<ul>
+<li><em><strong>Be careful</strong>, by stopping the application you will have to start all over again.</em></li>
+<li><em>Pressing more than once on the start or stop button will not have any additional effect.</em></li>
+</ul>
+<h3>Main Frame</h3>
+<p>The main frame regroups all the elements of the interface that will give you information about your project.</p>
+<p><center>
+    <p><img alt="Main interface" src="../theme/images/blog/mi2.png" /></p>
+</center></p>
+<p>It is divided into 4 different parts</p>
+<ul>
+<li>The <strong>input label</strong>, which shows you the folder from which images will be loaded. the selected folder will change each time you select a new directory using the input folder button.</li>
+<li>The <strong>processing list</strong> contains the list of images being processed for your timelapse. You will learn more about it in the dedicated section.</li>
+<li>The <strong>progress bar</strong> will give you real time information about the progress of the processing.</li>
+<li>The <strong>status bar</strong> will give you a bit more precise information that the progress bar. It is itself divided into 2 parts, and you can learn more about it in the status bar dedicated part.</li>
+</ul>
+<h4>Processing list</h4>
+<p>When you choose your input folder and press start, one of the first steps of the algorithms is to <strong>list all the images</strong> that will be processed.
+The folder you have selected will be walked <strong>recursively</strong>, including all its sub-folders and all the files will be retrieved.
+All the images will be then listed, while non image files will automatically discarded.</p>
+<p>When this step is finished, the algorithm will <strong>start searching for faces</strong> in your pictures, in <strong>chronological order</strong>.
+A <font color="green">green color</font> on a file means that the image was successfully processed, while a <font color="red">red color</font> indicates that no face has been found.
+When all the files are given a color, the face detection step is terminated and the movie will be generated.</p>
+<p>Below are presented 2 examples of processing list. In the first case, the face detection is being performed and everything seems to work fine.
+In the second example, the operation seem to be finished as all the images have been processed. No face has been found on one of the images though.</p>
+<p><center>
+    <p><img alt="Main interface" src="../theme/images/blog/mi3.png" /></p>
+    <p><img alt="Main interface" src="../theme/images/blog/mi4.png" /></p>
+</center></p>
+<h4>Status Bar</h4>
+<p>The status bar presents you with information about the <strong>current step</strong> of the algorithm, and the <strong>progress</strong> of this step.
+To create a video from scratch, several steps have to be performed in a sequential way and you can see them real-time in the left part of the status bar.</p>
+<p>The different steps that may be displayed are:</p>
+<ul>
+<li><strong>Listing pictures</strong>, meaning that the algorithm is walking through your input folder searching for pictures</li>
+<li><strong>Detecting faces</strong> is displayed when listing the image is finished. Each image is opened and a face detection is performed.</li>
+<li><strong>Calculating video requirements</strong> is the next phase of the algorithm. All the faces have been found. Now you want all of them to be at the same scale in the end video. The output video dimensions are also calculated based on the video mode you have chosen.</li>
+<li><strong>Generating Movie</strong>. All needed information have been collected. The final step is thus to create the timelapse.</li>
+<li><strong>Process cancelled</strong>. If you see this, it either means that you have pressed the stop button, or that there has been a problem during the processing.</li>
+</ul></div>
+	</div>
+
+		<footer>
+		  <p> Website proudly powered by <a href="http://pelican.notmyidea.org/en/3.0/index.html">Pelican</a>. Theme by <a href="http://santini.di.unimi.it/">Massimo Santini</a>.</p>
+		  <p>&copy; Julien Lengrand-Lambert 2012</p>
+		</footer>
+	  </div>
+
+	</div>
+</body>
+</html>
