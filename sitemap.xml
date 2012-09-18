@@ -5,91 +5,91 @@
 
   <url>
     <loc>localhost/index.html</loc>
-    <lastmod>2012-09-18T23:30:35-00:00</lastmod>
+    <lastmod>2012-09-18T23:58:01-00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
 
   <url>
     <loc>localhost/archives.html</loc>
-    <lastmod>2012-09-18T23:30:35-00:00</lastmod>
+    <lastmod>2012-09-18T23:58:01-00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
 
   <url>
     <loc>localhost/tags.html</loc>
-    <lastmod>2012-09-18T23:30:35-00:00</lastmod>
+    <lastmod>2012-09-18T23:58:01-00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
 
   <url>
     <loc>localhost/categories.html</loc>
-    <lastmod>2012-09-18T23:30:35-00:00</lastmod>
+    <lastmod>2012-09-18T23:58:01-00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
 
   <url>
     <loc>localhost/pages/About.html</loc>
-    <lastmod>2012-09-18T23:30:35-00:00</lastmod>
+    <lastmod>2012-09-18T23:58:01-00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>localhost/pages/Downloads.html</loc>
-    <lastmod>2012-09-18T23:30:35-00:00</lastmod>
+    <lastmod>2012-09-18T23:58:01-00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>localhost/pages/FAQ.html</loc>
-    <lastmod>2012-09-18T23:30:35-00:00</lastmod>
+    <lastmod>2012-09-18T23:58:01-00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>localhost/pages/FutureDevelopments.html</loc>
-    <lastmod>2012-09-18T23:30:35-00:00</lastmod>
+    <lastmod>2012-09-18T23:58:01-00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>localhost/pages/Installation.html</loc>
-    <lastmod>2012-09-18T23:30:35-00:00</lastmod>
+    <lastmod>2012-09-18T23:58:01-00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>localhost/pages/Ivolution.html</loc>
-    <lastmod>2012-09-18T23:30:35-00:00</lastmod>
+    <lastmod>2012-09-18T23:58:01-00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>localhost/pages/MainInterface.html</loc>
-    <lastmod>2012-09-18T23:30:35-00:00</lastmod>
+    <lastmod>2012-09-18T23:58:01-00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>localhost/pages/OneMinuteTutorial.html</loc>
-    <lastmod>2012-09-18T23:30:35-00:00</lastmod>
+    <lastmod>2012-09-18T23:58:01-00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>localhost/pages/Settings.html</loc>
-    <lastmod>2012-09-18T23:30:35-00:00</lastmod>
+    <lastmod>2012-09-18T23:58:01-00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
